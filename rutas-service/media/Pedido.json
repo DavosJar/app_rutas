@@ -1,0 +1,1 @@
+[{"id":1,"contenido":"HIGIENE","requiereFrio":true},{"id":2,"contenido":"HIGIENE","requiereFrio":true},{"id":3,"requiereFrio":false},{"id":4,"contenido":"ROPA","requiereFrio":false},{"id":5,"idCliente":2,"contenido":"ROPA","requiereFrio":false}]
