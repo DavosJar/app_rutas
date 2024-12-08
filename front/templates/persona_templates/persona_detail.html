@@ -1,0 +1,33 @@
+{% extends "blank_base.html" %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{{ persona.nombre }} {{ persona.apellido}}</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Nombre:</strong> {{ persona.nombre }}</p>
+                <p><strong>Apellido:</strong> {{ persona.apellido }}</p>
+                <p><strong>Tipo de Identificación:</strong> {{ persona.tipoIdentificacion }}</p>
+                <p><strong>Identificación:</strong> {{ persona.identificacion }}</p>
+                <p><strong>Fecha de Nacimiento:</strong> {{ persona.fechaNacimiento }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Dirección:</strong> {{ persona.direccion }}</p>
+                <p><strong>Teléfono:</strong> {{ persona.telefono }}</p>
+                <p><strong>Email:</strong> {{ persona.email }}</p>
+                <p><strong>Sexo:</strong> {{ persona.sexo }}</p>
+                <!--Actions-->
+                <div class="row gap-1">
+                   
+                    <a href="{{ url_for('persona.edit', id=persona.id) }}" class="btn btn-primary">Editar</a>
+                    <a href="{{ url_for('persona.delete', id=persona.id) }}" class="btn btn-danger">Eliminar</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
