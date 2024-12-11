@@ -1,1 +1,18 @@
-[{"id":1,"horaInicio":"12:00","duracionEstimada":"2h","fecha":"2024-11-02","idConductorAsignado":1,"estado":"EN_RUTA"},{"id":2,"horaInicio":"12:00","duracionEstimada":"8h","fecha":"2024-11-02","idConductorAsignado":1,"estado":"EN_RUTA"}]
+[
+  {
+    "id": 1,
+    "horaInicio": "12:00",
+    "duracionEstimada": "2h",
+    "fecha": "2024-11-02",
+    "idConductorAsignado": 1,
+    "estado": "EN_RUTA"
+  },
+  {
+    "id": 2,
+    "horaInicio": "12:00",
+    "duracionEstimada": "8h",
+    "fecha": "2024-11-02",
+    "idConductorAsignado": 1,
+    "estado": "EN_RUTA"
+  }
+]

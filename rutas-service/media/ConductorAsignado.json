@@ -1,1 +1,91 @@
-[{"id":1,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":3,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":4,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":5,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":6,"idConductor":1,"idVehiculo":4,"fechaAsignacion":"2024-11-02","fechaFinalizacion":"2024-12-01"},{"id":7,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":8,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":9,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":10,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":11,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":12,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":13,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02"},{"id":14,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02","fechaFinalizacion":"","estado":"ACTIVO"},{"id":15,"idConductor":1,"idVehiculo":3,"fechaAsignacion":"2024-11-02","fechaFinalizacion":"none","estado":"ACTIVO"}]
+[
+  {
+    "id": 1,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 3,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 4,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 5,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 6,
+    "idConductor": 1,
+    "idVehiculo": 4,
+    "fechaAsignacion": "2024-11-02",
+    "fechaFinalizacion": "2024-12-01"
+  },
+  {
+    "id": 7,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 8,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 9,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 10,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 11,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 12,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 13,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02"
+  },
+  {
+    "id": 14,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02",
+    "fechaFinalizacion": "",
+    "estado": "ACTIVO"
+  },
+  {
+    "id": 15,
+    "idConductor": 1,
+    "idVehiculo": 3,
+    "fechaAsignacion": "2024-11-02",
+    "fechaFinalizacion": "none",
+    "estado": "ACTIVO"
+  }
+]
