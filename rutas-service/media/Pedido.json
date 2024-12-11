@@ -1,1 +1,38 @@
-[{"id":1,"contenido":"HIGIENE","requiereFrio":true},{"id":2,"contenido":"HIGIENE","requiereFrio":true},{"id":3,"requiereFrio":false},{"id":4,"contenido":"ROPA","requiereFrio":false},{"id":5,"idCliente":2,"contenido":"ROPA","requiereFrio":false}]
+[
+  {
+    "id": 6,
+    "contenido": "Caja con productos delicados",
+    "fechaRegistro": "2024-12-10",
+    "requiereFrio": false,
+    "volumenTotal": 8.5,
+    "pesoTotal": 15.2,
+    "estado": "FRAGIL",
+    "idOrdenEntrega": 1,
+    "idPuntoEntrega": 2,
+    "idItinerario": 2
+  },
+  {
+    "id": 7,
+    "contenido": "Caja de repuestos para artefactos medicos",
+    "fechaRegistro": "2024-12-10",
+    "requiereFrio": false,
+    "volumenTotal": 8.5,
+    "pesoTotal": 15.2,
+    "estado": "FRAGIL",
+    "idOrdenEntrega": 1,
+    "idPuntoEntrega": 2,
+    "idItinerario": 2
+  },
+  {
+    "id": 8,
+    "contenido": "Caja de carnees especiales",
+    "fechaRegistro": "2024-12-10",
+    "requiereFrio": false,
+    "volumenTotal": 8.5,
+    "pesoTotal": 15.2,
+    "estado": "CARNES",
+    "idOrdenEntrega": 8,
+    "idPuntoEntrega": 2,
+    "idItinerario": 2
+  }
+]
