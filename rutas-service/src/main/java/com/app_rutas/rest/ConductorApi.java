@@ -302,5 +302,5 @@ public class ConductorApi {
         map.put("msg", "OK");
         map.put("data", ps.getConductorAttributeLists());
         return Response.ok(map).build();
-    }
+    }    
 }
