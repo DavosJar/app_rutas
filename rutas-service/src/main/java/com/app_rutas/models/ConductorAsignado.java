@@ -1,5 +1,7 @@
 package com.app_rutas.models;
 
+import com.app_rutas.models.enums.ConductorEstado;
+
 public class ConductorAsignado {
     private Integer id;
     private Integer idVehiculo;

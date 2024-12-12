@@ -3,33 +3,33 @@ package com.app_rutas.controller.dao;
 import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
 import com.app_rutas.controller.tda.list.LinkedList;
-import com.app_rutas.models.ConductorAsignado;
-import com.app_rutas.models.enums.ConductorEstado;
+import com.app_rutas.models.Vehiculo;
+import com.app_rutas.models.enums.VehiculoEstadoEnum;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Method;
 
 @SuppressWarnings({ "unchecked", "ConvertToTryWithResources" })
-public class ConductorAsignadoDao extends AdapterDao<ConductorAsignado> {
-    private ConductorAsignado conductorAsignado;
-    private LinkedList<ConductorAsignado> listAll;
+public class VehiculoDao extends AdapterDao<Vehiculo> {
+    private Vehiculo ordenEntrega;
+    private LinkedList<Vehiculo> listAll;
 
-    public ConductorAsignadoDao() {
-        super(ConductorAsignado.class);
+    public VehiculoDao() {
+        super(Vehiculo.class);
     }
 
-    public ConductorAsignado getConductor() {
-        if (this.conductorAsignado == null) {
-            this.conductorAsignado = new ConductorAsignado();
+    public Vehiculo getVehiculo() {
+        if (this.ordenEntrega == null) {
+            this.ordenEntrega = new Vehiculo();
         }
-        return this.conductorAsignado;
+        return this.ordenEntrega;
     }
 
-    public void setConductor(ConductorAsignado conductorAsignado) {
-        this.conductorAsignado = conductorAsignado;
+    public void setVehiculo(Vehiculo ordenEntrega) {
+        this.ordenEntrega = ordenEntrega;
     }
 
-    public LinkedList<ConductorAsignado> getListAll() throws Exception {
+    public LinkedList<Vehiculo> getListAll() throws Exception {
         if (listAll == null) {
             this.listAll = listAll();
         }
@@ -37,63 +37,63 @@ public class ConductorAsignadoDao extends AdapterDao<ConductorAsignado> {
     }
 
     public boolean save() throws Exception {
-        Integer id = Contador.obtenerValorActual(ConductorAsignado.class);
+        Integer id = Contador.obtenerValorActual(Vehiculo.class);
         try {
-            this.conductorAsignado.setId(id);
-            this.persist(this.conductorAsignado);
-            Contador.actualizarContador(ConductorAsignado.class);
+            this.ordenEntrega.setId(id);
+            this.persist(this.ordenEntrega);
+            Contador.actualizarContador(Vehiculo.class);
             this.listAll = listAll();
             return true;
         } catch (Exception e) {
-            throw new Exception("Error al guardar el conductorAsignado: " + e.getMessage());
+            throw new Exception("Error al guardar el ordenEntrega: " + e.getMessage());
         }
     }
 
     public Boolean update() throws Exception {
-        if (this.conductorAsignado == null || this.conductorAsignado.getId() == null) {
-            throw new Exception("No se ha seleccionado un conductorAsignado para actualizar.");
+        if (this.ordenEntrega == null || this.ordenEntrega.getId() == null) {
+            throw new Exception("No se ha seleccionado un ordenEntrega para actualizar.");
         }
         if (listAll == null) {
             listAll = listAll();
         }
-        Integer index = getByIndex("id", this.conductorAsignado.getId());
+        Integer index = getByIndex("id", this.ordenEntrega.getId());
         if (index == -1) {
-            throw new Exception("ConductorAsignado no encontrado.");
+            throw new Exception("Vehiculo no encontrado.");
         }
         try {
-            this.merge(this.conductorAsignado, index);
+            this.merge(this.ordenEntrega, index);
             listAll = listAll();
             return true;
         } catch (Exception e) {
-            throw new Exception("Error al actualizar el conductorAsignado: " + e.getMessage());
+            throw new Exception("Error al actualizar el ordenEntrega: " + e.getMessage());
         }
     }
 
     public Boolean delete() throws Exception {
-        if (this.conductorAsignado == null || this.conductorAsignado.getId() == null) {
-            throw new Exception("No se ha seleccionado un conductorAsignado para eliminar.");
+        if (this.ordenEntrega == null || this.ordenEntrega.getId() == null) {
+            throw new Exception("No se ha seleccionado un ordenEntrega para eliminar.");
         }
         if (listAll == null) {
             listAll = listAll();
         }
-        Integer index = getByIndex("id", this.conductorAsignado.getId());
+        Integer index = getByIndex("id", this.ordenEntrega.getId());
         if (index == -1) {
-            throw new Exception("ConductorAsignado no encontrado.");
+            throw new Exception("Vehiculo no encontrado.");
         }
         try {
             this.delete(index);
             listAll = listAll();
             return true;
         } catch (Exception e) {
-            throw new Exception("Error al eliminar el conductorAsignado: " + e.getMessage());
+            throw new Exception("Error al eliminar el ordenEntrega: " + e.getMessage());
         }
     }
 
-    private LinkedList<ConductorAsignado> linearBinarySearch(String attribute, Object value) throws Exception {
-        LinkedList<ConductorAsignado> lista = this.listAll().quickSort(attribute, 1);
-        LinkedList<ConductorAsignado> ordenes = new LinkedList<>();
+    private LinkedList<Vehiculo> linearBinarySearch(String attribute, Object value) throws Exception {
+        LinkedList<Vehiculo> lista = this.listAll().quickSort(attribute, 1);
+        LinkedList<Vehiculo> ordenes = new LinkedList<>();
         if (!lista.isEmpty()) {
-            ConductorAsignado[] aux = lista.toArray();
+            Vehiculo[] aux = lista.toArray();
             Integer low = 0;
             Integer high = aux.length - 1;
             Integer mid;
@@ -134,16 +134,16 @@ public class ConductorAsignadoDao extends AdapterDao<ConductorAsignado> {
         return ordenes;
     }
 
-    public LinkedList<ConductorAsignado> buscar(String attribute, Object value) throws Exception {
+    public LinkedList<Vehiculo> buscar(String attribute, Object value) throws Exception {
         return linearBinarySearch(attribute, value);
     }
 
-    public ConductorAsignado buscarPor(String attribute, Object value) throws Exception {
-        LinkedList<ConductorAsignado> lista = listAll();
-        ConductorAsignado p = null;
+    public Vehiculo buscarPor(String attribute, Object value) throws Exception {
+        LinkedList<Vehiculo> lista = listAll();
+        Vehiculo p = null;
 
         if (!lista.isEmpty()) {
-            ConductorAsignado[] ordenes = lista.toArray();
+            Vehiculo[] ordenes = lista.toArray();
             for (int i = 0; i < ordenes.length; i++) {
                 if (obtenerAttributeValue(ordenes[i], attribute).toString().toLowerCase()
                         .equals(value.toString().toLowerCase())) {
@@ -161,7 +161,7 @@ public class ConductorAsignadoDao extends AdapterDao<ConductorAsignado> {
         }
         Integer index = -1;
         if (!this.listAll.isEmpty()) {
-            ConductorAsignado[] ordenes = this.listAll.toArray();
+            Vehiculo[] ordenes = this.listAll.toArray();
             for (int i = 0; i < ordenes.length; i++) {
                 if (obtenerAttributeValue(ordenes[i], attribute).toString().toLowerCase()
                         .equals(value.toString().toLowerCase())) {
@@ -189,7 +189,7 @@ public class ConductorAsignadoDao extends AdapterDao<ConductorAsignado> {
 
     public String[] getOrdenAttributeLists() {
         LinkedList<String> attributes = new LinkedList<>();
-        for (Method m : ConductorAsignado.class.getDeclaredMethods()) {
+        for (Method m : Vehiculo.class.getDeclaredMethods()) {
             if (m.getName().startsWith("get")) {
                 String attribute = m.getName().substring(3);
                 if (!attribute.equalsIgnoreCase("id")) {
@@ -200,17 +200,17 @@ public class ConductorAsignadoDao extends AdapterDao<ConductorAsignado> {
         return attributes.toArray();
     }
 
-    public LinkedList<ConductorAsignado> order(String attribute, Integer type) throws Exception {
-        LinkedList<ConductorAsignado> lista = listAll();
+    public LinkedList<Vehiculo> order(String attribute, Integer type) throws Exception {
+        LinkedList<Vehiculo> lista = listAll();
         return lista.isEmpty() ? lista : lista.mergeSort(attribute, type);
     }
 
     public String toJson() throws Exception {
         Gson g = new Gson();
-        return g.toJson(this.conductorAsignado);
+        return g.toJson(this.ordenEntrega);
     }
 
-    public ConductorAsignado getById(Integer id) throws Exception {
+    public Vehiculo getById(Integer id) throws Exception {
         return get(id);
     }
 
@@ -219,12 +219,12 @@ public class ConductorAsignadoDao extends AdapterDao<ConductorAsignado> {
         return g.toJson(get(index));
     }
 
-    public ConductorEstado getEstadoEnum(String estado) {
-        return ConductorEstado.valueOf(estado);
+    public VehiculoEstadoEnum getEstadoEnum(String estado) {
+        return VehiculoEstadoEnum.valueOf(estado);
     }
 
-    public ConductorEstado[] getEstadoEnum() {
-        return ConductorEstado.values();
+    public VehiculoEstadoEnum[] getEstado() {
+        return VehiculoEstadoEnum.values();
     }
 
     public String getByJson(Integer Index) throws Exception {
