@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.app_rutas.controller.dao.services.OrdenEntregaServices;
+import com.app_rutas.controller.dao.services.PedidoServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.OrdenEntrega;
@@ -192,6 +193,27 @@ public class OrdenEntregaApi {
             map.put("msg", "Error en la busqueda");
             map.put("error", e.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(map).build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/order/{atributo}/{orden}")
+    public Response ordenar(@PathParam("atributo") String atributo, @PathParam("orden") Integer orden)
+            throws Exception {
+        HashMap<String, Object> res = new HashMap<>();
+        PedidoServices ps = new PedidoServices();
+        try {
+            res.put("estado", "Ok");
+            res.put("data", ps.order(atributo, orden).toArray());
+            if (ps.order(atributo, orden).isEmpty()) {
+                res.put("data", new Object[] {});
+            }
+            return Response.ok(res).build();
+        } catch (Exception e) {
+            res.put("estado", "error");
+            res.put("data", "Error interno del servidor: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }
 }

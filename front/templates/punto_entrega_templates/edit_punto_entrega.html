@@ -1,0 +1,51 @@
+{% extends "blank_base.html" %}
+{% block title %}
+Editar Punto de Entrega
+{% endblock title %}
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="mb-4">Editar Punto de entrega</h2>
+    <div class="card shadow-sm p-4">
+        <form action="{{ url_for('punto_entrega.update', id=punto_entrega.id) }}" method="POST">
+            <!-- Campo oculto con el ID -->
+            <input type="hidden" name="id" value="{{ punto_entrega.id }}">
+
+            <!-- Campos del formulario -->
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{ punto_entrega.nombre }}" required>
+                </div>
+            </div>
+            <div class="row">
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="ciudad">Ciudad</label>
+                    <input type="text" class="form-control" id="ciudad" name="ciudad" value="{{ punto_entrega.ciudad }}" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="latitud">Latitud</label>
+                    <input type="text" class="form-control" id="latitud" name="latitud" value="{{ punto_entrega.latitud }}" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="longitud">Longitud</label>
+                    <input type="text" class="form-control" id="longitud" name="longitud" value="{{ punto_entrega.longitud }}" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="direccion">Direccion</label>
+                    <input type="text" class="form-control" id="direccion" name="direccion" value="{{ punto_entrega.direccion }}" required>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary w-50">Actualizar</button>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
