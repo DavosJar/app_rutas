@@ -1,0 +1,26 @@
+{% extends "blank_base.html" %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{{ punto_entrega.nombre }}</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Nombre:</strong> {{ punto_entrega.nombre }}</p>
+                <p><strong>Ciudad:</strong> {{ punto_entrega.ciudad }}</p>
+                <p><strong>Latitud:</strong> {{ punto_entrega.latitud }}</p>
+                <p><strong>Longitud:</strong> {{ punto_entrega.longitud }}</p>
+                <p><strong>Direccion:</strong> {{ punto_entrega.direccion }}</p>
+            </div>
+            <div class="col-md-6">                   
+                    <a href="{{ url_for('punto_entrega.edit', id=punto_entrega.id) }}" class="btn btn-primary">Editar</a>
+                    <a href="{{ url_for('punto_entrega.delete', id=punto_entrega.id) }}" class="btn btn-danger">Eliminar</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

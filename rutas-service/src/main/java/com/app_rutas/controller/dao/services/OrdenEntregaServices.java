@@ -2,7 +2,7 @@ package com.app_rutas.controller.dao.services;
 
 import com.app_rutas.controller.dao.OrdenEntregaDao;
 import com.app_rutas.models.OrdenEntrega;
-import com.app_rutas.models.EstadoEnum;
+import com.app_rutas.models.enums.EstadoEnum;
 import com.app_rutas.controller.tda.list.LinkedList;
 
 public class OrdenEntregaServices {

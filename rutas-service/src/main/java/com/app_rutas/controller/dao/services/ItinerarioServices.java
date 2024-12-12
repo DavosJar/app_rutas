@@ -1,12 +1,34 @@
 package com.app_rutas.controller.dao.services;
 
+import java.util.HashMap;
+
 import com.app_rutas.controller.dao.ItinerarioDao;
+import com.app_rutas.models.ConductorAsignado;
 import com.app_rutas.models.Itinerario;
-import com.app_rutas.models.ItinerarioEstadoEnum;
+import com.app_rutas.models.enums.ItinerarioEstadoEnum;
 import com.app_rutas.controller.tda.list.LinkedList;
 
 public class ItinerarioServices {
     private ItinerarioDao obj;
+
+    public Object[] listShowAll()throws Exception{
+        if(!obj.getListAll().isEmpty()){
+            Itinerario[] lista = (Itinerario[]) obj.getListAll().toArray();
+            Object[] respuesta = new Object[lista.length];
+            for (int i = 0; i < lista.length; i++) {
+                ConductorAsignado c = new ConductorAsignadoServices().get(lista[i].getIdConductorAsignado());
+                HashMap mapa = new HashMap();
+                mapa.put("id", lista[i].getId());
+                mapa.put("horaInicio", lista[i].getHoraIncio());
+                mapa.put("duracionEstimada", lista[i].getDuracionEstimada());
+                mapa.put("estado", lista[i].getEstado());
+                mapa.put("idConductorAsignado", c);
+                respuesta[i] = mapa;
+            }
+            return respuesta;
+        }
+        return new Object[]{};
+    }
 
     public ItinerarioServices() {
         this.obj = new ItinerarioDao();
