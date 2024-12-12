@@ -3,8 +3,8 @@ package com.app_rutas.controller.dao.services;
 import com.app_rutas.controller.dao.PersonaDao;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Persona;
-import com.app_rutas.models.Sexo;
-import com.app_rutas.models.TipoIdentificacion;
+import com.app_rutas.models.enums.Sexo;
+import com.app_rutas.models.enums.TipoIdentificacion;
 
 public class PersonaServices {
 

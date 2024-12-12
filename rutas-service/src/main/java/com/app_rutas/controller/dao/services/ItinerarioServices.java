@@ -2,7 +2,7 @@ package com.app_rutas.controller.dao.services;
 
 import com.app_rutas.controller.dao.ItinerarioDao;
 import com.app_rutas.models.Itinerario;
-import com.app_rutas.models.ItinerarioEstadoEnum;
+import com.app_rutas.models.enums.ItinerarioEstadoEnum;
 import com.app_rutas.controller.tda.list.LinkedList;
 
 public class ItinerarioServices {

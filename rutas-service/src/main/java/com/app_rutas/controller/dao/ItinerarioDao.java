@@ -4,7 +4,7 @@ import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Itinerario;
-import com.app_rutas.models.ItinerarioEstadoEnum;
+import com.app_rutas.models.enums.ItinerarioEstadoEnum;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Method;

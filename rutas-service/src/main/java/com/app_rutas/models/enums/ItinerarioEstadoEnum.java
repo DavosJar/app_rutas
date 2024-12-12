@@ -1,4 +1,4 @@
-package com.app_rutas.models;
+package com.app_rutas.models.enums;
 
 public enum ItinerarioEstadoEnum {
     PENDINENTE("PENDIENTE"),

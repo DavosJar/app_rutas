@@ -7,7 +7,7 @@ import com.app_rutas.models.Itinerario;
 import com.app_rutas.models.OrdenEntrega;
 import com.app_rutas.models.Pedido;
 import com.app_rutas.models.PuntoEntrega;
-import com.app_rutas.models.ContenidoEnum;
+import com.app_rutas.models.enums.ContenidoEnum;
 import com.app_rutas.controller.tda.list.LinkedList;
 
 public class PedidoServices {
