@@ -189,4 +189,25 @@ public class ItinerarioApi {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(map).build();
         }
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/order/{atributo}/{orden}")
+    public Response ordenar(@PathParam("atributo") String atributo, @PathParam("orden") Integer orden)
+            throws Exception {
+        HashMap<String, Object> res = new HashMap<>();
+        ItinerarioServices ps = new ItinerarioServices();
+        try {
+            res.put("estado", "Ok");
+            res.put("data", ps.order(atributo, orden).toArray());
+            if (ps.order(atributo, orden).isEmpty()) {
+                res.put("data", new Object[] {});
+            }
+            return Response.ok(res).build();
+        } catch (Exception e) {
+            res.put("estado", "error");
+            res.put("data", "Error interno del servidor: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
+        }
+    }
 }
