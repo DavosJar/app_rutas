@@ -1,5 +1,7 @@
 package com.app_rutas.models;
 
+import com.app_rutas.models.enums.ItinerarioEstadoEnum;
+
 public class Itinerario {
     private Integer id;
     private String horaIncio;

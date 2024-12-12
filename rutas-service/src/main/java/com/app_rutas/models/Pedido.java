@@ -1,5 +1,5 @@
 package com.app_rutas.models;
-import com.app_rutas.models.ContenidoEnum;
+import com.app_rutas.models.enums.ContenidoEnum;
 public class Pedido {
     private Integer id;
     private Integer idCliente;

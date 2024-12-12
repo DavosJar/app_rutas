@@ -1,5 +1,7 @@
 package com.app_rutas.models;
 
+import com.app_rutas.models.enums.EstadoEnum;
+
 public class OrdenEntrega {
         private Integer id;
     public String codigoOrdenEntrega;

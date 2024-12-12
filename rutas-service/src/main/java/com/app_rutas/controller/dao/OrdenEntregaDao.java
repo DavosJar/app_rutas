@@ -4,7 +4,7 @@ import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Contador;
 import com.app_rutas.models.OrdenEntrega;
-import com.app_rutas.models.EstadoEnum;
+import com.app_rutas.models.enums.EstadoEnum;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Method;
