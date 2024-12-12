@@ -1,5 +1,8 @@
 package com.app_rutas.models;
 
+import com.app_rutas.models.enums.Sexo;
+import com.app_rutas.models.enums.TipoIdentificacion;
+
 public class Persona {
 
     private Integer id;
