@@ -7,6 +7,7 @@ import com.app_rutas.models.Conductor;
 import com.app_rutas.models.ConductorAsignado;
 import com.app_rutas.models.Vehiculo;
 import com.app_rutas.controller.tda.list.LinkedList;
+import com.app_rutas.models.enums.ConductorEstado;
 
 public class ConductorAsignadoServices {
     private ConductorAsignadoDao obj;
