@@ -1,0 +1,51 @@
+{% extends "blank_base.html" %}
+{% block title %}
+Registrar Itinerario
+{% endblock title %}
+{% block content %}
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow y">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Datos Itinerario</h6>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('itinerario.save') }}" method="POST">
+                    <div class="row">
+                        <div class="col">
+
+                            <div class="form-group">
+                                <label for="conductor-asignado">Conductor Asignado</label>
+                                <input type="text" class="form-control" id="conductor-asignado" name="conductor-asignado" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="horaInicio">Hora de Inicio</label>
+                                <input type="text" class="form-control" id="horaInicio" name="horaInicio" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="duracionEstimada">Duracion Estimada</label>
+                                <input type="text" class="form-control" id="duracionEstimada" name="duracionEstimada" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="estado">Estado</label>
+                                <select id="estado" name="estado" class="form-control">
+                                    {% if estados %}
+                                        {% for key, value in estados %}
+                                            <option value="{{ key }}" {% if is_edit and itinerario.estado == key %}selected{% endif %}>{{ value }}</option>
+                                        {% endfor %}
+                                    {% else %}
+                                        <option value="" disabled>No disponible</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
