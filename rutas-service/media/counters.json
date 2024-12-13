@@ -1,7 +1,7 @@
 {
     "PuntoEntrega": 4,
-    "Persona": 7,
     "Pedido": 9,
+    "Persona": 7,
     "Conductor": 3,
     "OrdenEntrega": 9,
     "Vehiculo": 7,

@@ -175,7 +175,7 @@ public class PedidoApi {
         HashMap res = new HashMap<>();
         try {
             PedidoServices ps = new PedidoServices();
-            ps.setPedido(ps.get(Integer.parseInt(map.get("pepe").toString())));
+            ps.setPedido(ps.get(Integer.parseInt(map.get("id").toString())));
             if (ps.getPedido().getId() == null) {
                 res.put("msg", "Error");
                 res.put("data", "El equipo no existe");
