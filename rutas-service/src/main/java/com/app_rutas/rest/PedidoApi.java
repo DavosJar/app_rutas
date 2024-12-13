@@ -12,10 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.app_rutas.controller.dao.services.ItinerarioServices;
-import com.app_rutas.controller.dao.services.OrdenEntregaServices;
-import com.app_rutas.controller.dao.services.PedidoServices;
-import com.app_rutas.controller.dao.services.PuntoEntregaServices;
+import com.app_rutas.controller.dao.services.*;
 import com.app_rutas.controller.excepcion.ListEmptyException;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Pedido;
@@ -52,6 +49,7 @@ public class PedidoApi {
         map.put("data", ps.getContenido());
         return Response.ok(map).build();
     }
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -175,7 +173,7 @@ public class PedidoApi {
         HashMap res = new HashMap<>();
         try {
             PedidoServices ps = new PedidoServices();
-            ps.setPedido(ps.get(Integer.parseInt(map.get("pepe").toString())));
+            ps.setPedido(ps.get(Integer.parseInt(map.get("id").toString())));
             if (ps.getPedido().getId() == null) {
                 res.put("msg", "Error");
                 res.put("data", "El equipo no existe");

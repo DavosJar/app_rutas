@@ -1,0 +1,77 @@
+{% extends "blank_base.html" %}
+{% block title %}
+Registrar Pedido
+{% endblock title %}
+{% block content %}
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Datos de pedido</h6>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('pedido.save') }}" method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="contenido">Contenido</label>
+                                <input type="text" class="form-control" id="contenido" name="contenido" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registro">Fecha de Registro</label>
+                                <input type="date" class="form-control" id="registro" name="registro" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="refrigeracion">Requiere Refrigeración</label>
+                                <select class="form-control" id="refrigeracion" name="refrigeracion" required>
+                                    <option value="true">Sí</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="peso">Peso Total</label>
+                                <input type="number" class="form-control" id="peso" name="peso" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="volumen">Volumen Total</label>
+                                <input type="number" class="form-control" id="volumen" name="volumen" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="estado">Estado</label>
+                                <select id="estado" name="estado" class="form-control" required>
+                                    {% if estado %}
+                                    {% for key, value in estado %}
+                                    <option value="{{ key }}">{{ value }}</option>
+                                    {% endfor %}
+                                    {% else %}
+                                    <option value="" disabled>No disponible</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="entrega">ID Orden de Entrega</label>
+                                <input type="number" class="form-control" id="entrega" name="entrega" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="punto">ID Punto de Entrega</label>
+                                <input type="number" class="form-control" id="punto" name="punto" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="itinerario">ID Itinerario</label>
+                                <input type="number" class="form-control" id="itinerario" name="itinerario" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

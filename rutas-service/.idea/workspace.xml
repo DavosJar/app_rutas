@@ -5,33 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54476c0b-1ec0-4d7a-a05a-ff3666eb4b71" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../front/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/../front/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/Vehiculo.json" beforeDir="false" afterPath="$PROJECT_DIR$/media/Vehiculo.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media/Pedido.json" beforeDir="false" afterPath="$PROJECT_DIR$/media/Pedido.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/media/Persona.json" beforeDir="false" afterPath="$PROJECT_DIR$/media/Persona.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/media/counters.json" beforeDir="false" afterPath="$PROJECT_DIR$/media/counters.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app_rutas/controller/dao/ConductorAsignadoDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app_rutas/controller/dao/ConductorAsignadoDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app_rutas/controller/dao/services/ConductorAsignadoServices.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app_rutas/controller/dao/services/ConductorAsignadoServices.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/app_rutas/models/ConductorAsignado.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app_rutas/models/ConductorAsignado.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/ItinerarioDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/ItinerarioDao.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/OrdenEntregaDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/OrdenEntregaDao.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/PedidoDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/PedidoDao.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/PersonaDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/PersonaDao.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/services/ItinerarioServices.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/services/ItinerarioServices.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/services/OrdenEntregaServices.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/services/OrdenEntregaServices.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/services/PedidoServices.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/services/PedidoServices.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/services/PersonaServices.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/controller/dao/services/PersonaServices.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/models/ContenidoEnum.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/models/EstadoEnum.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/models/Itinerario.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/models/Itinerario.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/models/ItinerarioEstadoEnum.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/models/OrdenEntrega.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/models/OrdenEntrega.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/models/Pedido.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/models/Pedido.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/models/Persona.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/models/Persona.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/models/Sexo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/models/TipoIdentificacion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/rest/ItinerarioApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/rest/ItinerarioApi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/rest/OrdenEntregaApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/rest/OrdenEntregaApi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app_rutas/rest/PedidoApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app_rutas/rest/PedidoApi.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/rest/PedidoApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/rest/PedidoApi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/app_rutas/rest/PersonaApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/app_rutas/rest/PersonaApi.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,22 +37,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/CR__Vehiculo",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/usuario/SGRU2/app_rutas/rutas-service",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/CR__FrotendPedido&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/usuario/SGRU2/app_rutas/rutas-service&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -96,6 +76,9 @@
       <workItem from="1733846870369" duration="1094000" />
       <workItem from="1733879512863" duration="2113000" />
       <workItem from="1733932490626" duration="2013000" />
+      <workItem from="1734010290930" duration="13957000" />
+      <workItem from="1734031401681" duration="2044000" />
+      <workItem from="1734068023513" duration="5324000" />
     </task>
     <servers />
   </component>
