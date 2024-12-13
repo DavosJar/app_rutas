@@ -52,21 +52,15 @@ def delete(id):
 
 @itinerario.route('/<id>/edit', methods=['GET'])
 def edit(id):
-    lista_estados = get_options(f"{URL_STATIC}/listType")
     try:
         r = requests.get(f"{URL_STATIC}/get/{id}")
         r.raise_for_status()
         data = r.json()
         itinerario = data["data"]
 
-        itinerario = {
-            "id": itinerario["id"],
-            "estado": itinerario["estado"],
-            "conductor-asignado": itinerario["conductor-asignado"], 
-            "horaInicio": itinerario["horaInicio"],
-            "duracionEstimada": itinerario["duracionEstimada"],
-        }
+        lista_estados = get_options(f"{URL_STATIC}/listType")
 
+        print(r.status_code, r.text)
         return render_template('/itinerario_templates/edit_itinerario.html', itinerario=itinerario, estados=lista_estados)
     except requests.RequestException:
         return redirect(url_for('itinerario.home'))
@@ -75,12 +69,14 @@ def edit(id):
 def update(id):
     try:
         data = {
+            "id": request.form.get('id'),
             "estado": request.form.get('estado'), 
-            "conductor-asignado": request.form.get('conductor-asignado'),
-            "horaInicio": request.form.get('horaInicio'),
+            "idConductorAsignado": int(request.form.get('conductor-asignado')),
+            "horaIncio": request.form.get('horaInicio'),
             "duracionEstimada": request.form.get('duracionEstimada'),
         }
 
+        print(data)
         r = requests.post(f"{URL_STATIC}/update", json=data)
         r.raise_for_status()
 
