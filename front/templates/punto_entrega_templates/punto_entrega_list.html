@@ -45,7 +45,7 @@
                     {% if puntos_entrega %}
                     {% for punto_entrega in puntos_entrega %}
                     <tr>
-                        <td>{{ punto_entrega.ciudad }}</td>
+                        <td><a href="{{ url_for('punto_entrega.punto_entrega_detail', id=punto_entrega.id) }}">{{ punto_entrega.ciudad }}</a></td>
                         <td>{{ punto_entrega.nombre }}</td>
                         <td>{{ punto_entrega.ciudad }}</td>
                         <td>{{ punto_entrega.latitud }}</td>

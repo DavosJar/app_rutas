@@ -1,1 +1,24 @@
-[{"id":2,"nombre":"alexis","apellido":"jara","tipoIdentificacion":"DNI","identificacion":"1111111111","direccion":"La banda","telefono":"0909090909","email":"alexis@gmail.com","sexo":"HOMBRE"},{"id":3,"nombre":"alexis","apellido":"jara","tipoIdentificacion":"DNI","identificacion":"1111111111","direccion":"La banda","telefono":"0909090909","email":"alexis@gmail.com","sexo":"MUJER"}]
+[
+    {
+        "id": 2,
+        "nombre": "alexis",
+        "apellido": "jara",
+        "tipoIdentificacion": "DNI",
+        "identificacion": "1111111111",
+        "direccion": "La banda",
+        "telefono": "0909090909",
+        "email": "alexis@gmail.com",
+        "sexo": "HOMBRE"
+    },
+    {
+        "id": 3,
+        "nombre": "alexis",
+        "apellido": "jara",
+        "tipoIdentificacion": "DNI",
+        "identificacion": "1111111111",
+        "direccion": "La banda",
+        "telefono": "0909090909",
+        "email": "alexis@gmail.com",
+        "sexo": "MUJER"
+    }
+]
