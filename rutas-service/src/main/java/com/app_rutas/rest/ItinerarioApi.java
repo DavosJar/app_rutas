@@ -85,9 +85,10 @@ public class ItinerarioApi {
         try {
             if (map.get("conductor-asignado") != null) {
                 ConductorAsignadoServices cas = new ConductorAsignadoServices();
-                cas.setConductor(cas.get(Integer.parseInt(map.get("conductor-asignado").toString())));
+                cas.setConductor(cas.get(Integer.parseInt(map.get("").toString())));
                 if (cas.getConductor().getId() != null) {
                     ItinerarioServices ps = new ItinerarioServices();
+
                     if (map.get("horaInicio") == null || map.get("horaInicio").toString().isEmpty()) {
                         throw new IllegalArgumentException("El campo 'horaInicio' es obligatorio.");
                     }
@@ -180,7 +181,7 @@ public class ItinerarioApi {
                     }
                 } else {
                     res.put("estado", "error");
-                    res.put("data", "No se proporciono un punto de entrega o una orden de entrega");
+                    res.put("data", "No se proporciono un itinerario");
                     return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
                 }
             }
@@ -212,7 +213,7 @@ public class ItinerarioApi {
                 map.put("data", results.toArray());
                 return Response.ok(map).build();
             } else {
-                map.put("msg", "No se encontraron ordenes de entrega con los valores proporcionados");
+                map.put("msg", "No se encontraron itinerarios");
                 return Response.status(Status.NOT_FOUND).entity(map).build();
             }
 
