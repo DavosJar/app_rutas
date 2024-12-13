@@ -1,0 +1,54 @@
+{% extends "blank_base.html" %}
+{% block title %}
+Editar Orden de Entrega
+{% endblock title %}
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="mb-4">Editar Orden de Entrega</h2>
+    <div class="card shadow-sm p-4">
+        <form action="{{ url_for('orden_entrega.update', id=orden_entrega.id) }}" method="POST">
+            <!-- Campo oculto con el ID -->
+            <input type="hidden" name="id" value="{{ orden_entrega.id }}">
+
+            <!-- Campos del formulario -->
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="ubicacionActual">Ubicacion</label>
+                    <input type="text" class="form-control" id="ubicacionActual" name="ubicacionActual" value="{{ orden_entrega.ubicacionActual }}" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="fechaEntrega">Fecha de entrega</label>
+                    <input type="date" class="form-control" id="fechaEntrega" name="fechaEntrega" value="{{ orden_entrega.fechaEntrega }}" required>
+                </div>
+            </div>
+            <div class="row">
+            <div class="form-group col-md-6">
+                <label for="horaMaxima">Hora maxima de entrega</label>
+                <input type="text" class="form-control" id="horaMaxima" name="horaMaxima" value="{{ orden_entrega.horaMaxima }}" required>
+            </div>
+            </div>
+            <div class="row">
+            <div class="form-group col-md-6">
+                <label for="horaMinima">Hora minima de entrega</label>
+                <input type="text" class="form-control" id="horaMinima" name="horaMinima" value="{{ orden_entrega.horaMinima }}" required>
+            </div>
+        </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="estado">Estado de Orden</label>
+                    <select id="estado" name="estado" class="form-control">
+                        {% for key, value in estado %}
+                            <option value="{{ key }}" {% if orden_entrega.estado == key %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary w-50">Actualizar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
