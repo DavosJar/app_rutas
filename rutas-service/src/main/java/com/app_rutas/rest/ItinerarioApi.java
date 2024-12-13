@@ -155,7 +155,7 @@ public class ItinerarioApi {
         HashMap res = new HashMap<>();
         try {
             ItinerarioServices ps = new ItinerarioServices();
-            ps.setItinerario(ps.get(Integer.parseInt(map.get("pepe").toString())));
+            ps.setItinerario(ps.get(Integer.parseInt(map.get("id").toString())));
             if (ps.getItinerario().getId() == null) {
                 res.put("status", "error");
                 res.put("message", "Itinerario no encontrado.");

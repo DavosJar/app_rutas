@@ -160,7 +160,7 @@ public class ConductorAsignadoApi {
         HashMap res = new HashMap<>();
         try {
             ConductorAsignadoServices ps = new ConductorAsignadoServices();
-            ps.setConductor(ps.get(Integer.parseInt(map.get("pepe").toString())));
+            ps.setConductor(ps.get(Integer.parseInt(map.get("id").toString())));
             if (ps.getConductor().getId() == null) {
                 res.put("msg", "Error");
                 res.put("data", "El equipo no existe");

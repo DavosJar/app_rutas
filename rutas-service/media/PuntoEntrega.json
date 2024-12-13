@@ -1,9 +1,1 @@
-<<<<<<< HEAD
-[{"id":2,"nombre":"Debemos quitar este campo","ciudad":"Peru Pe causa","latitud":123134.0,"longitud":12.0,"direccion":"Las viudas"},{"id":4,"nombre":"Pepito","ciudad":"Welintonkiu","latitud":29103.0,"longitud":2241.0,"direccion":"MiCasaTio"}]
-=======
-<<<<<<< HEAD
-[{"id":2,"nombre":"Debemos quitar este campo","ciudad":"Peru Pe causa","latitud":10.0,"longitud":12.0,"direccion":"Las viudas"},{"id":3,"nombre":"Debemos quitar este campo","ciudad":"Peru Pe causa","latitud":10.0,"longitud":12.0,"direccion":"Las viudas"}]
-=======
-[{"id":2,"nombre":"Debemos quitar este campo","ciudad":"Peru Pe causa","latitud":123134.0,"longitud":12.0,"direccion":"Las viudas"}]
->>>>>>> origin/develop
->>>>>>> origin/develop
+[{"id":2,"nombre":"Debemos quitar este campo","ciudad":"Peru Pe causa","latitud":123134.0,"longitud":12.0,"direccion":"Las viudas"},{"id":4,"nombre":"Pepito","ciudad":"Welintonkiu","latitud":29103.0,"longitud":2241.0,"direccion":"MiCasaTio"},{"id":5,"nombre":"Prueba","ciudad":"Peru","latitud":125.2,"longitud":2042.1,"direccion":"Viva la viva"}]
