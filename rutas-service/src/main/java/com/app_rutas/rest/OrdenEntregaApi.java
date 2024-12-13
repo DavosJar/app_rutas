@@ -147,7 +147,7 @@ public class OrdenEntregaApi {
         HashMap res = new HashMap<>();
         try {
             OrdenEntregaServices ps = new OrdenEntregaServices();
-            ps.setOrdenEntrega(ps.get(Integer.parseInt(map.get("pepe").toString())));
+            ps.setOrdenEntrega(ps.get(Integer.parseInt(map.get("id").toString())));
             ps.getOrdenEntrega().setUbicacionActual(map.get("ubicacion").toString());
             ps.getOrdenEntrega().setFechaEntrega(map.get("fechaEntrega").toString());
             ps.getOrdenEntrega().setHoraMaxima(map.get("horaMaxima").toString());
