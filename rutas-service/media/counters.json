@@ -1,1 +1,9 @@
+<<<<<<< HEAD
 {"PuntoEntrega": 5,"Persona": 7,"Pedido": 9,"Conductor": 3,"OrdenEntrega": 10,"Vehiculo": 7,"Itinerario": 3,"ConductorAsignado": 16}
+=======
+<<<<<<< HEAD
+{"PuntoEntrega": 4,"Persona": 4,"Pedido": 18,"OrdenEntrega": 37,"Vehiculo": 4,"Itinerario": 7,"ConductorAsignado": 6}
+=======
+{"PuntoEntrega": 4,"Persona": 7,"Pedido": 9,"Conductor": 3,"OrdenEntrega": 9,"Vehiculo": 7,"Itinerario": 3,"ConductorAsignado": 16}
+>>>>>>> origin/develop
+>>>>>>> origin/develop
