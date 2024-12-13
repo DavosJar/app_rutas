@@ -1,0 +1,26 @@
+{% extends "blank_base.html" %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{{ orden_entrega.estado }} </h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Ubicacion:</strong> {{ orden_entrega.ubicacionActual }}</p>
+                <p><strong>Fecha de entrega:</strong> {{ orden_entrega.fechaEntrega }}</p>
+                <p><strong>Hora maxima de entrega:</strong> {{ orden_entrega.horaMaxima }}</p>
+                <p><strong>Hora minima de entrega:</strong> {{ orden_entrega.horaMinima }}</p>
+                <p><strong>Estado:</strong> {{ orden_entrega.estado }}</p>
+            </div>
+            <div class="col-md-6">                              
+                    <a href="{{ url_for('orden_entrega.edit', id=orden_entrega.id) }}" class="btn btn-primary">Editar</a>
+                    <a href="{{ url_for('orden_entrega.delete', id=orden_entrega.id) }}" class="btn btn-danger">Eliminar</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
