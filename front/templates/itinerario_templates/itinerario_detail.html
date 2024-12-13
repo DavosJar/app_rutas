@@ -1,0 +1,25 @@
+{% extends "blank_base.html" %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{{ itinerario.nombre }}</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Estado:</strong> {{ itinerario.estado }}</p>
+                <p><strong>Conductor Asignado:</strong> {{ itinerario.idConductorAsignado }}</p>
+                <p><strong>Hora de Inicio:</strong> {{ itinerario.horaInicio }}</p>
+                <p><strong>Duracion Estimada:</strong> {{ itinerario.duracionEstimada }}</p>
+            </div>
+            <div class="col-md-6">                   
+                    <a href="{{ url_for('itinerario.edit', id=itinerario.id) }}" class="btn btn-primary">Editar</a>
+                    <a href="{{ url_for('itinerario.delete', id=itinerario.id) }}" class="btn btn-danger">Eliminar</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

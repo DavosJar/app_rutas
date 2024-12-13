@@ -4,10 +4,10 @@ import com.app_rutas.models.enums.ItinerarioEstadoEnum;
 
 public class Itinerario {
     private Integer id;
+    private Integer idConductorAsignado;
     private String horaIncio;
     private String duracionEstimada;
     private ItinerarioEstadoEnum estado;
-    private String conductorResponsable;
 
     public Integer getId() {
         return this.id;
@@ -15,6 +15,14 @@ public class Itinerario {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getIdConductorAsignado() {
+        return this.idConductorAsignado;
+    }
+
+    public void setIdConductorAsignado(Integer idConductorAsignado) {
+        this.idConductorAsignado = idConductorAsignado;
     }
 
     public String getHoraIncio() {
@@ -40,12 +48,4 @@ public class Itinerario {
     public void setEstado(ItinerarioEstadoEnum estado) {
         this.estado = estado;
     }
-
-    public String getConductorResponsable() {
-        return this.conductorResponsable;
-    }
-
-    public void setConductorResponsable(String conductorResponsable) {
-        this.conductorResponsable = conductorResponsable;
-    }    
 }
