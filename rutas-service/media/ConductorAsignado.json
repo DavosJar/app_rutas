@@ -1,1 +1,34 @@
-[{"id":2,"idVehiculo":1,"idConductor":3,"fechaAsignacion":"7 de diciembre del 2024","fechaDeBaja":"10 de diciembre del 2024","estado":"ACTIVO"},{"id":3,"idVehiculo":1,"idConductor":3,"fechaAsignacion":"7 de diciembre del 2024","fechaDeBaja":"10 de diciembre del 2024","estado":"ACTIVO"},{"id":4,"idVehiculo":2,"idConductor":3,"fechaAsignacion":"7 de diciembre del 2024","fechaDeBaja":"10 de diciembre del 2024","estado":"ACTIVO"},{"id":5,"idVehiculo":2,"idConductor":2,"fechaAsignacion":"7 de diciembre del 2024","fechaDeBaja":"10 de diciembre del 2024","estado":"ACTIVO"}]
+[
+    {
+        "id": 2,
+        "idVehiculo": 1,
+        "idConductor": 3,
+        "fechaAsignacion": "7 de diciembre del 2024",
+        "fechaDeBaja": "10 de diciembre del 2024",
+        "estado": "ACTIVO"
+    },
+    {
+        "id": 3,
+        "idVehiculo": 1,
+        "idConductor": 3,
+        "fechaAsignacion": "7 de diciembre del 2024",
+        "fechaDeBaja": "10 de diciembre del 2024",
+        "estado": "ACTIVO"
+    },
+    {
+        "id": 4,
+        "idVehiculo": 2,
+        "idConductor": 3,
+        "fechaAsignacion": "7 de diciembre del 2024",
+        "fechaDeBaja": "10 de diciembre del 2024",
+        "estado": "ACTIVO"
+    },
+    {
+        "id": 5,
+        "idVehiculo": 2,
+        "idConductor": 2,
+        "fechaAsignacion": "7 de diciembre del 2024",
+        "fechaDeBaja": "10 de diciembre del 2024",
+        "estado": "ACTIVO"
+    }
+]
