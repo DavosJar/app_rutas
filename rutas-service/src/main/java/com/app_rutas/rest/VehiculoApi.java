@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.app_rutas.controller.dao.services.PuntoEntregaServices;
 import com.app_rutas.controller.dao.services.VehiculoServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
 import com.app_rutas.controller.tda.list.LinkedList;
@@ -160,7 +159,7 @@ public class VehiculoApi {
         HashMap res = new HashMap<>();
         try {
             VehiculoServices ps = new VehiculoServices();
-            ps.setVehiculo(ps.get(Integer.parseInt(map.get("pepe").toString())));
+            ps.setVehiculo(ps.get(Integer.parseInt(map.get("id").toString())));
             ps.getVehiculo().setPlaca(map.get("placa").toString());
             ps.getVehiculo().setModelo(map.get("modelo").toString());
             ps.getVehiculo().setCapacidad(Integer.parseInt(map.get("capacidad").toString()));
