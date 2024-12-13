@@ -12,5 +12,10 @@ def create_app():
         app.register_blueprint(persona, url_prefix='/admin/persona')
         app.register_blueprint(punto_entrega, url_prefix='/admin/punto_entrega')
         app.register_blueprint(itinerario, url_prefix='/admin/itinerario')
+        from routes.orden_entrega_route import orden_entrega
+        app.register_blueprint(router, url_prefix='/admin')
+        app.register_blueprint(persona, url_prefix='/admin/persona')
+        app.register_blueprint(punto_entrega, url_prefix='/admin/punto_entrega')
+        app.register_blueprint(orden_entrega, url_prefix='/admin/orden_entrega')
         
     return app
