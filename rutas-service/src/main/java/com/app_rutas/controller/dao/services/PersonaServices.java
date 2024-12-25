@@ -1,5 +1,7 @@
 package com.app_rutas.controller.dao.services;
 
+import java.util.HashMap;
+
 import com.app_rutas.controller.dao.PersonaDao;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Persona;
@@ -81,4 +83,13 @@ public class PersonaServices {
         return obj.getPersonaAttributeLists();
     }
 
+    public Boolean isUnique(String atributo, Object valor) throws Exception {
+        return obj.isUnique(atributo, valor);
+    }
+
+    public void validateField(String field, HashMap<String, Object> map, String... validations) throws Exception {
+        Persona persona = this.getPersona();
+
+        FieldValidator.validateAndSet(persona, map, field, validations);
+    }
 }

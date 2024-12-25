@@ -2,6 +2,7 @@ package com.app_rutas.controller.dao;
 
 import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
+import com.app_rutas.controller.excepcion.ValueAlreadyExistException;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Persona;
 import com.app_rutas.models.enums.Sexo;
@@ -133,6 +134,32 @@ public class PersonaDao extends AdapterDao<Persona> {
             }
         }
         return personas;
+    }
+
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        if (campo == null || value == null) {
+            throw new IllegalArgumentException("El atributo y el valor no pueden ser nulos.");
+        }
+
+        if (this.listAll == null) {
+            this.listAll = listAll();
+        }
+
+        if (this.listAll.isEmpty()) {
+            return true;
+        }
+
+        Persona[] Personas = this.listAll.toArray();
+
+        for (Persona persona : Personas) {
+            Object attributeValue = obtenerAttributeValue(persona, campo);
+            System.out.println("Comparando " + attributeValue + " con " + value); // Mensaje de depuración
+            if (attributeValue != null && attributeValue.toString().equalsIgnoreCase(value.toString())) {
+                throw new ValueAlreadyExistException("El valor ya existe.");
+            }
+        }
+
+        return true;
     }
 
     public LinkedList<Persona> buscar(String attribute, Object value) throws Exception {

@@ -43,7 +43,7 @@ public class Persona {
         this.apellido = apellido;
     }
 
-    public String getidentificacion() {
+    public String getIdentificacion() {
         return this.identificacion;
     }
 
