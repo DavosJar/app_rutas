@@ -1,3 +1,3 @@
 # app_rutas
 ## TDA
-![image](https://github.com/user-attachments/assets/0c7a5785-06bb-431b-b9ea-12801321f326)
+![image](https://github.com/user-attachments/assets/aeff9b68-0707-456a-bb3d-d35b7f9b6fb3)
