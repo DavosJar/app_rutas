@@ -178,7 +178,7 @@ public class PedidoApi {
             ps.setPedido(ps.get(Integer.parseInt(map.get("id").toString())));
             if (ps.getPedido().getId() == null) {
                 res.put("msg", "Error");
-                res.put("data", "El equipo no existe");
+                res.put("data", "El pedido no existe");
                 return Response.status(Status.BAD_REQUEST).entity(res).build();
             } else {
                 if (map.get("punto-entrega") != null && map.get("orden-entrega") != null || map.get("itinerario") != null) {
