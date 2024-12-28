@@ -2,7 +2,6 @@ package com.app_rutas.models;
 import com.app_rutas.models.enums.ContenidoEnum;
 public class Pedido {
     private Integer id;
-    private Integer idCliente;
     private String contenido;
     private String fechaRegistro;
     private Boolean requiereFrio;
@@ -19,14 +18,6 @@ public class Pedido {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getIdCliente() {
-        return this.idCliente;
-    }
-
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
     }
 
     public String getContenido() {
@@ -92,7 +83,6 @@ public class Pedido {
     public void setIdPuntoEntrega(Integer idPuntoEntrega) {
         this.idPuntoEntrega = idPuntoEntrega;
     }
-
     public Integer getIdItinerario() {
         return this.idItinerario;
     }

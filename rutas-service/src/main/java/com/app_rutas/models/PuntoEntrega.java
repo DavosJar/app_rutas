@@ -2,11 +2,11 @@ package com.app_rutas.models;
 
 public class PuntoEntrega {
     private Integer id;
-    private String nombre;
-    private String ciudad;
-    private Double latitud;
-    private Double longitud;
-    private String direccion;
+    private Integer idCliente;
+    private String num;
+    private String callePrincipal;
+    private String calleSecundaria;
+    private String referencia;
 
     public Integer getId() {
         return this.id;
@@ -16,43 +16,44 @@ public class PuntoEntrega {
         this.id = id;
     }
 
-    public String getNombre() {
-        return this.nombre;
+    public Integer getIdCliente() {
+        return this.idCliente;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
     }
 
-    public String getCiudad() {
-        return this.ciudad;
+    public String getNum() {
+        return this.num;
     }
 
-    public void setCiudad(String ciudad) {
-        this.ciudad = ciudad;
+    public void setNum(String num) {
+        this.num = num;
     }
 
-    public Double getLatitud() {
-        return this.latitud;
+    public String getCallePrincipal() {
+        return this.callePrincipal;
     }
 
-    public void setLatitud(Double latitud) {
-        this.latitud = latitud;
+    public void setCallePrincipal(String callePrincipal) {
+        this.callePrincipal = callePrincipal;
     }
 
-    public Double getLongitud() {
-        return this.longitud;
+    public String getCalleSecundaria() {
+        return this.calleSecundaria;
     }
 
-    public void setLongitud(Double longitud) {
-        this.longitud = longitud;
+    public void setCalleSecundaria(String calleSecundaria) {
+        this.calleSecundaria = calleSecundaria;
     }
 
-    public String getDireccion() {
-        return this.direccion;
+    public String getReferencia() {
+        return this.referencia;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setReferencia(String referencia) {
+        this.referencia = referencia;
     }
+
 }

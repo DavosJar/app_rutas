@@ -3,12 +3,12 @@ package com.app_rutas.models;
 import com.app_rutas.models.enums.EstadoEnum;
 
 public class OrdenEntrega {
-        private Integer id;
-    public String codigoOrdenEntrega;
-    private String horaMinima;
-    private String horaMaxima;
-    private String fechaEntrega;
-    private String ubicacionActual;
+    private Integer id;
+    private Integer idPedido;
+    private String fechaProgramada;
+    private String horaProgramada;
+    private String receptor;
+    private String observaciones;
     private EstadoEnum estado;
 
     public Integer getId() {
@@ -18,45 +18,44 @@ public class OrdenEntrega {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public String getCodigoOrdenEntrega() {
-        return this.codigoOrdenEntrega;
+    public Integer getIdPedido() {
+        return this.idPedido;
     }
 
-    public void setCodigoOrdenEntrega(String codigoOrdenEntrega) {
-        this.codigoOrdenEntrega = codigoOrdenEntrega;
+    public void setIdPedido(Integer idPedido) {
+        this.idPedido = idPedido;
     }
 
-    public String getHoraMinima() {
-        return this.horaMinima;
+    public String getFechaProgramada() {
+        return this.fechaProgramada;
     }
 
-    public void setHoraMinima(String horaMinima) {
-        this.horaMinima = horaMinima;
+    public void setFechaProgramada(String fechaProgramada) {
+        this.fechaProgramada = fechaProgramada;
     }
 
-    public String getHoraMaxima() {
-        return this.horaMaxima;
+    public String getHoraProgramada() {
+        return this.horaProgramada;
     }
 
-    public void setHoraMaxima(String horaMaxima) {
-        this.horaMaxima = horaMaxima;
+    public void setHoraProgramada(String horaProgramada) {
+        this.horaProgramada = horaProgramada;
     }
 
-    public String getFechaEntrega() {
-        return this.fechaEntrega;
+    public String getReceptor() {
+        return this.receptor;
     }
 
-    public void setFechaEntrega(String fechaEntrega) {
-        this.fechaEntrega = fechaEntrega;
+    public void setReceptor(String receptor) {
+        this.receptor = receptor;
     }
 
-    public String getUbicacionActual() {
-        return this.ubicacionActual;
+    public String getObservaciones() {
+        return this.observaciones;
     }
 
-    public void setUbicacionActual(String ubicacionActual) {
-        this.ubicacionActual = ubicacionActual;
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public EstadoEnum getEstado() {

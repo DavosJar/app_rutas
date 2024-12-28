@@ -11,7 +11,7 @@ public class Vehiculo {
     private Float potencia;
     private Float pesoMinimo;
     private Float pesoMaximo;
-    private Boolean tieneRestriccion;
+    private Boolean refrigerado;
     private VehiculoEstadoEnum estado;
 
     public Integer getId() {
@@ -78,12 +78,12 @@ public class Vehiculo {
         this.pesoMaximo = pesoMaximo;
     }
 
-    public Boolean getTieneRestriccion() {
-        return this.tieneRestriccion;
+    public Boolean getRefrigerado() {
+        return this.refrigerado;
     }
 
-    public void setTieneRestriccion(Boolean tieneRestriccion) {
-        this.tieneRestriccion = tieneRestriccion;
+    public void setRefrigerado(Boolean refrigerado) {
+        this.refrigerado = refrigerado;
     }
 
     public VehiculoEstadoEnum getEstado() {

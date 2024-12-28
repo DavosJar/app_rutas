@@ -1,12 +1,35 @@
 package com.app_rutas.controller.dao.services;
 
+import java.util.HashMap;
+
 import com.app_rutas.controller.dao.PuntoEntregaDao;
+import com.app_rutas.models.Cliente;
 import com.app_rutas.models.PuntoEntrega;
 
 import com.app_rutas.controller.tda.list.LinkedList;
 
 public class PuntoEntregaServices {
     private PuntoEntregaDao obj;
+
+    public Object[] listShowAll() throws Exception {
+        if (!obj.getListAll().isEmpty()) {
+            PuntoEntrega[] lista = (PuntoEntrega[]) obj.getListAll().toArray();
+            Object[] respuesta = new Object[lista.length];
+            for (int i = 0; i < lista.length; i++) {
+                Cliente c = new ClienteServices().get(lista[i].getIdCliente());
+                HashMap mapa = new HashMap();
+                mapa.put("id", lista[i].getId());
+                mapa.put("callePrincipal", lista[i].getCallePrincipal());
+                mapa.put("calleSecundaria", lista[i].getCalleSecundaria());
+                mapa.put("num", lista[i].getNum());
+                mapa.put("referencia", lista[i].getReferencia());
+                mapa.put("cliente", c);
+                respuesta[i] = mapa;
+            }
+            return respuesta;
+        }
+        return new Object[] {};
+    }
 
     public PuntoEntregaServices() {
         this.obj = new PuntoEntregaDao();

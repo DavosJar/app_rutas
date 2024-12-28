@@ -12,24 +12,24 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.app_rutas.controller.dao.services.ConductorAsignadoServices;
+import com.app_rutas.controller.dao.services.ConductorVehiculoServices;
 import com.app_rutas.controller.dao.services.ConductorServices;
 import com.app_rutas.controller.dao.services.ItinerarioServices;
 import com.app_rutas.controller.dao.services.VehiculoServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
 import com.app_rutas.controller.tda.list.LinkedList;
-import com.app_rutas.models.ConductorAsignado;
+import com.app_rutas.models.ConductorVehiculo;
 import com.google.gson.Gson;
 
-@Path("/conductor-asignado")
-public class ConductorAsignadoApi {
+@Path("/conductor-vehiculo")
+public class ConductorVehiculoApi {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
     public Response getAll() throws ListEmptyException, Exception {
         HashMap res = new HashMap<>();
-        ConductorAsignadoServices ps = new ConductorAsignadoServices();
+        ConductorVehiculoServices ps = new ConductorVehiculoServices();
         try {
             res.put("status", "success");
             res.put("message", "Consulta realizada con exito.");
@@ -42,23 +42,12 @@ public class ConductorAsignadoApi {
         }
     }
 
-    @Path("/listType")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getType() {
-        HashMap map = new HashMap<>();
-        ConductorAsignadoServices ps = new ConductorAsignadoServices();
-        map.put("msg", "OK");
-        map.put("data", ps.getEstadoEnum());
-        return Response.ok(map).build();
-    }
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/get/{id}")
     public Response getById(@PathParam("id") Integer id) {
         HashMap<String, Object> map = new HashMap<>();
-        ConductorAsignadoServices ps = new ConductorAsignadoServices();
+        ConductorVehiculoServices ps = new ConductorVehiculoServices();
         try {
             if (id == null || id < 1) {
                 map.put("msg", "ID invalido");
@@ -94,7 +83,7 @@ public class ConductorAsignadoApi {
                 cs.setConductor(cs.getConductorById(Integer.parseInt(map.get("conductor").toString())));
 
                 if (pes.getVehiculo().getId() != null && cs.getConductor().getId() != null) {
-                    ConductorAsignadoServices ps = new ConductorAsignadoServices();
+                    ConductorVehiculoServices ps = new ConductorVehiculoServices();
                     if (map.get("fechaAsignacion") == null || map.get("fechaAsignacion").toString().isEmpty()) {
                         throw new IllegalArgumentException("El campo 'fechaAsignacion' es obligatorio.");
                     }
@@ -104,9 +93,6 @@ public class ConductorAsignadoApi {
                         throw new IllegalArgumentException("El campo 'fechaDeBaja' es obligatorio.");
                     }
                     ps.getConductor().setFechaDeBaja(map.get("fechaDeBaja").toString());
-                    if (map.get("estado") != null) {
-                        ps.getConductor().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
-                    }
                     ps.getConductor().setIdVehiculo(pes.getVehiculo().getId());
                     ps.getConductor().setIdConductor(cs.getConductor().getId());
                     ps.save();
@@ -137,7 +123,7 @@ public class ConductorAsignadoApi {
     @Path("/{id}/delete")
     public Response delete(@PathParam("id") Integer id) {
         HashMap<String, Object> res = new HashMap<>();
-        ConductorAsignadoServices ps = new ConductorAsignadoServices();
+        ConductorVehiculoServices ps = new ConductorVehiculoServices();
         try {
             ps.getConductor().setId(id);
             ps.delete();
@@ -159,7 +145,7 @@ public class ConductorAsignadoApi {
     public Response update(HashMap map) {
         HashMap res = new HashMap<>();
         try {
-            ConductorAsignadoServices ps = new ConductorAsignadoServices();
+            ConductorVehiculoServices ps = new ConductorVehiculoServices();
             ps.setConductor(ps.get(Integer.parseInt(map.get("id").toString())));
             if (ps.getConductor().getId() == null) {
                 res.put("msg", "Error");
@@ -174,7 +160,6 @@ public class ConductorAsignadoApi {
                     if (pes.getVehiculo().getId() != null && cs.getConductor().getId() != null) {
                         ps.getConductor().setFechaAsignacion(map.get("fechaAsignacion").toString());
                         ps.getConductor().setFechaDeBaja(map.get("fechaDeBaja").toString());
-                        ps.getConductor().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
                         ps.getConductor().setIdVehiculo(pes.getVehiculo().getId());
                         ps.getConductor().setIdConductor(cs.getConductor().getId());
                         ps.update();
@@ -205,10 +190,10 @@ public class ConductorAsignadoApi {
     @Path("/search/{attribute}/{value}")
     public Response binarySearchLin(@PathParam("attribute") String attribute, @PathParam("value") String value) {
         HashMap<String, Object> map = new HashMap<>();
-        ConductorAsignadoServices ps = new ConductorAsignadoServices();
+        ConductorVehiculoServices ps = new ConductorVehiculoServices();
 
         try {
-            LinkedList<ConductorAsignado> results;
+            LinkedList<ConductorVehiculo> results;
             try {
                 results = ps.buscar(attribute, value);
             } catch (NumberFormatException e) {

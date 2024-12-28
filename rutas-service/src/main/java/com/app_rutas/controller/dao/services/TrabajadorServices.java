@@ -1,21 +1,21 @@
 package com.app_rutas.controller.dao.services;
 
-import com.app_rutas.controller.dao.PersonaDao;
+import com.app_rutas.controller.dao.TrabajadorDao;
 import com.app_rutas.controller.tda.list.LinkedList;
-import com.app_rutas.models.Persona;
+import com.app_rutas.models.Trabajador;
 import com.app_rutas.models.enums.Sexo;
 import com.app_rutas.models.enums.TipoIdentificacion;
 
-public class PersonaServices {
+public class TrabajadorServices {
 
     @SuppressWarnings("FieldMayBeFinal")
-    private PersonaDao obj;
+    private TrabajadorDao obj;
 
-    public PersonaServices() {
-        obj = new PersonaDao();
+    public TrabajadorServices() {
+        obj = new TrabajadorDao();
     }
 
-    public Persona getPersona() {
+    public Trabajador getPersona() {
         return obj.getPersona();
     }
 
@@ -27,15 +27,15 @@ public class PersonaServices {
         return obj.delete();
     }
 
-    public LinkedList<Persona> listAll() throws Exception {
+    public LinkedList<Trabajador> listAll() throws Exception {
         return obj.getListAll();
     }
 
-    public void setPersona(Persona Pprsona) {
+    public void setPersona(Trabajador Pprsona) {
         obj.setPersona(Pprsona);
     }
 
-    public Persona getPersonaById(Integer id) throws Exception {
+    public Trabajador getPersonaById(Integer id) throws Exception {
         return obj.getPersonaById(id);
 
     }
@@ -45,15 +45,15 @@ public class PersonaServices {
 
     }
 
-    public LinkedList<Persona> getPersonasBy(String atributo, Object valor) throws Exception {
+    public LinkedList<Trabajador> getPersonasBy(String atributo, Object valor) throws Exception {
         return obj.buscar(atributo, valor);
     }
 
-    public LinkedList<Persona> order(String atributo, Integer type) throws Exception {
+    public LinkedList<Trabajador> order(String atributo, Integer type) throws Exception {
         return obj.order(atributo, type);
     }
 
-    public Persona obtenerPersonaPor(String atributo, Object valor) throws Exception {
+    public Trabajador obtenerPersonaPor(String atributo, Object valor) throws Exception {
         return obj.buscarPor(atributo, valor);
     }
 

@@ -1,14 +1,12 @@
 package com.app_rutas.models;
 
-import com.app_rutas.models.enums.ConductorEstado;
 
-public class ConductorAsignado {
+public class ConductorVehiculo {
     private Integer id;
     private Integer idVehiculo;
     private Integer idConductor;
     private String fechaAsignacion;
     private String fechaDeBaja;
-    private ConductorEstado estado;
 
     public Integer getId() {
         return this.id;
@@ -49,13 +47,4 @@ public class ConductorAsignado {
     public void setFechaDeBaja(String fechaDeBaja) {
         this.fechaDeBaja = fechaDeBaja;
     }
-
-    public ConductorEstado getEstado() {
-        return this.estado;
-    }
-
-    public void setEstado(ConductorEstado estado) {
-        this.estado = estado;
-    }
-
 }
