@@ -32,7 +32,8 @@ public class ConductorApi {
             if (ps.listAll().isEmpty()) {
                 res.put("data", new Object[] {});
             }
-            // ev.registrarEvento(TipoCrud.LIST, "Se ha consultado la lista de conductors.");
+            // ev.registrarEvento(TipoCrud.LIST, "Se ha consultado la lista de
+            // conductors.");
             return Response.ok(res).build();
         } catch (Exception e) {
             res.put("status", "ERROR");
@@ -104,10 +105,25 @@ public class ConductorApi {
             if (map.get("sexo") != null) {
                 ps.getConductor().setSexo(ps.getSexo(map.get("sexo").toString()));
             }
-
+            if (map.get("licenciaConducir") != null) {
+                ps.getConductor().setLicenciaConducir(map.get("licenciaConducir").toString());
+            }
+            if (map.get("caducidadLicencia") != null) {
+                ps.getConductor().setCaducidadLicencia(map.get("caducidadLicencia").toString());
+            }
+            if (map.get("salario") != null) {
+                ps.getConductor().setSalario(Float.valueOf(map.get("salario").toString()));
+            }
+            if (map.get("turno") != null) {
+                ps.getConductor().setTurno(ps.getTurno(map.get("turno").toString()));
+            }
+            if (map.get("estado") != null) {
+                ps.getConductor().setEstado(ps.getEstado(map.get("estado").toString()));
+            }
+            //System.out.println("datos: " + ps.getConductor().getLicenciaConducir());
             ps.save();
             res.put("estado", "Ok");
-            res.put("data", "Registro guardado con exito.");
+            res.put("data", "Conductor guardado con exito.");
             return Response.ok(res).build();
         } catch (IllegalArgumentException e) {
             res.put("estado", "error");
@@ -131,7 +147,7 @@ public class ConductorApi {
             ps.getConductor().setId(id);
             ps.delete();
             res.put("estado", "Ok");
-            res.put("data", "Registro eliminado con exito.");
+            res.put("data", "Conductor eliminado con exito.");
 
             return Response.ok(res).build();
         } catch (Exception e) {
@@ -179,7 +195,22 @@ public class ConductorApi {
                 if (map.get("sexo") == null || map.get("sexo").toString().isEmpty()) {
                     throw new IllegalArgumentException("El campo 'sexo' es obligatorio.");
                 }
-                System.out.println("falta alguin dato");
+                if (map.get("licenciaConducir") == null || map.get("licenciaConducir").toString().isEmpty()) {
+                    throw new IllegalArgumentException("El campo 'licenciaConducir' es obligatorio.");
+                }
+                if (map.get("caducidadLicencia") == null || map.get("caducidadLicencia").toString().isEmpty()) {
+                    throw new IllegalArgumentException("El campo 'caducidadLicencia' es obligatorio.");
+                }
+                if (map.get("salario") == null || map.get("salario").toString().isEmpty()) {
+                    throw new IllegalArgumentException("El campo 'salario' es obligatorio.");
+                }
+                if (map.get("turno") == null || map.get("turno").toString().isEmpty()) {
+                    throw new IllegalArgumentException("El campo 'turno' es obligatorio.");
+                }
+                if (map.get("estado") == null || map.get("estado").toString().isEmpty()) {
+                    throw new IllegalArgumentException("Elsave campo 'estado' es obligatorio.");
+                }
+                //System.out.println("falta alguin dato");
                 ps.setConductor(ps.getConductorById(Integer.valueOf(map.get("id").toString())));
                 ps.getConductor().setNombre(map.get("nombre").toString());
                 ps.getConductor().setApellido(map.get("apellido").toString());
@@ -193,7 +224,7 @@ public class ConductorApi {
 
                 ps.update();
                 res.put("estado", "Ok");
-                res.put("data", "Registro actualizado con exito.");
+                res.put("data", "Conductor actualizado con exito.");
                 return Response.ok(res).build();
             } catch (Exception e) {
                 res.put("estado", "error");
@@ -302,5 +333,27 @@ public class ConductorApi {
         map.put("msg", "OK");
         map.put("data", ps.getConductorAttributeLists());
         return Response.ok(map).build();
-    }    
+    }
+
+    @Path("/turno")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getType() {
+        HashMap map = new HashMap<>();
+        ConductorServices ps = new ConductorServices();
+        map.put("msg", "OK");
+        map.put("data", ps.getTurnos());
+        return Response.ok(map).build();
+    }
+
+    @Path("/estado")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEstadoC() {
+        HashMap map = new HashMap<>();
+        ConductorServices ps = new ConductorServices();
+        map.put("msg", "OK");
+        map.put("data", ps.getEstados());
+        return Response.ok(map).build();
+    }
 }

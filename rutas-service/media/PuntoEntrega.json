@@ -1,1 +1,1 @@
-[{"id":2,"nombre":"Debemos quitar este campo","ciudad":"Quito","latitud":10.0,"longitud":12.0,"direccion":"Las viudas"},{"id":3,"nombre":"Debemos quitar este campo","ciudad":"Guayakil","latitud":10.0,"longitud":12.0,"direccion":"Las viudas"}]
+[{"id":8,"idCliente":1,"num":"123","callePrincipal":"Av. Principal","calleSecundaria":"Calle Secundaria","referencia":"Cerca del parque"}]

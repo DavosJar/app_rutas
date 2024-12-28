@@ -3,7 +3,7 @@ package com.app_rutas.models;
 import com.app_rutas.models.enums.Sexo;
 import com.app_rutas.models.enums.TipoIdentificacion;
 
-public class Persona {
+public class Trabajador {
 
     private Integer id;
     private String nombre;
@@ -16,7 +16,7 @@ public class Persona {
     private String email;
     private Sexo sexo;
 
-    public Persona() {
+    public Trabajador() {
     }
 
     public Integer getId() {

@@ -3,7 +3,7 @@ package com.app_rutas.controller.dao.services;
 import java.util.HashMap;
 
 import com.app_rutas.controller.dao.ItinerarioDao;
-import com.app_rutas.models.ConductorAsignado;
+import com.app_rutas.models.ConductorVehiculo;
 import com.app_rutas.models.Itinerario;
 import com.app_rutas.models.enums.ItinerarioEstadoEnum;
 import com.app_rutas.controller.tda.list.LinkedList;
@@ -16,11 +16,11 @@ public class ItinerarioServices {
             Itinerario[] lista = (Itinerario[]) obj.getListAll().toArray();
             Object[] respuesta = new Object[lista.length];
             for (int i = 0; i < lista.length; i++) {
-                ConductorAsignado c = new ConductorAsignadoServices().get(lista[i].getIdConductorAsignado());
+                ConductorVehiculo c = new ConductorVehiculoServices().get(lista[i].getIdConductorAsignado());
                 HashMap mapa = new HashMap();
                 mapa.put("id", lista[i].getId());
-                mapa.put("horaInicio", lista[i].getHoraIncio());
-                mapa.put("duracionEstimada", lista[i].getDuracionEstimada());
+                mapa.put("detallesEntrega", lista[i].getDetallesEntrega());
+                mapa.put("fechaGeneracion", lista[i].getFechaGeneracion());
                 mapa.put("estado", lista[i].getEstado());
                 mapa.put("idConductorAsignado", c);
                 respuesta[i] = mapa;

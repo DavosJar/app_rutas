@@ -22,7 +22,6 @@ public class PedidoServices {
                 PuntoEntrega p = new PuntoEntregaServices().get(lista[i].getIdPuntoEntrega());
                 Itinerario it = new ItinerarioServices().get(lista[i].getIdItinerario());
                 HashMap mapa = new HashMap();
-                mapa.put("id", lista[i].getId());
                 mapa.put("contenido", lista[i].getContenido());
                 mapa.put("fechaRegistro", lista[i].getFechaRegistro());
                 mapa.put("pesoTotal", lista[i].getPesoTotal());

@@ -12,18 +12,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.app_rutas.controller.dao.services.PersonaServices;
+import com.app_rutas.controller.dao.services.TrabajadorServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
 
 @Path("/persona")
-public class PersonaApi {
+public class TrabajadorApi {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
     public Response getAllProyects() throws ListEmptyException, Exception {
         HashMap<String, Object> res = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
         // EventoCrudServices ev = new EventoCrudServices();
         try {
             res.put("status", "OK");
@@ -47,7 +47,7 @@ public class PersonaApi {
     @Path("/get/{id}")
     public Response getPersonaById(@PathParam("id") Integer id) throws Exception {
         HashMap<String, Object> map = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
         try {
             map.put("msg", "OK");
             map.put("data", ps.getPersonaById(id));
@@ -70,7 +70,7 @@ public class PersonaApi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(HashMap<String, Object> map) {
         HashMap<String, Object> res = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
 
         try {
             if (map.get("nombre") == null || map.get("nombre").toString().isEmpty()) {
@@ -126,7 +126,7 @@ public class PersonaApi {
     public Response delete(@PathParam("id") Integer id) throws Exception {
 
         HashMap<String, Object> res = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
         try {
             ps.getPersona().setId(id);
             ps.delete();
@@ -146,7 +146,7 @@ public class PersonaApi {
     @Path("/update")
     public Response update(HashMap<String, Object> map) throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
         if (ps.getPersonaById(Integer.valueOf(map.get("id").toString())) != null) {
             try {
                 if (map.get("id") == null || map.get("id").toString().isEmpty()) {
@@ -212,7 +212,7 @@ public class PersonaApi {
     @Path("/list/search/ident/{identificacion}")
     public Response searchPersona(@PathParam("identificacion") String identificacion) throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
         try {
             res.put("estado", "Ok");
             res.put("data", ps.obtenerPersonaPor("identificacion", identificacion));
@@ -235,7 +235,7 @@ public class PersonaApi {
     public Response buscarPersonas(@PathParam("atributo") String atributo, @PathParam("valor") String valor)
             throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
         try {
             res.put("estado", "Ok");
             res.put("data", ps.getPersonasBy(atributo, valor).toArray());
@@ -256,7 +256,7 @@ public class PersonaApi {
     public Response ordenarPersonas(@PathParam("atributo") String atributo, @PathParam("orden") Integer orden)
             throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
         try {
             res.put("estado", "Ok");
             res.put("data", ps.order(atributo, orden).toArray());
@@ -276,7 +276,7 @@ public class PersonaApi {
     @Path("/sexo")
     public Response getSexo() throws ListEmptyException, Exception {
         HashMap<String, Object> map = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
         map.put("msg", "OK");
         map.put("data", ps.getSexos());
         return Response.ok(map).build();
@@ -287,7 +287,7 @@ public class PersonaApi {
     @Path("/tipoidentificacion")
     public Response geTipos() throws ListEmptyException, Exception {
         HashMap<String, Object> map = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
         map.put("msg", "OK");
         map.put("data", ps.getTipos());
         return Response.ok(map).build();
@@ -298,7 +298,7 @@ public class PersonaApi {
     @Path("/criterios")
     public Response getCriterios() throws ListEmptyException, Exception {
         HashMap<String, Object> map = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
+        TrabajadorServices ps = new TrabajadorServices();
         map.put("msg", "OK");
         map.put("data", ps.getPersonaAttributeLists());
         return Response.ok(map).build();

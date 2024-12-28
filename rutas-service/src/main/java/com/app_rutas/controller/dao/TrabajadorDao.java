@@ -3,33 +3,33 @@ package com.app_rutas.controller.dao;
 import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
 import com.app_rutas.controller.tda.list.LinkedList;
-import com.app_rutas.models.Persona;
+import com.app_rutas.models.Trabajador;
 import com.app_rutas.models.enums.Sexo;
 import com.app_rutas.models.enums.TipoIdentificacion;
 import com.google.gson.Gson;
 import java.lang.reflect.Method;
 
 @SuppressWarnings({ "unchecked", "ConvertToTryWithResources" })
-public class PersonaDao extends AdapterDao<Persona> {
-    private Persona persona;
-    private LinkedList<Persona> listAll;
+public class TrabajadorDao extends AdapterDao<Trabajador> {
+    private Trabajador persona;
+    private LinkedList<Trabajador> listAll;
 
-    public PersonaDao() {
-        super(Persona.class);
+    public TrabajadorDao() {
+        super(Trabajador.class);
     }
 
-    public Persona getPersona() {
+    public Trabajador getPersona() {
         if (this.persona == null) {
-            this.persona = new Persona();
+            this.persona = new Trabajador();
         }
         return this.persona;
     }
 
-    public void setPersona(Persona persona) {
+    public void setPersona(Trabajador persona) {
         this.persona = persona;
     }
 
-    public LinkedList<Persona> getListAll() throws Exception {
+    public LinkedList<Trabajador> getListAll() throws Exception {
         if (listAll == null) {
             this.listAll = listAll();
         }
@@ -37,11 +37,11 @@ public class PersonaDao extends AdapterDao<Persona> {
     }
 
     public boolean save() throws Exception {
-        Integer id = Contador.obtenerValorActual(Persona.class);
+        Integer id = Contador.obtenerValorActual(Trabajador.class);
         try {
             this.persona.setId(id);
             this.persist(this.persona);
-            Contador.actualizarContador(Persona.class);
+            Contador.actualizarContador(Trabajador.class);
             this.listAll = listAll();
             return true;
         } catch (Exception e) {
@@ -89,11 +89,11 @@ public class PersonaDao extends AdapterDao<Persona> {
         }
     }
 
-    private LinkedList<Persona> linearBinarySearch(String attribute, Object value) throws Exception {
-        LinkedList<Persona> lista = this.listAll().quickSort(attribute, 1);
-        LinkedList<Persona> personas = new LinkedList<>();
+    private LinkedList<Trabajador> linearBinarySearch(String attribute, Object value) throws Exception {
+        LinkedList<Trabajador> lista = this.listAll().quickSort(attribute, 1);
+        LinkedList<Trabajador> personas = new LinkedList<>();
         if (!lista.isEmpty()) {
-            Persona[] aux = lista.toArray();
+            Trabajador[] aux = lista.toArray();
             Integer low = 0;
             Integer high = aux.length - 1;
             Integer mid;
@@ -135,16 +135,16 @@ public class PersonaDao extends AdapterDao<Persona> {
         return personas;
     }
 
-    public LinkedList<Persona> buscar(String attribute, Object value) throws Exception {
+    public LinkedList<Trabajador> buscar(String attribute, Object value) throws Exception {
         return linearBinarySearch(attribute, value);
     }
 
-    public Persona buscarPor(String attribute, Object value) throws Exception {
-        LinkedList<Persona> lista = listAll();
-        Persona p = null;
+    public Trabajador buscarPor(String attribute, Object value) throws Exception {
+        LinkedList<Trabajador> lista = listAll();
+        Trabajador p = null;
 
         if (!lista.isEmpty()) {
-            Persona[] personas = lista.toArray();
+            Trabajador[] personas = lista.toArray();
             for (int i = 0; i < personas.length; i++) {
                 if (obtenerAttributeValue(personas[i], attribute).toString().toLowerCase()
                         .equals(value.toString().toLowerCase())) {
@@ -162,7 +162,7 @@ public class PersonaDao extends AdapterDao<Persona> {
         }
         Integer index = -1;
         if (!this.listAll.isEmpty()) {
-            Persona[] personas = this.listAll.toArray();
+            Trabajador[] personas = this.listAll.toArray();
             for (int i = 0; i < personas.length; i++) {
                 if (obtenerAttributeValue(personas[i], attribute).toString().toLowerCase()
                         .equals(value.toString().toLowerCase())) {
@@ -190,7 +190,7 @@ public class PersonaDao extends AdapterDao<Persona> {
 
     public String[] getPersonaAttributeLists() {
         LinkedList<String> attributes = new LinkedList<>();
-        for (Method m : Persona.class.getDeclaredMethods()) {
+        for (Method m : Trabajador.class.getDeclaredMethods()) {
             if (m.getName().startsWith("get")) {
                 String attribute = m.getName().substring(3);
                 if (!attribute.equalsIgnoreCase("id")) {
@@ -201,8 +201,8 @@ public class PersonaDao extends AdapterDao<Persona> {
         return attributes.toArray();
     }
 
-    public LinkedList<Persona> order(String attribute, Integer type) throws Exception {
-        LinkedList<Persona> lista = listAll();
+    public LinkedList<Trabajador> order(String attribute, Integer type) throws Exception {
+        LinkedList<Trabajador> lista = listAll();
         return lista.isEmpty() ? lista : lista.mergeSort(attribute, type);
     }
 
@@ -211,7 +211,7 @@ public class PersonaDao extends AdapterDao<Persona> {
         return g.toJson(this.persona);
     }
 
-    public Persona getPersonaById(Integer id) throws Exception {
+    public Trabajador getPersonaById(Integer id) throws Exception {
         return get(id);
     }
 

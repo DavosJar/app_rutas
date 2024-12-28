@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.app_rutas.controller.dao.services.ClienteServices;
 import com.app_rutas.controller.dao.services.PuntoEntregaServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
 import com.app_rutas.controller.tda.list.LinkedList;
@@ -29,7 +30,7 @@ public class PuntoEntregaApi {
         try {
             res.put("status", "success");
             res.put("message", "Consulta realizada con exito.");
-            res.put("data", ps.listAll().toArray());
+            res.put("data", ps.listShowAll());
             return Response.ok(res).build();
         } catch (Exception e) {
             res.put("status", "error");
@@ -69,32 +70,40 @@ public class PuntoEntregaApi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(HashMap map) {
         HashMap res = new HashMap<>();
-        PuntoEntregaServices ps = new PuntoEntregaServices();
+        PuntoEntregaServices pes = new PuntoEntregaServices();
 
         try {
-            if (map.get("ciudad") == null || map.get("ciudad").toString().isEmpty()) {
-                throw new IllegalArgumentException("El campo 'ciudad' es obligatorio.");
+            if (map.get("cliente") != null) {
+                ClienteServices c = new ClienteServices();
+                c.setCliente(c.get(Integer.parseInt(map.get("cliente").toString())));
+                if (c.getCliente() == null || c.getCliente().getId() == null) {
+                    throw new IllegalArgumentException("No existe un cliente con el ID proporcionado");
+                }
             }
-            ps.getPuntoEntrega().setCiudad(map.get("ciudad").toString());
-
-            if (map.get("direccion") == null || map.get("direccion").toString().isEmpty()) {
-                throw new IllegalArgumentException("El campo 'direccion' es obligatorio.");
+            if (map.get("num") == null || map.get("num").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'num' no puede estar vacío.");
             }
-            ps.getPuntoEntrega().setDireccion(map.get("direccion").toString());
-
-            if (map.get("nombre") != null) {
-                ps.getPuntoEntrega().setNombre(map.get("nombre").toString());
+            if (map.get("callePrincipal") == null || map.get("callePrincipal").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'callePrincipal' no puede estar vacío.");
             }
-            if (map.get("latitud") != null) {
-                ps.getPuntoEntrega().setLatitud(Double.parseDouble(map.get("latitud").toString()));
+            if (map.get("calleSecundaria") == null || map.get("calleSecundaria").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'calleSecundaria' no puede estar vacío.");
             }
-            if (map.get("longitud") != null) {
-                ps.getPuntoEntrega().setLongitud(Double.parseDouble(map.get("longitud").toString()));
+            if (map.get("referencia") == null || map.get("referencia").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'referencia' no puede estar vacío.");
             }
-            ps.save();
+            pes.getPuntoEntrega().setNum(map.get("num").toString());
+            pes.getPuntoEntrega().setCallePrincipal(map.get("callePrincipal").toString());
+            pes.getPuntoEntrega().setCalleSecundaria(map.get("calleSecundaria").toString());
+            pes.getPuntoEntrega().setReferencia(map.get("referencia").toString());
+            if (map.get("cliente") != null) {
+                pes.getPuntoEntrega().setIdCliente(Integer.parseInt(map.get("cliente").toString()));
+            }
+            pes.save();
             res.put("estado", "Ok");
-            res.put("data", "Registro guardado con exito.");
+            res.put("data", "Registro guardado con éxito.");
             return Response.ok(res).build();
+
         } catch (IllegalArgumentException e) {
             res.put("estado", "error");
             res.put("data", e.getMessage());
@@ -135,15 +144,39 @@ public class PuntoEntregaApi {
         try {
             PuntoEntregaServices ps = new PuntoEntregaServices();
             ps.setPuntoEntrega(ps.get(Integer.parseInt(map.get("id").toString())));
-            ps.getPuntoEntrega().setCiudad(map.get("ciudad").toString());
-            ps.getPuntoEntrega().setDireccion(map.get("direccion").toString());
-            ps.getPuntoEntrega().setNombre(map.get("nombre").toString());
-            ps.getPuntoEntrega().setLatitud(Double.parseDouble(map.get("latitud").toString()));
-            ps.getPuntoEntrega().setLongitud(Double.parseDouble(map.get("longitud").toString()));
+            if (ps.getPuntoEntrega() == null || ps.getPuntoEntrega().getId() == null) {
+                res.put("status", "error");
+                res.put("message", "No existe punto de entrega con el ID proporcionado");
+                return Response.status(Status.NOT_FOUND).entity(res).build();
+            }
+            if (map.get("num") == null || map.get("num").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'num' no puede estar vacío.");
+            }
+            if (map.get("callePrincipal") == null || map.get("callePrincipal").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'callePrincipal' no puede estar vacío.");
+            }
+            if (map.get("calleSecundaria") == null || map.get("calleSecundaria").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'calleSecundaria' no puede estar vacío.");
+            }
+            if (map.get("referencia") == null || map.get("referencia").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'referencia' no puede estar vacío.");
+            }
+            ps.getPuntoEntrega().setNum(map.get("num").toString());
+            ps.getPuntoEntrega().setCallePrincipal(map.get("callePrincipal").toString());
+            ps.getPuntoEntrega().setCalleSecundaria(map.get("calleSecundaria").toString());
+            ps.getPuntoEntrega().setReferencia(map.get("referencia").toString());
+            if (map.get("cliente") != null) {
+                ps.getPuntoEntrega().setIdCliente(Integer.parseInt(map.get("cliente").toString()));
+            }
             ps.update();
             res.put("status", "success");
-            res.put("message", "Punto de entrega actualizado con exito.");
+            res.put("message", "Punto de entrega actualizado con éxito.");
             return Response.ok(res).build();
+
+        } catch (IllegalArgumentException e) {
+            res.put("status", "error");
+            res.put("message", e.getMessage());
+            return Response.status(Status.BAD_REQUEST).entity(res).build();
         } catch (Exception e) {
             res.put("status", "error");
             res.put("message", "Error interno del servidor: " + e.getMessage());

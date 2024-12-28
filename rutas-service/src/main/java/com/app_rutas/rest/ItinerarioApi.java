@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.app_rutas.controller.dao.services.ConductorAsignadoServices;
+import com.app_rutas.controller.dao.services.ConductorVehiculoServices;
 import com.app_rutas.controller.dao.services.ItinerarioServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
 import com.app_rutas.controller.tda.list.LinkedList;
@@ -83,25 +83,23 @@ public class ItinerarioApi {
         HashMap<String, Object> res = new HashMap<>();
 
         try {
-            if (map.get("conductor-asignado") != null) {
-                ConductorAsignadoServices cas = new ConductorAsignadoServices();
-                cas.setConductor(cas.get(Integer.parseInt(map.get("").toString())));
+            if (map.get("idConductorAsignado") != null) {
+                ConductorVehiculoServices cas = new ConductorVehiculoServices();
+                cas.setConductor(cas.get(Integer.parseInt(map.get("idConductorAsignado").toString())));
                 if (cas.getConductor().getId() != null) {
                     ItinerarioServices ps = new ItinerarioServices();
 
-                    if (map.get("horaInicio") == null || map.get("horaInicio").toString().isEmpty()) {
-                        throw new IllegalArgumentException("El campo 'horaInicio' es obligatorio.");
+                    if (map.get("detallesEntrega") == null || map.get("detallesEntrega").toString().isEmpty()) {
+                        throw new IllegalArgumentException("El campo 'detallesEntrega' es obligatorio.");
                     }
-                    ps.getItinerario().setHoraIncio(map.get("horaInicio").toString());
-
-                    if (map.get("duracionEstimada") == null || map.get("duracionEstimada").toString().isEmpty()) {
-                        throw new IllegalArgumentException("El campo 'duracionEstimada' es obligatorio.");
+                    if (map.get("fechaGeneracion") == null || map.get("fechaGeneracion").toString().isEmpty()) {
+                        throw new IllegalArgumentException("El campo 'fechaGeneracion' es obligatorio.");
                     }
-                    ps.getItinerario().setDuracionEstimada(map.get("duracionEstimada").toString());
-
                     if (map.get("estado") != null) {
                         ps.getItinerario().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
                     }
+                    ps.getItinerario().setDetallesEntrega(map.get("detallesEntrega").toString());
+                    ps.getItinerario().setFechaGeneracion(map.get("fechaGeneracion").toString());
                     ps.getItinerario().setIdConductorAsignado(cas.getConductor().getId());
                     ps.save();
                     res.put("estado", "Ok");
@@ -163,11 +161,15 @@ public class ItinerarioApi {
                 return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
             } else {
                 if (map.get("conductor-asignado") != null) {
-                    ConductorAsignadoServices cas = new ConductorAsignadoServices();
+                    ConductorVehiculoServices cas = new ConductorVehiculoServices();
                     cas.setConductor(cas.get(Integer.parseInt(map.get("conductor-asignado").toString())));
                     if (cas.getConductor().getId() != null) {
-                        ps.getItinerario().setHoraIncio(map.get("horaInicio").toString());
-                        ps.getItinerario().setDuracionEstimada(map.get("duracionEstimada").toString());
+                        if (map.get("detallesEntrega") != null) {
+                            ps.getItinerario().setDetallesEntrega(map.get("detallesEntrega").toString());
+                        }
+                        if (map.get("fechaGeneracion") != null) {
+                            ps.getItinerario().setFechaGeneracion(map.get("fechaGeneracion").toString());
+                        }
                         ps.getItinerario().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
                         ps.getItinerario().setIdConductorAsignado(cas.getConductor().getId());
                         ps.update();

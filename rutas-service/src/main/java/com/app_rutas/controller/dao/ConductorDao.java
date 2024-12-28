@@ -4,6 +4,8 @@ import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Conductor;
+import com.app_rutas.models.enums.ConductorTurnoEnum;
+import com.app_rutas.models.enums.EstadoConductor;
 import com.app_rutas.models.enums.Sexo;
 import com.app_rutas.models.enums.TipoIdentificacion;
 import com.google.gson.Gson;
@@ -234,6 +236,22 @@ public class ConductorDao extends AdapterDao<Conductor> {
 
     public Sexo[] getSexos() {
         return Sexo.values();
+    }
+
+    public EstadoConductor getEstado(String estado) {
+        return EstadoConductor.valueOf(estado);
+    }
+
+    public EstadoConductor[] getEstados() {
+        return EstadoConductor.values();
+    }
+
+    public ConductorTurnoEnum getTurno(String turno) {
+        return ConductorTurnoEnum.valueOf(turno);
+    }
+
+    public ConductorTurnoEnum[] getTurnos() {
+        return ConductorTurnoEnum.values();
     }
 
     public String getConductorJson(Integer Index) throws Exception {

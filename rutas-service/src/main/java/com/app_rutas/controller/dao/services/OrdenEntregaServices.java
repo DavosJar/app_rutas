@@ -1,12 +1,36 @@
 package com.app_rutas.controller.dao.services;
 
+import java.util.HashMap;
+
 import com.app_rutas.controller.dao.OrdenEntregaDao;
 import com.app_rutas.models.OrdenEntrega;
+import com.app_rutas.models.Pedido;
 import com.app_rutas.models.enums.EstadoEnum;
 import com.app_rutas.controller.tda.list.LinkedList;
 
 public class OrdenEntregaServices {
     private OrdenEntregaDao obj;
+
+    public Object[] listShowAll()throws Exception{
+        if (!obj.getListAll().isEmpty()) {
+            OrdenEntrega[] lista = (OrdenEntrega[]) obj.getListAll().toArray();
+            Object[] respuesta = new Object[lista.length];
+            for(int i =0; i < lista.length; i++){
+                Pedido p = new PedidoServices().get(lista[i].getIdPedido());
+                HashMap mapa = new HashMap();
+                mapa.put("id", lista[i].getId());
+                mapa.put("fechaProgramada", lista[i].getFechaProgramada());
+                mapa.put("horaProgramada", lista[i].getHoraProgramada());
+                mapa.put("receptor", lista[i].getReceptor());
+                mapa.put("observaciones", lista[i].getObservaciones());
+                mapa.put("estado", lista[i].getEstado());
+                mapa.put("pedido", p);
+                respuesta[i] = mapa;
+            }
+            return respuesta;
+        }
+        return new Object[] {};
+    }
 
     public OrdenEntregaServices() {
         this.obj = new OrdenEntregaDao();

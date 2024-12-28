@@ -1,6 +1,6 @@
 package com.app_rutas.models.enums;
 
-public enum ConductorEstado {
+public enum EstadoConductor {
     ACTIVO("ACTIVO"),
     INACTIVO("INACTIVO"),
     SUSPENDIDO("SUSPENDIDO"),
@@ -8,7 +8,7 @@ public enum ConductorEstado {
 
     private String estado;
 
-    private ConductorEstado(String estado) {
+    private EstadoConductor(String estado) {
         this.estado = estado;
     }
 

@@ -5,8 +5,8 @@ import com.app_rutas.models.enums.ItinerarioEstadoEnum;
 public class Itinerario {
     private Integer id;
     private Integer idConductorAsignado;
-    private String horaIncio;
-    private String duracionEstimada;
+    private String fechaGeneracion;
+    private String detallesEntrega;
     private ItinerarioEstadoEnum estado;
 
     public Integer getId() {
@@ -24,21 +24,20 @@ public class Itinerario {
     public void setIdConductorAsignado(Integer idConductorAsignado) {
         this.idConductorAsignado = idConductorAsignado;
     }
-
-    public String getHoraIncio() {
-        return this.horaIncio;
+    public String getFechaGeneracion() {
+        return this.fechaGeneracion;
     }
 
-    public void setHoraIncio(String horaIncio) {
-        this.horaIncio = horaIncio;
+    public void setFechaGeneracion(String fechaGeneracion) {
+        this.fechaGeneracion = fechaGeneracion;
     }
 
-    public String getDuracionEstimada() {
-        return this.duracionEstimada;
+    public String getDetallesEntrega() {
+        return this.detallesEntrega;
     }
 
-    public void setDuracionEstimada(String duracionEstimada) {
-        this.duracionEstimada = duracionEstimada;
+    public void setDetallesEntrega(String detallesEntrega) {
+        this.detallesEntrega = detallesEntrega;
     }
 
     public ItinerarioEstadoEnum getEstado() {

@@ -30,7 +30,7 @@ public class OrdenEntregaApi {
         try {
             res.put("status", "success");
             res.put("message", "Consulta realizada con exito.");
-            res.put("data", ps.listAll().toArray());
+            res.put("data", ps.listShowAll());
             return Response.ok(res).build();
         } catch (Exception e) {
             res.put("status", "error");
@@ -39,7 +39,7 @@ public class OrdenEntregaApi {
         }
     }
 
-    @Path("/listType")
+    @Path("/estado")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getType() {
@@ -84,29 +84,34 @@ public class OrdenEntregaApi {
         OrdenEntregaServices ps = new OrdenEntregaServices();
 
         try {
-            if (map.get("ubicacion") == null || map.get("ubicacion").toString().isEmpty()) {
-                throw new IllegalArgumentException("El campo 'ubicacion' es obligatorio.");
+            if (map.get("pedido") != null) {
+                PedidoServices p = new PedidoServices();
+                p.setPedido(p.get(Integer.parseInt(map.get("pedido").toString())));                
             }
-            ps.getOrdenEntrega().setUbicacionActual(map.get("ubicacion").toString());
-            ps.getOrdenEntrega().setCodigoOrdenEntrega(ps.codigoU(map.get("ubicacion").toString()));
-
-            if (map.get("fechaEntrega") == null || map.get("fechaEntrega").toString().isEmpty()) {
-                throw new IllegalArgumentException("El campo 'fechaEntrega' es obligatorio.");
+            if (map.get("fechaProgramada") == null || map.get("fechaProgramada").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'fechaProgramada' es obligatorio.");
             }
-            ps.getOrdenEntrega().setFechaEntrega(map.get("fechaEntrega").toString());
-
-            if (map.get("horaMaxima") != null) {
-                ps.getOrdenEntrega().setHoraMaxima(map.get("horaMaxima").toString());
+            if (map.get("horaProgramada") == null || map.get("horaProgramada").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'horaProgramada' es obligatorio.");
             }
-            if (map.get("horaMinima") != null) {
-                ps.getOrdenEntrega().setHoraMinima(map.get("horaMinima").toString());
+            if (map.get("receptor") == null || map.get("receptor").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'receptor' es obligatorio.");
             }
-            if (map.get("estado") != null) {
-                ps.getOrdenEntrega().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
+            if (map.get("observaciones") == null || map.get("observaciones").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'observaciones' es obligatorio.");
             }
+            if (map.get("estado") == null || map.get("estado").toString().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'estado' es obligatorio.");
+            }
+            ps.getOrdenEntrega().setFechaProgramada(map.get("fechaProgramada").toString());
+            ps.getOrdenEntrega().setHoraProgramada(map.get("horaProgramada").toString());
+            ps.getOrdenEntrega().setReceptor(map.get("receptor").toString());
+            ps.getOrdenEntrega().setObservaciones(map.get("observaciones").toString());
+            ps.getOrdenEntrega().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
+            ps.getOrdenEntrega().setIdPedido(Integer.parseInt(map.get("pedido").toString()));
             ps.save();
             res.put("estado", "Ok");
-            res.put("data", "Registro guardado con exito.");
+            res.put("data", "Orden de entrega guardado con exito.");
             return Response.ok(res).build();
         } catch (IllegalArgumentException e) {
             res.put("estado", "error");
@@ -130,7 +135,7 @@ public class OrdenEntregaApi {
             ps.delete();
             System.out.println("Orden de entrega eliminada" + id);
             res.put("estado", "Ok");
-            res.put("data", "Registro eliminado con exito.");
+            res.put("data", "Orden de entrega eliminado con exito.");
             return Response.ok(res).build();
         } catch (Exception e) {
             System.out.println("Hasta aqui llega" + ps.getOrdenEntrega().getId());
@@ -148,11 +153,30 @@ public class OrdenEntregaApi {
         try {
             OrdenEntregaServices ps = new OrdenEntregaServices();
             ps.setOrdenEntrega(ps.get(Integer.parseInt(map.get("id").toString())));
-            ps.getOrdenEntrega().setUbicacionActual(map.get("ubicacion").toString());
-            ps.getOrdenEntrega().setFechaEntrega(map.get("fechaEntrega").toString());
-            ps.getOrdenEntrega().setHoraMaxima(map.get("horaMaxima").toString());
-            ps.getOrdenEntrega().setHoraMinima(map.get("horaMinima").toString());
-            ps.getOrdenEntrega().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
+            if (ps.getOrdenEntrega() == null || ps.getOrdenEntrega().getId() == null) {
+                res.put("status", "error");
+                res.put("message", "No se ha seleccionado una orden de entrega para actualizar.");
+                return Response.status(Status.BAD_REQUEST).entity(res).build();
+            }
+            if(map.get("pedido") != null && !map.get("pedido").toString().isEmpty()) {
+                PedidoServices p = new PedidoServices();
+                p.setPedido(p.get(Integer.parseInt(map.get("pedido").toString())));
+            }
+            if (map.get("fechaProgramada") != null && !map.get("fechaProgramada").toString().isEmpty()) {
+                ps.getOrdenEntrega().setFechaProgramada(map.get("fechaProgramada").toString());
+            }
+            if (map.get("horaProgramada") != null && !map.get("horaProgramada").toString().isEmpty()) {
+                ps.getOrdenEntrega().setHoraProgramada(map.get("horaProgramada").toString());
+            }
+            if (map.get("receptor") != null && !map.get("receptor").toString().isEmpty()) {
+                ps.getOrdenEntrega().setReceptor(map.get("receptor").toString());
+            }
+            if (map.get("observaciones") != null && !map.get("observaciones").toString().isEmpty()) {
+                ps.getOrdenEntrega().setObservaciones(map.get("observaciones").toString());
+            }
+            if (map.get("estado") != null && !map.get("estado").toString().isEmpty()) {
+                ps.getOrdenEntrega().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
+            }
             ps.update();
             res.put("status", "success");
             res.put("message", "Orden actualizada con exito.");

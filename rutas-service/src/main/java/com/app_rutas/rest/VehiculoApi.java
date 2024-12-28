@@ -111,10 +111,10 @@ public class VehiculoApi {
             if (map.get("estado") != null) {
                 ps.getVehiculo().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
             }
-            if (map.get("tieneRestriccion") != null) {
-                ps.getVehiculo().setTieneRestriccion(Boolean.parseBoolean(map.get("tieneRestriccion").toString()));
+            if (map.get("refrigerado") != null) {
+                ps.getVehiculo().setRefrigerado(Boolean.parseBoolean(map.get("refrigerado").toString()));
             } else {
-                ps.getVehiculo().setTieneRestriccion(false);
+                ps.getVehiculo().setRefrigerado(false);
             }
             ps.save();
             res.put("estado", "Ok");
@@ -168,11 +168,11 @@ public class VehiculoApi {
             ps.getVehiculo().setPesoMaximo(Float.parseFloat(map.get("pesoMaximo").toString()));
             ps.getVehiculo().setPotencia(Float.parseFloat(map.get("potencia").toString()));
             ps.getVehiculo().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
-            if (map.get("tieneRestriccion") == null) {
-                ps.getVehiculo().setTieneRestriccion(false);
+            if (map.get("refrigerado") == null) {
+                ps.getVehiculo().setRefrigerado(false);
 
             } else {
-                ps.getVehiculo().setTieneRestriccion(Boolean.parseBoolean(map.get("tieneRestriccion").toString()));
+                ps.getVehiculo().setRefrigerado(Boolean.parseBoolean(map.get("refrigerado").toString()));
             }
             ps.update();
             res.put("status", "success");

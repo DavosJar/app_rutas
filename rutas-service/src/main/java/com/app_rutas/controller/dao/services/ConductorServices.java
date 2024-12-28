@@ -3,6 +3,8 @@ package com.app_rutas.controller.dao.services;
 import com.app_rutas.controller.dao.ConductorDao;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Conductor;
+import com.app_rutas.models.enums.ConductorTurnoEnum;
+import com.app_rutas.models.enums.EstadoConductor;
 import com.app_rutas.models.enums.Sexo;
 import com.app_rutas.models.enums.TipoIdentificacion;
 
@@ -79,6 +81,22 @@ public class ConductorServices {
 
     public Sexo[] getSexos() {
         return obj.getSexos();
+    }
+
+    public EstadoConductor getEstado(String estado) {
+        return obj.getEstado(estado);
+    }
+
+    public EstadoConductor[] getEstados() {
+        return obj.getEstados();
+    }
+
+    public ConductorTurnoEnum getTurno(String turno) {
+        return obj.getTurno(turno);
+    }
+
+    public ConductorTurnoEnum[] getTurnos() {
+        return obj.getTurnos();
     }
 
     public String[] getConductorAttributeLists() {
