@@ -14,7 +14,6 @@ public enum ContenidoEnum {
     CUIDADO_PERSONAL("CUIDADO_PERSONAL"),
     OTROS("OTROS");
 
-
     private String estado;
 
     private ContenidoEnum(String estado) {

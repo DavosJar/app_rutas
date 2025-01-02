@@ -8,6 +8,7 @@ public class Cuenta {
     private String altEmail;
     private String password;
     private String username;
+    private String salt;
     private Rol rol;
 
     public Integer getId() {
@@ -56,5 +57,13 @@ public class Cuenta {
 
     public void setRol(Rol rol) {
         this.rol = rol;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }

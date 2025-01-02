@@ -6,13 +6,23 @@ import com.app_rutas.models.enums.EstadoConductor;
 public class Conductor extends Trabajador {
     private String licenciaConducir;
     private String caducidadLicencia;
-    private Float salario;
+    private Double salario;
     private ConductorTurnoEnum turno;
     private EstadoConductor estado;
+    private Boolean isAsigned;
 
     public Conductor() {
         super();
     }
+
+    public Boolean getIsAsigned() {
+        return this.isAsigned;
+    }
+
+    public void setIsAsigned(Boolean isAsigned) {
+        this.isAsigned = isAsigned;
+    }
+
     public String getLicenciaConducir() {
         return this.licenciaConducir;
     }
@@ -20,6 +30,7 @@ public class Conductor extends Trabajador {
     public void setLicenciaConducir(String licenciaConducir) {
         this.licenciaConducir = licenciaConducir;
     }
+
     public String getCaducidadLicencia() {
         return this.caducidadLicencia;
     }
@@ -28,11 +39,11 @@ public class Conductor extends Trabajador {
         this.caducidadLicencia = caducidadLicencia;
     }
 
-    public Float getSalario() {
+    public Double getSalario() {
         return this.salario;
     }
 
-    public void setSalario(Float salario) {
+    public void setSalario(Double salario) {
         this.salario = salario;
     }
 

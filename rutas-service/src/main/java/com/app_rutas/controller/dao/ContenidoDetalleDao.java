@@ -4,33 +4,32 @@ import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
 import com.app_rutas.controller.excepcion.ValueAlreadyExistException;
 import com.app_rutas.controller.tda.list.LinkedList;
-import com.app_rutas.models.Trabajador;
-import com.app_rutas.models.enums.Sexo;
-import com.app_rutas.models.enums.TipoIdentificacion;
+import com.app_rutas.models.ContenidoDetalle;
+import com.app_rutas.models.enums.ContenidoEnum;
 import com.google.gson.Gson;
 import java.lang.reflect.Method;
 
 @SuppressWarnings({ "unchecked", "ConvertToTryWithResources" })
-public class TrabajadorDao extends AdapterDao<Trabajador> {
-    private Trabajador trabajador;
-    private LinkedList<Trabajador> listAll;
+public class ContenidoDetalleDao extends AdapterDao<ContenidoDetalle> {
+    private ContenidoDetalle contenidoDetalle;
+    private LinkedList<ContenidoDetalle> listAll;
 
-    public TrabajadorDao() {
-        super(Trabajador.class);
+    public ContenidoDetalleDao() {
+        super(ContenidoDetalle.class);
     }
 
-    public Trabajador getTrabajador() {
-        if (this.trabajador == null) {
-            this.trabajador = new Trabajador();
+    public ContenidoDetalle getContenidoDetalle() {
+        if (this.contenidoDetalle == null) {
+            this.contenidoDetalle = new ContenidoDetalle();
         }
-        return this.trabajador;
+        return this.contenidoDetalle;
     }
 
-    public void setTrabajador(Trabajador trabajador) {
-        this.trabajador = trabajador;
+    public void setContenidoDetalle(ContenidoDetalle contenidoDetalle) {
+        this.contenidoDetalle = contenidoDetalle;
     }
 
-    public LinkedList<Trabajador> getListAll() throws Exception {
+    public LinkedList<ContenidoDetalle> getListAll() throws Exception {
         if (listAll == null) {
             this.listAll = listAll();
         }
@@ -38,63 +37,63 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
     }
 
     public boolean save() throws Exception {
-        Integer id = Contador.obtenerValorActual(Trabajador.class);
+        Integer id = Contador.obtenerValorActual(ContenidoDetalle.class);
         try {
-            this.trabajador.setId(id);
-            this.persist(this.trabajador);
-            Contador.actualizarContador(Trabajador.class);
+            this.contenidoDetalle.setId(id);
+            this.persist(this.contenidoDetalle);
+            Contador.actualizarContador(ContenidoDetalle.class);
             this.listAll = listAll();
             return true;
         } catch (Exception e) {
-            throw new Exception("Error al guardar el trabajador: " + e.getMessage());
+            throw new Exception("Error al guardar el contenidoDetalle: " + e.getMessage());
         }
     }
 
     public Boolean update() throws Exception {
-        if (this.trabajador == null || this.trabajador.getId() == null) {
-            throw new Exception("No se ha seleccionado un trabajador para actualizar.");
+        if (this.contenidoDetalle == null || this.contenidoDetalle.getId() == null) {
+            throw new Exception("No se ha seleccionado un contenidoDetalle para actualizar.");
         }
         if (listAll == null) {
             listAll = listAll();
         }
-        Integer index = getTrabajadorIndex("id", this.trabajador.getId());
+        Integer index = getContenidoDetalleIndex("id", this.contenidoDetalle.getId());
         if (index == -1) {
-            throw new Exception("Trabajador no encontrado.");
+            throw new Exception("ContenidoDetalle no encontrado.");
         }
         try {
-            this.merge(this.trabajador, index);
+            this.merge(this.contenidoDetalle, index);
             listAll = listAll();
             return true;
         } catch (Exception e) {
-            throw new Exception("Error al actualizar el trabajador: " + e.getMessage());
+            throw new Exception("Error al actualizar el contenidoDetalle: " + e.getMessage());
         }
     }
 
     public Boolean delete() throws Exception {
-        if (this.trabajador == null || this.trabajador.getId() == null) {
-            throw new Exception("No se ha seleccionado un trabajador para eliminar.");
+        if (this.contenidoDetalle == null || this.contenidoDetalle.getId() == null) {
+            throw new Exception("No se ha seleccionado un contenidoDetalle para eliminar.");
         }
         if (listAll == null) {
             listAll = listAll();
         }
-        Integer index = getTrabajadorIndex("id", this.trabajador.getId());
+        Integer index = getContenidoDetalleIndex("id", this.contenidoDetalle.getId());
         if (index == -1) {
-            throw new Exception("Trabajador no encontrado.");
+            throw new Exception("ContenidoDetalle no encontrado.");
         }
         try {
             this.delete(index);
             listAll = listAll();
             return true;
         } catch (Exception e) {
-            throw new Exception("Error al eliminar el trabajador: " + e.getMessage());
+            throw new Exception("Error al eliminar el contenidoDetalle: " + e.getMessage());
         }
     }
 
-    private LinkedList<Trabajador> linearBinarySearch(String attribute, Object value) throws Exception {
-        LinkedList<Trabajador> lista = this.listAll().quickSort(attribute, 1);
-        LinkedList<Trabajador> trabajadors = new LinkedList<>();
+    private LinkedList<ContenidoDetalle> linearBinarySearch(String attribute, Object value) throws Exception {
+        LinkedList<ContenidoDetalle> lista = this.listAll().quickSort(attribute, 1);
+        LinkedList<ContenidoDetalle> trabajadors = new LinkedList<>();
         if (!lista.isEmpty()) {
-            Trabajador[] aux = lista.toArray();
+            ContenidoDetalle[] aux = lista.toArray();
             Integer low = 0;
             Integer high = aux.length - 1;
             Integer mid;
@@ -129,24 +128,23 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
             while (i < aux.length
                     && obtenerAttributeValue(aux[i], attribute).toString().toLowerCase().startsWith(searchValue)) {
                 trabajadors.add(aux[i]);
-                System.out.println("Agregando: " + aux[i].getNombre());
                 i++;
             }
         }
         return trabajadors;
     }
 
-    public LinkedList<Trabajador> buscar(String attribute, Object value) throws Exception {
+    public LinkedList<ContenidoDetalle> buscar(String attribute, Object value) throws Exception {
         return linearBinarySearch(attribute, value);
     }
 
-    public Trabajador buscarPor(String attribute, Object value) throws Exception {
-        LinkedList<Trabajador> lista = listAll();
-        Trabajador p = null;
+    public ContenidoDetalle buscarPor(String attribute, Object value) throws Exception {
+        LinkedList<ContenidoDetalle> lista = listAll();
+        ContenidoDetalle p = null;
 
         try {
             if (!lista.isEmpty()) {
-                Trabajador[] trabajadors = lista.toArray();
+                ContenidoDetalle[] trabajadors = lista.toArray();
                 for (int i = 0; i < trabajadors.length; i++) {
                     if (obtenerAttributeValue(trabajadors[i], attribute).toString().toLowerCase()
                             .equals(value.toString().toLowerCase())) {
@@ -156,22 +154,22 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
                 }
             }
             if (p == null) {
-                throw new Exception("No se encontró el trabajador con " + attribute + ": " + value);
+                throw new Exception("No se encontró el contenidoDetalle con " + attribute + ": " + value);
             }
         } catch (Exception e) {
-            throw new Exception("Error al buscar el trabajador: " + e.getMessage());
+            throw new Exception("Error al buscar el contenidoDetalle: " + e.getMessage());
         }
 
         return p;
     }
 
-    private Integer getTrabajadorIndex(String attribute, Object value) throws Exception {
+    private Integer getContenidoDetalleIndex(String attribute, Object value) throws Exception {
         if (this.listAll == null) {
             this.listAll = listAll();
         }
         Integer index = -1;
         if (!this.listAll.isEmpty()) {
-            Trabajador[] trabajadors = this.listAll.toArray();
+            ContenidoDetalle[] trabajadors = this.listAll.toArray();
             for (int i = 0; i < trabajadors.length; i++) {
                 if (obtenerAttributeValue(trabajadors[i], attribute).toString().toLowerCase()
                         .equals(value.toString().toLowerCase())) {
@@ -197,9 +195,9 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
         throw new NoSuchMethodException("No se encontor el atributo: " + attribute);
     }
 
-    public String[] getTrabajadorAttributeLists() {
+    public String[] getContenidoDetalleAttributeLists() {
         LinkedList<String> attributes = new LinkedList<>();
-        for (Method m : Trabajador.class.getDeclaredMethods()) {
+        for (Method m : ContenidoDetalle.class.getDeclaredMethods()) {
             if (m.getName().startsWith("get")) {
                 String attribute = m.getName().substring(3);
                 if (!attribute.equalsIgnoreCase("id")) {
@@ -223,10 +221,10 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
             return true;
         }
 
-        Trabajador[] Trabajadores = this.listAll.toArray();
+        ContenidoDetalle[] contenidoDetalles = this.listAll.toArray();
 
-        for (Trabajador trabajador : Trabajadores) {
-            Object attributeValue = obtenerAttributeValue(trabajador, campo);
+        for (ContenidoDetalle cd : contenidoDetalles) {
+            Object attributeValue = obtenerAttributeValue(cd, campo);
             if (attributeValue != null && attributeValue.toString().equalsIgnoreCase(value.toString())) {
                 throw new ValueAlreadyExistException("El valor ya existe.");
             }
@@ -235,44 +233,36 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
         return true;
     }
 
-    public LinkedList<Trabajador> order(String attribute, Integer type) throws Exception {
-        LinkedList<Trabajador> lista = listAll();
+    public LinkedList<ContenidoDetalle> order(String attribute, Integer type) throws Exception {
+        LinkedList<ContenidoDetalle> lista = listAll();
         return lista.isEmpty() ? lista : lista.mergeSort(attribute, type);
     }
 
     public String toJson() throws Exception {
         Gson g = new Gson();
-        return g.toJson(this.trabajador);
+        return g.toJson(this.contenidoDetalle);
     }
 
-    public Trabajador getTrabajadorById(Integer id) throws Exception {
+    public ContenidoDetalle getContenidoDetalleById(Integer id) throws Exception {
         return get(id);
     }
 
-    public String getTrabajadorJsonByIndex(Integer index) throws Exception {
+    public String getContenidoDetalleJsonByIndex(Integer index) throws Exception {
         Gson g = new Gson();
         return g.toJson(get(index));
     }
 
-    public TipoIdentificacion getTipo(String tipo) {
-        return TipoIdentificacion.valueOf(tipo);
-    }
-
-    public TipoIdentificacion[] getTipos() {
-        return TipoIdentificacion.values();
-    }
-
-    public Sexo getSexo(String sexo) {
-        return Sexo.valueOf(sexo);
-    }
-
-    public Sexo[] getSexos() {
-        return Sexo.values();
-    }
-
-    public String getTrabajadorJson(Integer Index) throws Exception {
+    public String getContenidoDetalleJson(Integer Index) throws Exception {
         Gson g = new Gson();
         return g.toJson(get(Index));
+    }
+
+    public ContenidoEnum[] getContenidoTypes() {
+        return ContenidoEnum.values();
+    }
+
+    public ContenidoEnum getContenidoType(String type) {
+        return ContenidoEnum.valueOf(type);
     }
 
 }

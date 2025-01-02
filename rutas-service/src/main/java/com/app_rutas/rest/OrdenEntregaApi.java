@@ -25,7 +25,7 @@ public class OrdenEntregaApi {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
     public Response getAll() throws ListEmptyException, Exception {
-        HashMap res = new HashMap<>();
+        HashMap<String, Object> res = new HashMap<>();
         OrdenEntregaServices ps = new OrdenEntregaServices();
         try {
             res.put("status", "success");
@@ -43,50 +43,51 @@ public class OrdenEntregaApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getType() {
-        HashMap map = new HashMap<>();
+        HashMap<String, Object> res = new HashMap<>();
         OrdenEntregaServices ps = new OrdenEntregaServices();
-        map.put("msg", "OK");
-        map.put("data", ps.getEstado());
-        return Response.ok(map).build();
+        res.put("msg", "OK");
+        res.put("data", ps.getEstado());
+        return Response.ok(res).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/get/{id}")
     public Response getById(@PathParam("id") Integer id) {
-        HashMap<String, Object> map = new HashMap<>();
+        HashMap<String, Object> res = new HashMap<>();
         OrdenEntregaServices ps = new OrdenEntregaServices();
         try {
             if (id == null || id < 1) {
-                map.put("msg", "ID invalido");
-                return Response.status(Status.BAD_REQUEST).entity(map).build();
+                res.put("msg", "ID invalido");
+                return Response.status(Status.BAD_REQUEST).entity(res).build();
             }
             ps.setOrdenEntrega(ps.get(id));
             if (ps.getOrdenEntrega() == null || ps.getOrdenEntrega().getId() == null) {
-                map.put("msg", "No existe generador con el ID proporcionado");
-                return Response.status(Status.NOT_FOUND).entity(map).build();
+                res.put("msg", "No existe generador con el ID proporcionado");
+                return Response.status(Status.NOT_FOUND).entity(res).build();
             }
-            map.put("msg", "OK");
-            map.put("data", ps.getOrdenEntrega());
-            return Response.ok(map).build();
+            res.put("msg", "OK");
+            res.put("data", ps.getOrdenEntrega());
+            return Response.ok(res).build();
         } catch (Exception e) {
-            map.put("msg", "Error al obtener el generador");
-            map.put("error", e.getMessage());
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(map).build();
+            res.put("msg", "Error al obtener el generador");
+            res.put("error", e.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }
 
     @Path("/save")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response save(HashMap map) {
-        HashMap res = new HashMap<>();
+    public Response save(HashMap<String, Object> map) {
+        HashMap<String, Object> res = new HashMap<>();
+        ;
         OrdenEntregaServices ps = new OrdenEntregaServices();
 
         try {
             if (map.get("pedido") != null) {
                 PedidoServices p = new PedidoServices();
-                p.setPedido(p.get(Integer.parseInt(map.get("pedido").toString())));                
+                p.setPedido(p.get(Integer.parseInt(map.get("pedido").toString())));
             }
             if (map.get("fechaProgramada") == null || map.get("fechaProgramada").toString().isEmpty()) {
                 throw new IllegalArgumentException("El campo 'fechaProgramada' es obligatorio.");
@@ -104,7 +105,6 @@ public class OrdenEntregaApi {
                 throw new IllegalArgumentException("El campo 'estado' es obligatorio.");
             }
             ps.getOrdenEntrega().setFechaProgramada(map.get("fechaProgramada").toString());
-            ps.getOrdenEntrega().setHoraProgramada(map.get("horaProgramada").toString());
             ps.getOrdenEntrega().setReceptor(map.get("receptor").toString());
             ps.getOrdenEntrega().setObservaciones(map.get("observaciones").toString());
             ps.getOrdenEntrega().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
@@ -148,8 +148,8 @@ public class OrdenEntregaApi {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/update")
-    public Response update(HashMap map) {
-        HashMap res = new HashMap<>();
+    public Response update(HashMap<String, Object> map) {
+        HashMap<String, Object> res = new HashMap<>();
         try {
             OrdenEntregaServices ps = new OrdenEntregaServices();
             ps.setOrdenEntrega(ps.get(Integer.parseInt(map.get("id").toString())));
@@ -158,16 +158,14 @@ public class OrdenEntregaApi {
                 res.put("message", "No se ha seleccionado una orden de entrega para actualizar.");
                 return Response.status(Status.BAD_REQUEST).entity(res).build();
             }
-            if(map.get("pedido") != null && !map.get("pedido").toString().isEmpty()) {
+            if (map.get("pedido") != null && !map.get("pedido").toString().isEmpty()) {
                 PedidoServices p = new PedidoServices();
                 p.setPedido(p.get(Integer.parseInt(map.get("pedido").toString())));
             }
             if (map.get("fechaProgramada") != null && !map.get("fechaProgramada").toString().isEmpty()) {
                 ps.getOrdenEntrega().setFechaProgramada(map.get("fechaProgramada").toString());
             }
-            if (map.get("horaProgramada") != null && !map.get("horaProgramada").toString().isEmpty()) {
-                ps.getOrdenEntrega().setHoraProgramada(map.get("horaProgramada").toString());
-            }
+
             if (map.get("receptor") != null && !map.get("receptor").toString().isEmpty()) {
                 ps.getOrdenEntrega().setReceptor(map.get("receptor").toString());
             }

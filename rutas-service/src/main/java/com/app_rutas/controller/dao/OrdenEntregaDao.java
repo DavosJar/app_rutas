@@ -2,7 +2,7 @@ package com.app_rutas.controller.dao;
 
 import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.tda.list.LinkedList;
-import com.app_rutas.models.Contador;
+import com.app_rutas.controller.dao.implement.Contador;
 import com.app_rutas.models.OrdenEntrega;
 import com.app_rutas.models.enums.EstadoEnum;
 import com.google.gson.Gson;
@@ -103,7 +103,7 @@ public class OrdenEntregaDao extends AdapterDao<OrdenEntrega> {
                 mid = (low + high) / 2;
 
                 String midValue = obtenerAttributeValue(aux[mid], attribute).toString().toLowerCase();
-                //System.out.println("Comparando: " + midValue + " con " + searchValue);
+                // System.out.println("Comparando: " + midValue + " con " + searchValue);
 
                 if (midValue.startsWith(searchValue)) {
                     if (mid == 0 || !obtenerAttributeValue(aux[mid - 1], attribute).toString().toLowerCase()
@@ -232,13 +232,13 @@ public class OrdenEntregaDao extends AdapterDao<OrdenEntrega> {
         return g.toJson(get(Index));
     }
 
-    public String codigoU(String input){
+    public String codigoU(String input) {
         int base = 0;
         for (char c : input.toCharArray()) {
-            base += c; 
+            base += c;
         }
-        int randomNum = (int) (Math.random() * 100000);    
-        String codigo = String.format("%010d", base * 100000 + randomNum);        
+        int randomNum = (int) (Math.random() * 100000);
+        String codigo = String.format("%010d", base * 100000 + randomNum);
         return codigo;
     }
 }

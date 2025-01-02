@@ -5,11 +5,19 @@ import com.app_rutas.models.enums.EstadoEnum;
 public class OrdenEntrega {
     private Integer id;
     private Integer idPedido;
+    private Integer idItinerario;
     private String fechaProgramada;
-    private String horaProgramada;
     private String receptor;
     private String observaciones;
     private EstadoEnum estado;
+
+    public Integer getIdItinerario() {
+        return idItinerario;
+    }
+
+    public void setIdItinerario(Integer idItinerario) {
+        this.idItinerario = idItinerario;
+    }
 
     public Integer getId() {
         return this.id;
@@ -18,6 +26,7 @@ public class OrdenEntrega {
     public void setId(Integer id) {
         this.id = id;
     }
+
     public Integer getIdPedido() {
         return this.idPedido;
     }
@@ -32,14 +41,6 @@ public class OrdenEntrega {
 
     public void setFechaProgramada(String fechaProgramada) {
         this.fechaProgramada = fechaProgramada;
-    }
-
-    public String getHoraProgramada() {
-        return this.horaProgramada;
-    }
-
-    public void setHoraProgramada(String horaProgramada) {
-        this.horaProgramada = horaProgramada;
     }
 
     public String getReceptor() {

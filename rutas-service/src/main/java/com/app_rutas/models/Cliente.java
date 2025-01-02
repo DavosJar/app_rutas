@@ -5,6 +5,7 @@ public class Cliente {
     private String razonSocial;
     private String ruc;
     private String telefono;
+    private String email;
 
     public Integer getId() {
         return this.id;
@@ -36,6 +37,14 @@ public class Cliente {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

@@ -1,5 +1,7 @@
 package com.app_rutas.controller.dao.services;
 
+import java.util.HashMap;
+
 import com.app_rutas.controller.dao.VehiculoDao;
 import com.app_rutas.models.Vehiculo;
 import com.app_rutas.models.enums.VehiculoEstadoEnum;
@@ -12,7 +14,7 @@ public class VehiculoServices {
         this.obj = new VehiculoDao();
     }
 
-    public LinkedList listAll() throws Exception {
+    public LinkedList<Vehiculo> listAll() throws Exception {
         return obj.getListAll();
     }
 
@@ -45,11 +47,11 @@ public class VehiculoServices {
         return obj.get(index);
     }
 
-    public VehiculoEstadoEnum[] getEstado() {
+    public VehiculoEstadoEnum[] getEstados() {
         return obj.getEstado();
     }
 
-    public VehiculoEstadoEnum getEstadoEnum(String estado) {
+    public VehiculoEstadoEnum getEstado(String estado) {
         return obj.getEstadoEnum(estado);
     }
 
@@ -79,5 +81,14 @@ public class VehiculoServices {
 
     public String getByJson(Integer index) throws Exception {
         return obj.getByJson(index);
+    }
+
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        return obj.isUnique(campo, value);
+    }
+
+    public void validateField(String field, HashMap<String, Object> map, String... validations) throws Exception {
+        Vehiculo vehiculo = this.getVehiculo();
+        FieldValidator.validateAndSet(vehiculo, map, field, validations);
     }
 }

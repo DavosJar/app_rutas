@@ -3,7 +3,8 @@ package com.app_rutas.models.enums;
 public enum Rol {
     ADMINISTRADOR("ADMINISTRADOR"),
     CONDUCTOR("CONDUCTOR"),
-    USUARIO("USUARIO");
+    GESTOR_PEDIDOS("GESTOR_PEDIDOS"),
+    OPERADOR_FLOTA("OPERADOR_FLOTA");
 
     private String rol;
 

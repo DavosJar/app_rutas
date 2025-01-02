@@ -2,6 +2,7 @@ package com.app_rutas.rest;
 
 import java.util.HashMap;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -19,7 +20,8 @@ import com.app_rutas.controller.dao.services.VehiculoServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.ConductorVehiculo;
-import com.google.gson.Gson;
+import com.app_rutas.models.enums.VehiculoEstadoEnum;
+import com.app_rutas.models.enums.EstadoConductor;
 
 @Path("/conductor-vehiculo")
 public class ConductorVehiculoApi {
@@ -28,7 +30,7 @@ public class ConductorVehiculoApi {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
     public Response getAll() throws ListEmptyException, Exception {
-        HashMap res = new HashMap<>();
+        HashMap<String, Object> res = new HashMap<>();
         ConductorVehiculoServices ps = new ConductorVehiculoServices();
         try {
             res.put("status", "success");
@@ -53,13 +55,13 @@ public class ConductorVehiculoApi {
                 map.put("msg", "ID invalido");
                 return Response.status(Status.BAD_REQUEST).entity(map).build();
             }
-            ps.setConductor(ps.get(id));
-            if (ps.getConductor() == null || ps.getConductor().getId() == null) {
+            ps.setConductorVehiculo(ps.get(id));
+            if (ps.getConductorVehiculo() == null || ps.getConductorVehiculo().getId() == null) {
                 map.put("msg", "No existe pedido con el ID proporcionado");
                 return Response.status(Status.NOT_FOUND).entity(map).build();
             }
             map.put("msg", "OK");
-            map.put("data", ps.getConductor());
+            map.put("data", ps.getConductorVehiculo());
             return Response.ok(map).build();
         } catch (Exception e) {
             map.put("msg", "Error al obtener el pedido");
@@ -71,35 +73,43 @@ public class ConductorVehiculoApi {
     @Path("/save")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response save(HashMap map) {
-        HashMap res = new HashMap<>();
-        Gson g = new Gson();
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response save(HashMap<String, Object> map) {
+        HashMap<String, Object> res = new HashMap<>();
 
         try {
-            if (map.get("vehiculo") != null && map.get("conductor") != null) {
+            if (map.get("idVehiculo") != null && map.get("idConductor") != null) {
                 VehiculoServices pes = new VehiculoServices();
-                pes.setVehiculo(pes.get(Integer.parseInt(map.get("vehiculo").toString())));
+                pes.setVehiculo(pes.get(Integer.parseInt(map.get("idVehiculo").toString())));
                 ConductorServices cs = new ConductorServices();
-                cs.setConductor(cs.getConductorById(Integer.parseInt(map.get("conductor").toString())));
+                cs.setConductor(cs.getConductorById(Integer.parseInt(map.get("idConductor").toString())));
 
                 if (pes.getVehiculo().getId() != null && cs.getConductor().getId() != null) {
-                    ConductorVehiculoServices ps = new ConductorVehiculoServices();
-                    if (map.get("fechaAsignacion") == null || map.get("fechaAsignacion").toString().isEmpty()) {
-                        throw new IllegalArgumentException("El campo 'fechaAsignacion' es obligatorio.");
+                    if ((pes.getVehiculo().getIsAsigned() == false
+                            && pes.getVehiculo().getEstado().equals(VehiculoEstadoEnum.DISPONIBLE))
+                            && cs.getConductor().getIsAsigned() == false
+                            && cs.getConductor().getEstado().equals(EstadoConductor.ACTIVO)) {
+                        ConductorVehiculoServices ps = new ConductorVehiculoServices();
+                        String fechaRegistro = java.time.LocalDate.now().toString();
+                        ps.getConductorVehiculo().setFechaAsignacion(fechaRegistro);
+                        ps.getConductorVehiculo().setIdVehiculo(pes.getVehiculo().getId());
+                        ps.getConductorVehiculo().setIdConductor(cs.getConductor().getId());
+                        ps.getConductorVehiculo().setIsActive(true);
+                        ps.getConductorVehiculo().setIsWorking(false);
+                        ps.save();
+                        cs.getConductor().setIsAsigned(true);
+                        pes.getVehiculo().setIsAsigned(true);
+                        cs.update();
+                        pes.update();
+                        // System.out.println("Orden de entrega guardada" + pes);
+                        res.put("estado", "Ok");
+                        res.put("data", "Registro guardado con exito.");
+                        return Response.ok(res).build();
+                    } else {
+                        res.put("estado", "error");
+                        res.put("data", "El vehiculo o el conductor no estan disponibles");
+                        return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
                     }
-                    ps.getConductor().setFechaAsignacion(map.get("fechaAsignacion").toString());
-
-                    if (map.get("fechaDeBaja") == null || map.get("fechaDeBaja").toString().isEmpty()) {
-                        throw new IllegalArgumentException("El campo 'fechaDeBaja' es obligatorio.");
-                    }
-                    ps.getConductor().setFechaDeBaja(map.get("fechaDeBaja").toString());
-                    ps.getConductor().setIdVehiculo(pes.getVehiculo().getId());
-                    ps.getConductor().setIdConductor(cs.getConductor().getId());
-                    ps.save();
-                    // System.out.println("Orden de entrega guardada" + pes);
-                    res.put("estado", "Ok");
-                    res.put("data", "Registro guardado con exito.");
-                    return Response.ok(res).build();
                 } else {
                     res.put("estado", "error");
                     res.put("data",
@@ -125,14 +135,14 @@ public class ConductorVehiculoApi {
         HashMap<String, Object> res = new HashMap<>();
         ConductorVehiculoServices ps = new ConductorVehiculoServices();
         try {
-            ps.getConductor().setId(id);
+            ps.getConductorVehiculo().setId(id);
             ps.delete();
             System.out.println("Orden de entrega eliminada" + id);
             res.put("estado", "Ok");
             res.put("data", "Registro eliminado con exito.");
             return Response.ok(res).build();
         } catch (Exception e) {
-            System.out.println("Hasta aqui llega" + ps.getConductor().getId());
+            System.out.println("Hasta aqui llega" + ps.getConductorVehiculo().getId());
             res.put("estado", "error");
             res.put("data", "Error interno del servidor: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
@@ -142,12 +152,12 @@ public class ConductorVehiculoApi {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/update")
-    public Response update(HashMap map) {
-        HashMap res = new HashMap<>();
+    public Response update(HashMap<String, Object> map) {
+        HashMap<String, Object> res = new HashMap<>();
         try {
             ConductorVehiculoServices ps = new ConductorVehiculoServices();
-            ps.setConductor(ps.get(Integer.parseInt(map.get("id").toString())));
-            if (ps.getConductor().getId() == null) {
+            ps.setConductorVehiculo(ps.get(Integer.parseInt(map.get("id").toString())));
+            if (ps.getConductorVehiculo().getId() == null) {
                 res.put("msg", "Error");
                 res.put("data", "El equipo no existe");
                 return Response.status(Status.BAD_REQUEST).entity(res).build();
@@ -158,10 +168,12 @@ public class ConductorVehiculoApi {
                     ConductorServices cs = new ConductorServices();
                     cs.setConductor(cs.getConductorById(Integer.parseInt(map.get("conductor").toString())));
                     if (pes.getVehiculo().getId() != null && cs.getConductor().getId() != null) {
-                        ps.getConductor().setFechaAsignacion(map.get("fechaAsignacion").toString());
-                        ps.getConductor().setFechaDeBaja(map.get("fechaDeBaja").toString());
-                        ps.getConductor().setIdVehiculo(pes.getVehiculo().getId());
-                        ps.getConductor().setIdConductor(cs.getConductor().getId());
+                        String fechaBaja = java.time.LocalDate.now().toString();
+                        ps.getConductorVehiculo().setFechaAsignacion(fechaBaja);
+                        ps.getConductorVehiculo().setIdVehiculo(pes.getVehiculo().getId());
+                        ps.getConductorVehiculo().setIdConductor(cs.getConductor().getId());
+                        ps.getConductorVehiculo().setIsWorking(false);
+                        ps.getConductorVehiculo().setIsActive(false);
                         ps.update();
                         res.put("status", "success");
                         res.put("message", "Conductor asignado actualizado con exito.");
@@ -181,6 +193,54 @@ public class ConductorVehiculoApi {
         } catch (Exception e) {
             res.put("estado", "error");
             res.put("data", "Ocurrió un error inesperado: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
+        }
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/anular")
+    public Response anular(HashMap<String, Object> map) {
+        HashMap<String, Object> res = new HashMap<>();
+        try {
+            if (map.get("id") == null) {
+                res.put("estado", "error");
+                res.put("data", "ID de asignación no proporcionado");
+                return Response.status(Status.BAD_REQUEST).entity(res).build();
+            }
+
+            int idAsignacion = Integer.parseInt(map.get("id").toString());
+            ConductorVehiculoServices ps = new ConductorVehiculoServices();
+            ps.setConductorVehiculo(ps.get(idAsignacion));
+
+            if (ps.getConductorVehiculo().getId() == null) {
+                res.put("estado", "error");
+                res.put("data", "La asignación no existe");
+                return Response.status(Status.NOT_FOUND).entity(res).build();
+            }
+            String fechaBaja = java.time.LocalDate.now().toString();
+            ps.getConductorVehiculo().setFechaDeBaja(fechaBaja);
+
+            ps.getConductorVehiculo().setIsActive(false);
+            ps.update();
+
+            ConductorServices cs = new ConductorServices();
+            cs.setConductor(cs.getConductorById(ps.getConductorVehiculo().getIdConductor()));
+            cs.getConductor().setIsAsigned(false);
+            cs.update();
+
+            VehiculoServices vs = new VehiculoServices();
+            vs.setVehiculo(vs.getById(ps.getConductorVehiculo().getIdVehiculo()));
+            vs.getVehiculo().setIsAsigned(false);
+            vs.update();
+
+            res.put("estado", "success");
+            res.put("data", "Equipo, conductor y vehículo dados de baja correctamente");
+            return Response.ok(res).build();
+
+        } catch (Exception e) {
+            res.put("estado", "error");
+            res.put("data", "Error al procesar la solicitud: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }

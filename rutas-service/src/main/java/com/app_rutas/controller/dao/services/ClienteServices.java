@@ -1,13 +1,13 @@
 package com.app_rutas.controller.dao.services;
 
+import java.util.HashMap;
+
 import com.app_rutas.controller.dao.ClienteDao;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Cliente;
-import com.app_rutas.models.PuntoEntrega;
 
 public class ClienteServices {
 
-    @SuppressWarnings("FieldMayBeFinal")
     private ClienteDao obj;
 
     public ClienteServices() {
@@ -34,8 +34,8 @@ public class ClienteServices {
         obj.setCliente(cliente);
     }
 
-    public Cliente getConductorById(Integer id) throws Exception {
-        return obj.getConductorById(id);
+    public Cliente getById(Integer id) throws Exception {
+        return obj.getClienteById(id);
 
     }
 
@@ -47,7 +47,7 @@ public class ClienteServices {
         return obj.toJson();
     }
 
-    public LinkedList<Cliente> getConductorsBy(String atributo, Object valor) throws Exception {
+    public LinkedList<Cliente> getClientesBy(String atributo, Object valor) throws Exception {
         return obj.buscar(atributo, valor);
     }
 
@@ -55,7 +55,7 @@ public class ClienteServices {
         return obj.order(atributo, type);
     }
 
-    public Cliente obtenerConductorPor(String atributo, Object valor) throws Exception {
+    public Cliente obtenerClientePor(String atributo, Object valor) throws Exception {
         return obj.buscarPor(atributo, valor);
     }
 
@@ -63,7 +63,16 @@ public class ClienteServices {
         return obj.update();
     }
 
-    public String[] getConductorAttributeLists() {
-        return obj.getConductorAttributeLists();
+    public String[] getClienteAttributeLists() {
+        return obj.getClienteAttributeLists();
+    }
+
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        return obj.isUnique(campo, value);
+    }
+
+    public void validateField(String field, HashMap<String, Object> map, String... validations) throws Exception {
+        Cliente cliente = this.getCliente();
+        FieldValidator.validateAndSet(cliente, map, field, validations);
     }
 }

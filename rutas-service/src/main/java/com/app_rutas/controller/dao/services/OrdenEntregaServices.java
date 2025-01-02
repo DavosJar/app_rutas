@@ -3,6 +3,7 @@ package com.app_rutas.controller.dao.services;
 import java.util.HashMap;
 
 import com.app_rutas.controller.dao.OrdenEntregaDao;
+import com.app_rutas.models.Itinerario;
 import com.app_rutas.models.OrdenEntrega;
 import com.app_rutas.models.Pedido;
 import com.app_rutas.models.enums.EstadoEnum;
@@ -11,16 +12,15 @@ import com.app_rutas.controller.tda.list.LinkedList;
 public class OrdenEntregaServices {
     private OrdenEntregaDao obj;
 
-    public Object[] listShowAll()throws Exception{
+    public Object[] listShowAll() throws Exception {
         if (!obj.getListAll().isEmpty()) {
             OrdenEntrega[] lista = (OrdenEntrega[]) obj.getListAll().toArray();
             Object[] respuesta = new Object[lista.length];
-            for(int i =0; i < lista.length; i++){
+            for (int i = 0; i < lista.length; i++) {
                 Pedido p = new PedidoServices().get(lista[i].getIdPedido());
-                HashMap mapa = new HashMap();
+                HashMap<String, Object> mapa = new HashMap<>();
                 mapa.put("id", lista[i].getId());
                 mapa.put("fechaProgramada", lista[i].getFechaProgramada());
-                mapa.put("horaProgramada", lista[i].getHoraProgramada());
                 mapa.put("receptor", lista[i].getReceptor());
                 mapa.put("observaciones", lista[i].getObservaciones());
                 mapa.put("estado", lista[i].getEstado());
@@ -36,7 +36,7 @@ public class OrdenEntregaServices {
         this.obj = new OrdenEntregaDao();
     }
 
-    public LinkedList listAll() throws Exception {
+    public LinkedList<OrdenEntrega> listAll() throws Exception {
         return obj.getListAll();
     }
 
@@ -107,5 +107,29 @@ public class OrdenEntregaServices {
 
     public String codigoU(String input) {
         return obj.codigoU(input);
+    }
+
+    public OrdenEntrega generarOrdenEntrega(Pedido pedido, Integer idItinerario) throws Exception {
+        if (pedido == null) {
+            throw new Exception("El pedido no existe");
+        }
+
+        if (idItinerario == null) {
+            throw new Exception("El idItinerario no puede ser nulo");
+        }
+
+        Itinerario itinerario = new ItinerarioServices().getById(idItinerario);
+
+        if (itinerario == null) {
+            throw new Exception("No se encontró un itinerario con el ID: " + idItinerario);
+        }
+
+        obj.setOrdenEntrega(new OrdenEntrega());
+        obj.getOrdenEntrega().setIdPedido(pedido.getId());
+        obj.getOrdenEntrega().setIdItinerario(idItinerario);
+        obj.getOrdenEntrega().setFechaProgramada(itinerario.getFechaProgramada());
+        obj.getOrdenEntrega().setEstado(EstadoEnum.PENDIENTE);
+
+        return obj.getOrdenEntrega();
     }
 }

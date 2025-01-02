@@ -12,14 +12,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.app_rutas.controller.dao.services.ItinerarioServices;
-import com.app_rutas.controller.dao.services.OrdenEntregaServices;
+import com.app_rutas.controller.dao.services.ClienteServices;
+
 import com.app_rutas.controller.dao.services.PedidoServices;
 import com.app_rutas.controller.dao.services.PuntoEntregaServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
-import com.app_rutas.controller.tda.list.LinkedList;
-import com.app_rutas.models.Pedido;
-import com.google.gson.Gson;
 
 @Path("/pedido")
 public class PedidoApi {
@@ -28,7 +25,7 @@ public class PedidoApi {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
     public Response getAll() throws ListEmptyException, Exception {
-        HashMap res = new HashMap<>();
+        HashMap<String, Object> res = new HashMap<>();
         PedidoServices ps = new PedidoServices();
         try {
             res.put("status", "success");
@@ -46,10 +43,10 @@ public class PedidoApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getType() {
-        HashMap map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         PedidoServices ps = new PedidoServices();
         map.put("msg", "OK");
-        map.put("data", ps.getContenido());
+        map.put("data", ps.getContenidos());
         return Response.ok(map).build();
     }
 
@@ -60,17 +57,8 @@ public class PedidoApi {
         HashMap<String, Object> map = new HashMap<>();
         PedidoServices ps = new PedidoServices();
         try {
-            if (id == null || id < 1) {
-                map.put("msg", "ID invalido");
-                return Response.status(Status.BAD_REQUEST).entity(map).build();
-            }
-            ps.setPedido(ps.get(id));
-            if (ps.getPedido() == null || ps.getPedido().getId() == null) {
-                map.put("msg", "No existe pedido con el ID proporcionado");
-                return Response.status(Status.NOT_FOUND).entity(map).build();
-            }
             map.put("msg", "OK");
-            map.put("data", ps.getPedido());
+            map.put("data", ps.showOne(id));
             return Response.ok(map).build();
         } catch (Exception e) {
             map.put("msg", "Error al obtener el pedido");
@@ -82,64 +70,53 @@ public class PedidoApi {
     @Path("/save")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response save(HashMap map) {
-        HashMap res = new HashMap<>();
-        Gson g = new Gson();
+    public Response save(HashMap<String, Object> map) {
+        HashMap<String, Object> res = new HashMap<>();
 
         try {
-            if (map.get("punto-entrega") != null && map.get("orden-entrega") != null && map.get("itinerario") != null) {
+            if (map.get("idPuntoEntrega") != null && map.get("idCliente") != null) {
                 PuntoEntregaServices pes = new PuntoEntregaServices();
-                pes.setPuntoEntrega(pes.get(Integer.parseInt(map.get("punto-entrega").toString())));
-                //System.out.println("Punto de entrega: " + pes.getPuntoEntrega().getId());
-                OrdenEntregaServices oes = new OrdenEntregaServices();
-                oes.setOrdenEntrega(oes.get(Integer.parseInt(map.get("orden-entrega").toString())));
-                ItinerarioServices is = new ItinerarioServices();
-                is.setItinerario(is.get(Integer.parseInt(map.get("itinerario").toString())));
-                //System.out.println("Orden de entrega: " + is.getItinerario().getId());
-                if (pes.getPuntoEntrega().getId() != null && oes.getOrdenEntrega().getId() != null && is.getItinerario().getId() != null) {
-                    PedidoServices ps = new PedidoServices();
-                    if (map.get("contenido") == null || map.get("contenido").toString().isEmpty()) {
-                        throw new IllegalArgumentException("El campo 'contenido' es obligatorio.");
-                    }
-                    ps.getPedido().setContenido(map.get("contenido").toString());
-
-                    if (map.get("fechaRegistro") == null || map.get("fechaRegistro").toString().isEmpty()) {
-                        throw new IllegalArgumentException("El campo 'fechaRegistro' es obligatorio.");
-                    }
-                    ps.getPedido().setFechaRegistro(map.get("fechaRegistro").toString());
-
-                    if (map.get("pesoTotal") != null) {
-                        ps.getPedido().setPesoTotal(Float.parseFloat(map.get("pesoTotal").toString()));
-                    }
-                    if (map.get("volumen") != null) {
-                        ps.getPedido().setVolumenTotal(Double.parseDouble(map.get("volumen").toString()));
-                    }
-                    if (map.get("estado") != null) {
-                        ps.getPedido().setEstado(ps.getContenidoEnum(map.get("estado").toString()));
-                    }
-                    if (map.get("requiereFrio") != null) {
-                        ps.getPedido().setRequiereFrio(Boolean.parseBoolean(map.get("requiereFrio").toString()));
-                    } else {
-                        ps.getPedido().setRequiereFrio(false);
-                    }
-                    ps.getPedido().setIdPuntoEntrega(pes.getPuntoEntrega().getId());
-                    ps.getPedido().setIdOrdenEntrega(oes.getOrdenEntrega().getId());
-                    ps.getPedido().setIdItinerario(is.getItinerario().getId());
-                    ps.save();
-                    System.out.println("Pedido guardado" + pes + oes + is);
-                    res.put("estado", "Ok");
-                    res.put("data", "Pedido guardado con exito.");
-                    return Response.ok(res).build();
-                } else {
+                ClienteServices cs = new ClienteServices();
+                int idPuntoEntrega = Integer.parseInt(map.get("idPuntoEntrega").toString());
+                if (pes.getById(idPuntoEntrega) == null) {
                     res.put("estado", "error");
-                    res.put("data", "No existe punto de entrega o orden de entrega con el ID proporcionado");
+                    res.put("data", "No existe punto de entrega con el ID proporcionado");
                     return Response.status(Response.Status.NOT_FOUND).entity(res).build();
                 }
+                int idCliente = Integer.parseInt(map.get("idCliente").toString());
+                if (cs.getById(idCliente) == null) {
+                    res.put("estado", "error");
+                    res.put("data", "No existe cliente con el ID proporcionado");
+                    return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+                }
+                PedidoServices ps = new PedidoServices();
+                String fechaRegistro = java.time.LocalDate.now().toString();
+                ps.getPedido().setFechaRegistro(fechaRegistro);
+                ps.getPedido().setCodigoUnico(ps.generarCodigoUnico(idCliente));
+                ps.validateField("pesoTotal", map, "NOT_NULL", "MIN_VALUE=0", "MAX_VALUE=99999");
+                ps.validateField("volumenTotal", map, "NOT_NULL", "MIN_VALUE=0", "MAX_VALUE=99999");
+                ps.getPedido().setRequiereFrio(map.get("requiereFrio") != null
+                        && Boolean.parseBoolean(map.get("requiereFrio").toString()));
+                if (map.get("contenido") != null) {
+                    ps.getPedido().setContenido(ps.getContenido(map.get("contenido").toString()));
+                } else {
+                    ps.getPedido().setContenido(ps.getContenido("OTROS"));
+                }
+                ps.getPedido().setIdPuntoEntrega(idPuntoEntrega);
+                ps.getPedido().setIdCliente(idCliente);
+                ps.getPedido().setIsAttended(false);
+                ps.save();
+
+                res.put("estado", "Ok");
+                res.put("data", "Pedido guardado con éxito.");
+                return Response.ok(res).build();
+
             } else {
                 res.put("estado", "error");
-                res.put("data", "No se proporciono un punto de entrega o una orden de entrega");
+                res.put("data", "No se proporcionaron los IDs de cliente y punto de entrega");
                 return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
             }
+
         } catch (Exception e) {
             res.put("estado", "error");
             res.put("data", "Error interno del servidor: " + e.getMessage());
@@ -171,33 +148,28 @@ public class PedidoApi {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/update")
-    public Response update(HashMap map) {
-        HashMap res = new HashMap<>();
+    public Response update(HashMap<String, Object> map) {
+        HashMap<String, Object> res = new HashMap<>();
         try {
             PedidoServices ps = new PedidoServices();
-            ps.setPedido(ps.get(Integer.parseInt(map.get("id").toString())));
+            ps.setPedido(ps.getById(Integer.parseInt(map.get("id").toString())));
             if (ps.getPedido().getId() == null) {
                 res.put("msg", "Error");
                 res.put("data", "El pedido no existe");
                 return Response.status(Status.BAD_REQUEST).entity(res).build();
             } else {
-                if (map.get("punto-entrega") != null && map.get("orden-entrega") != null || map.get("itinerario") != null) {
+                if (map.get("idPuntoEntrega") != null && map.get("idCliente") != null) {
                     PuntoEntregaServices pes = new PuntoEntregaServices();
-                    pes.setPuntoEntrega(pes.get(Integer.parseInt(map.get("punto-entrega").toString())));
-                    OrdenEntregaServices oes = new OrdenEntregaServices();
-                    oes.setOrdenEntrega(oes.get(Integer.parseInt(map.get("orden-entrega").toString())));
-                    ItinerarioServices is = new ItinerarioServices();
-                    is.setItinerario(is.get(Integer.parseInt(map.get("itinerario").toString())));
-                    if (pes.getPuntoEntrega().getId() != null && oes.getOrdenEntrega().getId() != null) {
-                        ps.getPedido().setContenido(map.get("contenido").toString());
-                        ps.getPedido().setFechaRegistro(map.get("fechaRegistro").toString());
-                        ps.getPedido().setPesoTotal(Float.parseFloat(map.get("pesoTotal").toString()));
-                        ps.getPedido().setVolumenTotal(Double.parseDouble(map.get("volumen").toString()));
-                        ps.getPedido().setEstado(ps.getContenidoEnum(map.get("estado").toString()));
+                    ClienteServices cs = new ClienteServices();
+                    pes.setPuntoEntrega(pes.get(Integer.parseInt(map.get("idPuntoEntrega").toString())));
+                    cs.setCliente(cs.get(Integer.parseInt(map.get("idCliente").toString())));
+                    if (pes.getPuntoEntrega().getId() != null && cs.getCliente().getId() != null) {
+                        ps.validateField("pesoTotal", map, "NOT_NULL", "MIN_VALUE=0", "MAX_VALUE=99999");
+                        ps.validateField("volumenTotal", map, "NOT_NULL", "MIN_VALUE=0", "MAX_VALUE=99999");
                         ps.getPedido().setRequiereFrio(Boolean.parseBoolean(map.get("requiereFrio").toString()));
                         ps.getPedido().setIdPuntoEntrega(pes.getPuntoEntrega().getId());
-                        ps.getPedido().setIdOrdenEntrega(oes.getOrdenEntrega().getId());
-                        ps.getPedido().setIdItinerario(is.getItinerario().getId());
+                        ps.getPedido().setIdCliente(cs.getCliente().getId());
+                        ps.getPedido().setContenido(ps.getContenido(map.get("contenido").toString()));
                         ps.update();
                         res.put("status", "success");
                         res.put("message", "Orden actualizada con exito.");
@@ -222,33 +194,44 @@ public class PedidoApi {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/search/{attribute}/{value}")
-    public Response binarySearchLin(@PathParam("attribute") String attribute, @PathParam("value") String value) {
-        HashMap<String, Object> map = new HashMap<>();
+    @Path("/list/search/codigo/{codigo}")
+    public Response searchPedido(@PathParam("codigo") String codigo) throws Exception {
+        HashMap<String, Object> res = new HashMap<>();
         PedidoServices ps = new PedidoServices();
-
         try {
-            LinkedList<Pedido> results;
-            try {
-                results = ps.buscar(attribute, value);
-            } catch (NumberFormatException e) {
-                map.put("msg", "El valor proporcionado no es un numero valido");
-                return Response.status(Status.BAD_REQUEST).entity(map).build();
+            res.put("estado", "Ok");
+            res.put("data", ps.showOne(ps.buscarPor("codigoUnico", codigo).getId()));
+            if (ps.buscarPor("codigoUnico", codigo) == null) {
+                res.put("estado", "error");
+                res.put("data", "No se encontro el trabajador con codigo Unico: " + codigo);
+                return Response.status(Response.Status.NOT_FOUND).entity(res).build();
             }
-
-            if (results != null && !results.isEmpty()) {
-                map.put("msg", "OK");
-                map.put("data", results.toArray());
-                return Response.ok(map).build();
-            } else {
-                map.put("msg", "No se encontraron ordenes de entrega con los valores proporcionados");
-                return Response.status(Status.NOT_FOUND).entity(map).build();
-            }
-
+            return Response.ok(res).build();
         } catch (Exception e) {
-            map.put("msg", "Error en la busqueda");
-            map.put("error", e.getMessage());
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(map).build();
+            res.put("estado", "error");
+            res.put("data", "Error interno del servidor: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/list/search/{atributo}/{valor}")
+    public Response buscarTrabajadores(@PathParam("atributo") String atributo, @PathParam("valor") String valor)
+            throws Exception {
+        HashMap<String, Object> res = new HashMap<>();
+        PedidoServices ps = new PedidoServices();
+        try {
+            res.put("estado", "Ok");
+            res.put("data", ps.buscar(atributo, valor).toArray());
+            if (ps.buscar(atributo, valor).isEmpty()) {
+                res.put("data", new Object[] {});
+            }
+            return Response.ok(res).build();
+        } catch (Exception e) {
+            res.put("estado", "error");
+            res.put("data", "Error interno del servidor: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }
 

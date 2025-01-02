@@ -2,6 +2,7 @@ package com.app_rutas.controller.dao;
 
 import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
+import com.app_rutas.controller.excepcion.ValueAlreadyExistException;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Cliente;
 import com.google.gson.Gson;
@@ -54,7 +55,7 @@ public class ClienteDao extends AdapterDao<Cliente> {
         if (listAll == null) {
             listAll = listAll();
         }
-        Integer index = getConductorIndex("id", this.cliente.getId());
+        Integer index = getClienteIndex("id", this.cliente.getId());
         if (index == -1) {
             throw new Exception("Cliente no encontrado.");
         }
@@ -74,7 +75,7 @@ public class ClienteDao extends AdapterDao<Cliente> {
         if (listAll == null) {
             listAll = listAll();
         }
-        Integer index = getConductorIndex("id", this.cliente.getId());
+        Integer index = getClienteIndex("id", this.cliente.getId());
         if (index == -1) {
             throw new Exception("Cliente no encontrado.");
         }
@@ -89,7 +90,7 @@ public class ClienteDao extends AdapterDao<Cliente> {
 
     private LinkedList<Cliente> linearBinarySearch(String attribute, Object value) throws Exception {
         LinkedList<Cliente> lista = this.listAll().quickSort(attribute, 1);
-        LinkedList<Cliente> conductors = new LinkedList<>();
+        LinkedList<Cliente> clientes = new LinkedList<>();
         if (!lista.isEmpty()) {
             Cliente[] aux = lista.toArray();
             Integer low = 0;
@@ -119,17 +120,17 @@ public class ClienteDao extends AdapterDao<Cliente> {
             }
 
             if (index.equals(-1)) {
-                return conductors;
+                return clientes;
             }
 
             Integer i = index;
             while (i < aux.length
                     && obtenerAttributeValue(aux[i], attribute).toString().toLowerCase().startsWith(searchValue)) {
-                conductors.add(aux[i]);
+                clientes.add(aux[i]);
                 i++;
             }
         }
-        return conductors;
+        return clientes;
     }
 
     public LinkedList<Cliente> buscar(String attribute, Object value) throws Exception {
@@ -141,11 +142,11 @@ public class ClienteDao extends AdapterDao<Cliente> {
         Cliente p = null;
 
         if (!lista.isEmpty()) {
-            Cliente[] conductors = lista.toArray();
-            for (int i = 0; i < conductors.length; i++) {
-                if (obtenerAttributeValue(conductors[i], attribute).toString().toLowerCase()
+            Cliente[] clientes = lista.toArray();
+            for (int i = 0; i < clientes.length; i++) {
+                if (obtenerAttributeValue(clientes[i], attribute).toString().toLowerCase()
                         .equals(value.toString().toLowerCase())) {
-                    p = conductors[i];
+                    p = clientes[i];
                     break;
                 }
             }
@@ -153,15 +154,15 @@ public class ClienteDao extends AdapterDao<Cliente> {
         return p;
     }
 
-    private Integer getConductorIndex(String attribute, Object value) throws Exception {
+    private Integer getClienteIndex(String attribute, Object value) throws Exception {
         if (this.listAll == null) {
             this.listAll = listAll();
         }
         Integer index = -1;
         if (!this.listAll.isEmpty()) {
-            Cliente[] conductors = this.listAll.toArray();
-            for (int i = 0; i < conductors.length; i++) {
-                if (obtenerAttributeValue(conductors[i], attribute).toString().toLowerCase()
+            Cliente[] clientes = this.listAll.toArray();
+            for (int i = 0; i < clientes.length; i++) {
+                if (obtenerAttributeValue(clientes[i], attribute).toString().toLowerCase()
                         .equals(value.toString().toLowerCase())) {
                     index = i;
                     break;
@@ -185,7 +186,7 @@ public class ClienteDao extends AdapterDao<Cliente> {
         throw new NoSuchMethodException("No se encontor el atributo: " + attribute);
     }
 
-    public String[] getConductorAttributeLists() {
+    public String[] getClienteAttributeLists() {
         LinkedList<String> attributes = new LinkedList<>();
         for (Method m : Cliente.class.getDeclaredMethods()) {
             if (m.getName().startsWith("get")) {
@@ -203,21 +204,46 @@ public class ClienteDao extends AdapterDao<Cliente> {
         return lista.isEmpty() ? lista : lista.mergeSort(attribute, type);
     }
 
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        if (campo == null || value == null) {
+            throw new IllegalArgumentException("El atributo y el valor no pueden ser nulos.");
+        }
+
+        if (this.listAll == null) {
+            this.listAll = listAll();
+        }
+
+        if (this.listAll.isEmpty()) {
+            return true;
+        }
+
+        Cliente[] clientes = this.listAll.toArray();
+
+        for (Cliente trabajador : clientes) {
+            Object attributeValue = obtenerAttributeValue(trabajador, campo);
+            if (attributeValue != null && attributeValue.toString().equalsIgnoreCase(value.toString())) {
+                throw new ValueAlreadyExistException("El valor ya existe.");
+            }
+        }
+
+        return true;
+    }
+
     public String toJson() throws Exception {
         Gson g = new Gson();
         return g.toJson(this.cliente);
     }
 
-    public Cliente getConductorById(Integer id) throws Exception {
+    public Cliente getClienteById(Integer id) throws Exception {
         return get(id);
     }
 
-    public String getConductorJasonByIndex(Integer index) throws Exception {
+    public String getClienteJasonByIndex(Integer index) throws Exception {
         Gson g = new Gson();
         return g.toJson(get(index));
     }
 
-    public String getConductorJson(Integer Index) throws Exception {
+    public String getClienteJson(Integer Index) throws Exception {
         Gson g = new Gson();
         return g.toJson(get(Index));
     }

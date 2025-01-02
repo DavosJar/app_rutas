@@ -12,24 +12,24 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.app_rutas.controller.dao.services.VehiculoServices;
+import com.app_rutas.controller.dao.services.ContenidoDetalleServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
 import com.app_rutas.controller.excepcion.ValueAlreadyExistException;
 import com.app_rutas.controller.tda.list.LinkedList;
-import com.app_rutas.models.Vehiculo;
+import com.app_rutas.models.ContenidoDetalle;
 
-@Path("/vehiculo")
-public class VehiculoApi {
+@Path("/contenido-detalle")
+public class ContenidoDetalleApi {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
-    public Response getAllProyects() throws ListEmptyException, Exception {
+    public Response getAllDetails() throws ListEmptyException, Exception {
         HashMap<String, Object> res = new HashMap<>();
-        VehiculoServices ts = new VehiculoServices();
+        ContenidoDetalleServices cds = new ContenidoDetalleServices();
         // EventoCrudServices ev = new EventoCrudServices();
         try {
-            LinkedList<Vehiculo> lista = ts.listAll();
+            LinkedList<ContenidoDetalle> lista = cds.listAll();
             res.put("status", "OK");
             res.put("msg", "Consulta exitosa.");
             res.put("data", lista.toArray());
@@ -37,11 +37,11 @@ public class VehiculoApi {
                 res.put("data", new Object[] {});
             }
             // ev.registrarEvento(TipoCrud.LIST, "Se ha consultado la lista de
-            // vehiculos.");
+            // contenidoDetalles.");
             return Response.ok(res).build();
         } catch (Exception e) {
             res.put("status", "ERROR");
-            res.put("msg", "Error al obtener la lista de vehiculos: " + e.getMessage());
+            res.put("msg", "Error al obtener la lista de contenidoDetalles: " + e.getMessage());
             // ev.registrarEvento(TipoCrud.LIST, "Error inesperado: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
@@ -50,15 +50,15 @@ public class VehiculoApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/get/{id}")
-    public Response getVehiculoById(@PathParam("id") Integer id) throws Exception {
+    public Response getContenidoDetalleById(@PathParam("id") Integer id) throws Exception {
         HashMap<String, Object> map = new HashMap<>();
-        VehiculoServices ts = new VehiculoServices();
+        ContenidoDetalleServices cds = new ContenidoDetalleServices();
         try {
             map.put("msg", "OK");
-            map.put("data", ts.getById(id));
-            if (ts.getById(id) == null) {
+            map.put("data", cds.getById(id));
+            if (cds.getById(id) == null) {
                 map.put("msg", "ERROR");
-                map.put("error", "No se encontro el vehiculo con id: " + id);
+                map.put("error", "No se encontro el contenidoDetalle con id: " + id);
                 return Response.status(Status.NOT_FOUND).entity(map).build();
             }
             return Response.ok(map).build();
@@ -75,22 +75,23 @@ public class VehiculoApi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(HashMap<String, Object> map) {
         HashMap<String, Object> res = new HashMap<>();
-        VehiculoServices ts = new VehiculoServices();
+        ContenidoDetalleServices cds = new ContenidoDetalleServices();
 
         try {
 
-            ts.validateField("marca", map, "NOT_NULL", "ALPHABETIC", "MAX_LENGTH=25", "MIN_LENGTH=3");
-            ts.validateField("modelo", map, "NOT_NULL", "MAX_LENGTH=25", "MIN_LENGTH=1");
-            ts.validateField("placa", map, "NOT_NULL", "IS_UNIQUE", "ALPHANUMERIC", "MIN_LENGTH=6", "MAX_LENGTH=8");
-            ts.validateField("capacidad", map, "NOT_NULL", "MIN_VALUE=0");
-            ts.validateField("potencia", map, "NOT_NULL", "MIN_VALUE=0");
-            ts.validateField("pesoTara", map, "NOT_NULL", "MIN_VALUE=0");
-            ts.validateField("pesoMaximo", map, "NOT_NULL", "MIN_VALUE=0");
-            ts.getVehiculo().setRefrigerado(Boolean.parseBoolean(map.get("refrigerado").toString()));
-            if (map.get("estado") != null) {
-                ts.getVehiculo().setEstado(ts.getEstado(map.get("estado").toString()));
+            if (map.get("tipo") != null) {
+                cds.getContenidoDetalle().setTipo(cds.getContenidoType(map.get("tipo").toString()));
+            } else {
+                cds.getContenidoDetalle().setTipo(cds.getContenidoType("OTROS"));
             }
-            ts.save();
+            cds.validateField("pesoUnitario", map, "NOT_NULL", "MIN_VALUE=0", "MAX_VALUE=99999999");
+            cds.validateField("volumenUnitario", map, "NOT_NULL", "MIN_VALUE=0", "MAX_VALUE=99999999");
+            if (map.get("requiereFrio") != null) {
+                cds.getContenidoDetalle().setRequiereFrio(Boolean.parseBoolean(map.get("requiereFrio").toString()));
+            } else {
+                cds.getContenidoDetalle().setRequiereFrio(false);
+            }
+            cds.save();
 
             res.put("estado", "Ok");
             res.put("data", "Registro guardado con éxito.");
@@ -119,10 +120,10 @@ public class VehiculoApi {
     public Response delete(@PathParam("id") Integer id) throws Exception {
 
         HashMap<String, Object> res = new HashMap<>();
-        VehiculoServices ts = new VehiculoServices();
+        ContenidoDetalleServices cds = new ContenidoDetalleServices();
         try {
-            ts.getVehiculo().setId(id);
-            ts.delete();
+            cds.getContenidoDetalle().setId(id);
+            cds.delete();
             res.put("estado", "Ok");
             res.put("data", "Registro eliminado con exito.");
 
@@ -139,55 +140,35 @@ public class VehiculoApi {
     @Path("/update")
     public Response update(HashMap<String, Object> map) {
         HashMap<String, Object> res = new HashMap<>();
-        VehiculoServices ts = new VehiculoServices();
+        ContenidoDetalleServices cds = new ContenidoDetalleServices();
 
         try {
             if (map.get("id") == null) {
                 throw new IllegalArgumentException("El id es obligatorio");
             }
             int id = (int) map.get("id");
-            ts.setVehiculo(ts.getById(id));
-            System.out.println("Vehiculo obtenido " + ts.getById(id));
+            cds.setContenidoDetalle(cds.getById(id));
+            cds.validateField("id", map, "MIN_VALUE=1");
 
-            ts.validateField("id", map, "MIN_VALUE=1");
-            if (map.get("marca") != null && !map.get("marca").equals(ts.getVehiculo().getMarca())) {
-                ts.validateField("marca", map, "NOT_NULL", "ALPHABETIC", "MAX_LENGTH=25", "MIN_LENGTH=3");
+            if (map.get("tipo") != null && !map.get("tipo").equals(cds.getContenidoDetalle().getTipo().getEstado())) {
+                cds.getContenidoDetalle().setTipo(cds.getContenidoType(map.get("tipo").toString()));
+            } else {
+                cds.getContenidoDetalle().setTipo(cds.getContenidoDetalle().getTipo());
             }
-            if (map.get("modelo") != null && !map.get("modelo").equals(ts.getVehiculo().getModelo())) {
-                ts.validateField("modelo", map, "NOT_NULL", "MIN_LENGTH=1", "MAX_LENGTH=25");
+            if (map.get("peso") != null && !map.get("peso").equals(cds.getContenidoDetalle().getPeso())) {
+                cds.validateField("peso", map, "NOT_NULL", "MIN_VALUE=0", "MAX_VALUE=99999999");
+            }
+            if (map.get("volumen") != null
+                    && !map.get("volumen").equals(cds.getContenidoDetalle().getVolumen())) {
+                cds.validateField("volumen", map, "NOT_NULL", "MIN_VALUE=0", "MAX_VALUE=99999999");
+            }
+            if (map.get("requiereFrio") != null) {
+                cds.getContenidoDetalle().setRequiereFrio(Boolean.parseBoolean(map.get("requiereFrio").toString()));
+            } else {
+                cds.getContenidoDetalle().setRequiereFrio(cds.getContenidoDetalle().getRequiereFrio());
             }
 
-            if (map.get("placa") != null) {
-                String newPlaca = map.get("placa").toString();
-                String currentPlaca = ts.getVehiculo().getPlaca();
-                if (!newPlaca.equalsIgnoreCase(currentPlaca)) {
-                    ts.validateField("placa", map, "NOT_NULL", "IS_UNIQUE", "ALPHANUMERIC", "MIN_LENGTH=6",
-                            "MAX_LENGTH=8");
-                }
-            }
-            if (map.get("capacidad") != null
-                    && !map.get("capacidad").equals(ts.getVehiculo().getCapacidad())) {
-                ts.validateField("capacidad", map, "NOT_NULL", "MIN_VALUE=0");
-            }
-            if (map.get("potencia") != null
-                    && !map.get("potencia").equals(ts.getVehiculo().getPotencia())) {
-                ts.validateField("potencia", map, "NOT_NULL", "MIN_VALUE=0");
-            }
-            if (map.get("pesoTara") != null
-                    && !map.get("pesoTara").equals(ts.getVehiculo().getPesoTara())) {
-                ts.validateField("pesoTara", map, "NOT_NULL", "MIN_VALUE=0");
-            }
-            if (map.get("pesoMaximo") != null
-                    && !map.get("pesoMaximo").equals(ts.getVehiculo().getPesoMaximo())) {
-                ts.validateField("pesoMaximo", map, "NOT_NULL", "MIN_VALUE=0");
-            }
-            if (map.get("refrigerado") != null && !map.get("refrigerado").equals(ts.getVehiculo().getRefrigerado())) {
-                ts.getVehiculo().setRefrigerado(Boolean.parseBoolean(map.get("refrigerado").toString()));
-            }
-            if (map.get("estado") != null && !map.get("estado").equals(ts.getVehiculo().getEstado().toString())) {
-                ts.getVehiculo().setEstado(ts.getEstado(map.get("estado").toString()));
-            }
-            ts.update();
+            cds.update();
             res.put("estado", "Ok");
             res.put("data", "Registro actualizado con éxito.");
             return Response.ok(res).build();
@@ -209,15 +190,15 @@ public class VehiculoApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list/search/ident/{identificacion}")
-    public Response searchVehiculo(@PathParam("identificacion") String identificacion) throws Exception {
+    public Response searchContenidoDetalle(@PathParam("identificacion") String identificacion) throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        VehiculoServices ts = new VehiculoServices();
+        ContenidoDetalleServices cds = new ContenidoDetalleServices();
         try {
             res.put("estado", "Ok");
-            res.put("data", ts.buscarPor("identificacion", identificacion));
-            if (ts.buscarPor("identificacion", identificacion) == null) {
+            res.put("data", cds.obtenerContenidoDetallePor("identificacion", identificacion));
+            if (cds.obtenerContenidoDetallePor("identificacion", identificacion) == null) {
                 res.put("estado", "error");
-                res.put("data", "No se encontro el vehiculo con identificacion: " + identificacion);
+                res.put("data", "No se encontro el contenidoDetalle con identificacion: " + identificacion);
                 return Response.status(Response.Status.NOT_FOUND).entity(res).build();
             }
             return Response.ok(res).build();
@@ -231,14 +212,14 @@ public class VehiculoApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list/search/{atributo}/{valor}")
-    public Response buscarConductores(@PathParam("atributo") String atributo, @PathParam("valor") String valor)
+    public Response buscarContenidoDetallees(@PathParam("atributo") String atributo, @PathParam("valor") String valor)
             throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        VehiculoServices ts = new VehiculoServices();
+        ContenidoDetalleServices cds = new ContenidoDetalleServices();
         try {
             res.put("estado", "Ok");
-            res.put("data", ts.buscar(atributo, valor).toArray());
-            if (ts.buscar(atributo, valor).isEmpty()) {
+            res.put("data", cds.getContenidoDetalleesBy(atributo, valor).toArray());
+            if (cds.getContenidoDetalleesBy(atributo, valor).isEmpty()) {
                 res.put("data", new Object[] {});
             }
             return Response.ok(res).build();
@@ -252,14 +233,14 @@ public class VehiculoApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list/order/{atributo}/{orden}")
-    public Response ordenarConductores(@PathParam("atributo") String atributo, @PathParam("orden") Integer orden)
+    public Response ordenarContenidoDetallees(@PathParam("atributo") String atributo, @PathParam("orden") Integer orden)
             throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        VehiculoServices ts = new VehiculoServices();
+        ContenidoDetalleServices cds = new ContenidoDetalleServices();
         try {
             res.put("estado", "Ok");
-            res.put("data", ts.order(atributo, orden).toArray());
-            if (ts.order(atributo, orden).isEmpty()) {
+            res.put("data", cds.order(atributo, orden).toArray());
+            if (cds.order(atributo, orden).isEmpty()) {
                 res.put("data", new Object[] {});
             }
             return Response.ok(res).build();
@@ -270,14 +251,14 @@ public class VehiculoApi {
         }
     }
 
-    @Path("/listType")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getType() {
+    @Path("/criterios")
+    public Response getCriterios() throws ListEmptyException, Exception {
         HashMap<String, Object> map = new HashMap<>();
-        VehiculoServices ps = new VehiculoServices();
+        ContenidoDetalleServices cds = new ContenidoDetalleServices();
         map.put("msg", "OK");
-        map.put("data", ps.getEstados());
+        map.put("data", cds.getContenidoDetalleAttributeLists());
         return Response.ok(map).build();
     }
 }

@@ -2,6 +2,7 @@ package com.app_rutas.controller.dao;
 
 import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
+import com.app_rutas.controller.excepcion.ValueAlreadyExistException;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Conductor;
 import com.app_rutas.models.enums.ConductorTurnoEnum;
@@ -201,6 +202,31 @@ public class ConductorDao extends AdapterDao<Conductor> {
             }
         }
         return attributes.toArray();
+    }
+
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        if (campo == null || value == null) {
+            throw new IllegalArgumentException("El atributo y el valor no pueden ser nulos.");
+        }
+
+        if (this.listAll == null) {
+            this.listAll = listAll();
+        }
+
+        if (this.listAll.isEmpty()) {
+            return true;
+        }
+
+        Conductor[] conductores = this.listAll.toArray();
+
+        for (Conductor conductor : conductores) {
+            Object attributeValue = obtenerAttributeValue(conductor, campo);
+            if (attributeValue != null && attributeValue.toString().equalsIgnoreCase(value.toString())) {
+                throw new ValueAlreadyExistException("El valor ya existe.");
+            }
+        }
+
+        return true;
     }
 
     public LinkedList<Conductor> order(String attribute, Integer type) throws Exception {

@@ -8,11 +8,12 @@ public class Vehiculo {
     private String modelo;
     private String placa;
     private Integer capacidad;
-    private Float potencia;
-    private Float pesoMinimo;
-    private Float pesoMaximo;
+    private Integer potencia;
+    private Double pesoTara;
+    private Double pesoMaximo;
     private Boolean refrigerado;
     private VehiculoEstadoEnum estado;
+    private Boolean isAsigned;
 
     public Integer getId() {
         return this.id;
@@ -54,27 +55,27 @@ public class Vehiculo {
         this.capacidad = capacidad;
     }
 
-    public Float getPotencia() {
+    public Integer getPotencia() {
         return this.potencia;
     }
 
-    public void setPotencia(Float potencia) {
+    public void setPotencia(Integer potencia) {
         this.potencia = potencia;
     }
 
-    public Float getPesoMinimo() {
-        return this.pesoMinimo;
+    public Double getPesoTara() {
+        return this.pesoTara;
     }
 
-    public void setPesoMinimo(Float pesoMinimo) {
-        this.pesoMinimo = pesoMinimo;
+    public void setPesoTara(Double pesoTara) {
+        this.pesoTara = pesoTara;
     }
 
-    public Float getPesoMaximo() {
+    public Double getPesoMaximo() {
         return this.pesoMaximo;
     }
 
-    public void setPesoMaximo(Float pesoMaximo) {
+    public void setPesoMaximo(Double pesoMaximo) {
         this.pesoMaximo = pesoMaximo;
     }
 
@@ -92,6 +93,14 @@ public class Vehiculo {
 
     public void setEstado(VehiculoEstadoEnum estado) {
         this.estado = estado;
+    }
+
+    public Boolean getIsAsigned() {
+        return isAsigned;
+    }
+
+    public void setIsAsigned(Boolean isAsigned) {
+        this.isAsigned = isAsigned;
     }
 
 }

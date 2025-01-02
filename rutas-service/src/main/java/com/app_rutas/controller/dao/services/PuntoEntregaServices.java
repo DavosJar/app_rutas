@@ -3,9 +3,7 @@ package com.app_rutas.controller.dao.services;
 import java.util.HashMap;
 
 import com.app_rutas.controller.dao.PuntoEntregaDao;
-import com.app_rutas.models.Cliente;
 import com.app_rutas.models.PuntoEntrega;
-
 import com.app_rutas.controller.tda.list.LinkedList;
 
 public class PuntoEntregaServices {
@@ -16,14 +14,12 @@ public class PuntoEntregaServices {
             PuntoEntrega[] lista = (PuntoEntrega[]) obj.getListAll().toArray();
             Object[] respuesta = new Object[lista.length];
             for (int i = 0; i < lista.length; i++) {
-                Cliente c = new ClienteServices().get(lista[i].getIdCliente());
-                HashMap mapa = new HashMap();
+                HashMap<String, Object> mapa = new HashMap<>();
                 mapa.put("id", lista[i].getId());
                 mapa.put("callePrincipal", lista[i].getCallePrincipal());
                 mapa.put("calleSecundaria", lista[i].getCalleSecundaria());
                 mapa.put("num", lista[i].getNum());
                 mapa.put("referencia", lista[i].getReferencia());
-                mapa.put("cliente", c);
                 respuesta[i] = mapa;
             }
             return respuesta;
@@ -31,11 +27,26 @@ public class PuntoEntregaServices {
         return new Object[] {};
     }
 
+    public Object showOne(Integer id) throws Exception {
+        PuntoEntrega puntoEntrega = obj.getById(id);
+        if (puntoEntrega == null) {
+            return null;
+        }
+
+        HashMap<String, Object> mapa = new HashMap<>();
+        mapa.put("id", puntoEntrega.getId());
+        mapa.put("callePrincipal", puntoEntrega.getCallePrincipal());
+        mapa.put("calleSecundaria", puntoEntrega.getCalleSecundaria());
+        mapa.put("num", puntoEntrega.getNum());
+        mapa.put("referencia", puntoEntrega.getReferencia());
+        return mapa;
+    }
+
     public PuntoEntregaServices() {
         this.obj = new PuntoEntregaDao();
     }
 
-    public LinkedList listAll() throws Exception {
+    public LinkedList<PuntoEntrega> listAll() throws Exception {
         return obj.getListAll();
     }
 
@@ -94,5 +105,14 @@ public class PuntoEntregaServices {
 
     public String getByJson(Integer index) throws Exception {
         return obj.getByJson(index);
+    }
+
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        return obj.isUnique(campo, value);
+    }
+
+    public void validateField(String field, HashMap<String, Object> map, String... validations) throws Exception {
+        PuntoEntrega persona = this.getPuntoEntrega();
+        FieldValidator.validateAndSet(persona, map, field, validations);
     }
 }

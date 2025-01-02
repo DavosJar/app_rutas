@@ -1,10 +1,10 @@
 package com.app_rutas.controller.dao.services;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import com.app_rutas.controller.dao.PedidoDao;
-import com.app_rutas.models.Itinerario;
-import com.app_rutas.models.OrdenEntrega;
+import com.app_rutas.models.Cliente;
 import com.app_rutas.models.Pedido;
 import com.app_rutas.models.PuntoEntrega;
 import com.app_rutas.models.enums.ContenidoEnum;
@@ -13,24 +13,23 @@ import com.app_rutas.controller.tda.list.LinkedList;
 public class PedidoServices {
     private PedidoDao obj;
 
-    public Object[] listShowAll() throws Exception{
+    public Object[] listShowAll() throws Exception {
         if (!obj.getListAll().isEmpty()) {
             Pedido[] lista = (Pedido[]) obj.getListAll().toArray();
             Object[] respuesta = new Object[lista.length];
             for (int i = 0; i < lista.length; i++) {
-                OrdenEntrega o = new OrdenEntregaServices().get(lista[i].getIdOrdenEntrega());
-                PuntoEntrega p = new PuntoEntregaServices().get(lista[i].getIdPuntoEntrega());
-                Itinerario it = new ItinerarioServices().get(lista[i].getIdItinerario());
-                HashMap mapa = new HashMap();
-                mapa.put("contenido", lista[i].getContenido());
+                PuntoEntrega pe = new PuntoEntregaServices().get(lista[i].getIdPuntoEntrega());
+                Cliente c = new ClienteServices().get(lista[i].getIdCliente());
+                HashMap<String, Object> mapa = new HashMap<>();
                 mapa.put("fechaRegistro", lista[i].getFechaRegistro());
+                mapa.put("codigoUnico", lista[i].getCodigoUnico());
                 mapa.put("pesoTotal", lista[i].getPesoTotal());
                 mapa.put("volumen", lista[i].getVolumenTotal());
-                mapa.put("estado", lista[i].getEstado());
                 mapa.put("requiereFrio", lista[i].getRequiereFrio());
-                mapa.put("orden-entrega", o);
-                mapa.put("punto-entrega", p);
-                mapa.put("itinerario", it);
+                mapa.put("contenido", lista[i].getContenido());
+                mapa.put("atendido", lista[i].getIsAttended());
+                mapa.put("puntoEntrega", pe);
+                mapa.put("cliente", c);
                 respuesta[i] = mapa;
             }
             return respuesta;
@@ -38,11 +37,33 @@ public class PedidoServices {
         return new Object[] {};
     }
 
+    public Object showOne(Integer id) {
+        try {
+            Pedido p = obj.getById(id);
+            PuntoEntregaServices pes = new PuntoEntregaServices();
+            Object pe = new PuntoEntregaServices().get(p.getIdPuntoEntrega());
+            Object c = new ClienteServices().get(p.getIdCliente());
+            HashMap<String, Object> mapa = new HashMap<>();
+            mapa.put("fechaRegistro", p.getFechaRegistro());
+            mapa.put("codigoUnico", p.getCodigoUnico());
+            mapa.put("pesoTotal", p.getPesoTotal());
+            mapa.put("volumen", p.getVolumenTotal());
+            mapa.put("requiereFrio", p.getRequiereFrio());
+            mapa.put("contenido", p.getContenido());
+            mapa.put("atendido", p.getIsAttended());
+            mapa.put("puntoEntrega", pe);
+            mapa.put("cliente", c);
+            return mapa;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al buscar el pedido");
+        }
+    }
+
     public PedidoServices() {
         this.obj = new PedidoDao();
     }
 
-    public LinkedList listAll() throws Exception {
+    public LinkedList<Pedido> listAll() throws Exception {
         return obj.getListAll();
     }
 
@@ -75,11 +96,11 @@ public class PedidoServices {
         return obj.get(index);
     }
 
-    public ContenidoEnum[] getContenido() {
+    public ContenidoEnum[] getContenidos() {
         return obj.getContenido();
     }
 
-    public ContenidoEnum getContenidoEnum(String estado){
+    public ContenidoEnum getContenido(String estado) {
         return obj.getContenidoEnum(estado);
     }
 
@@ -109,5 +130,26 @@ public class PedidoServices {
 
     public String getByJson(Integer index) throws Exception {
         return obj.getByJson(index);
+    }
+
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        return obj.isUnique(campo, value);
+    }
+
+    public void validateField(String field, HashMap<String, Object> map, String... validations) throws Exception {
+        Pedido persona = this.getPedido();
+        FieldValidator.validateAndSet(persona, map, field, validations);
+    }
+
+    public String generarCodigoUnico(int id) {
+        Random random = new Random();
+        int aleatorio = random.nextInt(10000);
+        return String.format("%04d%04d", id % 10000, aleatorio);
+    }
+
+    public void matchAttende(Integer id) throws Exception {
+        this.obj.setPedido(getById(id));
+        this.obj.getPedido().setIsAttended(true);
+        this.obj.update();
     }
 }

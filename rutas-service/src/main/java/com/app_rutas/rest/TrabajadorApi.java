@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -14,30 +15,56 @@ import javax.ws.rs.core.Response.Status;
 
 import com.app_rutas.controller.dao.services.TrabajadorServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
+import com.app_rutas.controller.excepcion.ValueAlreadyExistException;
+import com.app_rutas.controller.tda.list.LinkedList;
+import com.app_rutas.models.Trabajador;
 
-@Path("/persona")
+@Path("/trabajador")
 public class TrabajadorApi {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
-    public Response getAllProyects() throws ListEmptyException, Exception {
+    public Response getAllProyects(@HeaderParam("Authorization") String authHeader) {
         HashMap<String, Object> res = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
-        // EventoCrudServices ev = new EventoCrudServices();
+        TrabajadorServices ts = new TrabajadorServices();
+
+        // Log para verificar el encabezado recibido
+        System.out.println("Authorization Header: " + authHeader);
+
+        // Verificar si el encabezado de autorización es nulo o no es "public"
+        if (authHeader == null || !"public".equals(authHeader)) {
+            System.out.println("Acceso no autorizado. Encabezado incorrecto o ausente.");
+            res.put("status", "ERROR");
+            res.put("msg", "Acceso no autorizado. Agrega el encabezado 'Authorization: public'.");
+            return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
+        }
+
         try {
+            // Log antes de llamar al servicio
+            System.out.println("Llamando a TrabajadorServices.listAll...");
+            LinkedList<Trabajador> lista = ts.listAll();
+
+            // Log para verificar si la lista obtenida es nula o vacía
+            if (lista == null) {
+                System.out.println("La lista de trabajadores es nula.");
+            } else if (lista.isEmpty()) {
+                System.out.println("La lista de trabajadores está vacía.");
+            } else {
+                System.out.println("Lista obtenida con " + lista.getSize() + " trabajadores.");
+            }
+
             res.put("status", "OK");
             res.put("msg", "Consulta exitosa.");
-            res.put("data", ps.listAll().toArray());
-            if (ps.listAll().isEmpty()) {
-                res.put("data", new Object[] {});
-            }
-            // ev.registrarEvento(TipoCrud.LIST, "Se ha consultado la lista de personas.");
+            res.put("data", lista == null || lista.isEmpty() ? new Object[] {} : lista.toArray());
             return Response.ok(res).build();
         } catch (Exception e) {
+            // Log del error capturado
+            System.err.println("Error al obtener la lista de trabajadores: " + e.getMessage());
+            e.printStackTrace();
+
             res.put("status", "ERROR");
-            res.put("msg", "Error al obtener la lista de personas: " + e.getMessage());
-            // ev.registrarEvento(TipoCrud.LIST, "Error inesperado: " + e.getMessage());
+            res.put("msg", "Error al obtener la lista de trabajadores: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }
@@ -45,15 +72,15 @@ public class TrabajadorApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/get/{id}")
-    public Response getPersonaById(@PathParam("id") Integer id) throws Exception {
+    public Response getTrabajadorById(@PathParam("id") Integer id) throws Exception {
         HashMap<String, Object> map = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
+        TrabajadorServices ts = new TrabajadorServices();
         try {
             map.put("msg", "OK");
-            map.put("data", ps.getPersonaById(id));
-            if (ps.getPersonaById(id) == null) {
+            map.put("data", ts.getById(id));
+            if (ts.getById(id) == null) {
                 map.put("msg", "ERROR");
-                map.put("error", "No se encontro el persona con id: " + id);
+                map.put("error", "No se encontro el trabajador con id: " + id);
                 return Response.status(Status.NOT_FOUND).entity(map).build();
             }
             return Response.ok(map).build();
@@ -70,49 +97,40 @@ public class TrabajadorApi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(HashMap<String, Object> map) {
         HashMap<String, Object> res = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
+        TrabajadorServices ts = new TrabajadorServices();
 
         try {
-            if (map.get("nombre") == null || map.get("nombre").toString().isEmpty()) {
-                throw new IllegalArgumentException("El campo 'nombre' es obligatorio.");
-            }
-            ps.getPersona().setNombre(map.get("nombre").toString());
 
-            if (map.get("apellido") == null || map.get("apellido").toString().isEmpty()) {
-                throw new IllegalArgumentException("El campo 'apellido' es obligatorio.");
-            }
-            ps.getPersona().setApellido(map.get("apellido").toString());
+            ts.validateField("nombre", map, "NOT_NULL", "ALPHABETIC", "MAX_LENGTH=25", "MIN_LENGTH=3");
+            ts.validateField("apellido", map, "NOT_NULL", "ALPHABETIC", "MAX_LENGTH=25", "MIN_LENGTH=3");
 
             if (map.get("tipoIdentificacion") != null) {
-                ps.getPersona().setTipoIdentificacion(ps.getTipo(map.get("tipoIdentificacion").toString()));
+                ts.getTrabajador().setTipoIdentificacion(ts.getTipo(map.get("tipoIdentificacion").toString()));
             }
-            if (map.get("identificacion") != null) {
-                ps.getPersona().setIdentificacion(map.get("identificacion").toString());
-            }
-            if (map.get("fechaNacimiento") != null) {
-                ps.getPersona().setFechaNacimiento(map.get("fechaNacimiento").toString());
-            }
-            if (map.get("direccion") != null) {
-                ps.getPersona().setDireccion(map.get("direccion").toString());
-            }
-            if (map.get("telefono") != null) {
-                ps.getPersona().setTelefono(map.get("telefono").toString());
-            }
-            if (map.get("email") != null) {
-                ps.getPersona().setEmail(map.get("email").toString());
-            }
+            ts.validateField("identificacion", map, "NOT_NULL", "IS_UNIQUE", "NUMERIC", "LENGTH=10");
+            ts.validateField("fechaNacimiento", map, "DATE", "NOT_NULL", "MIN_DATE=1900-01-01", "MAX_DATE=2021-12-31");
+            ts.validateField("direccion", map, "NOT_NULL", "ALPHANUMERIC", "MAX_LENGTH=50", "MIN_LENGTH=5");
+            ts.validateField("telefono", map, "NOT_NULL", "NUMERIC", "LENGTH=10");
+            ts.validateField("email", map, "NOT_NULL", "VALID_EMAIL", "IS_UNIQUE");
             if (map.get("sexo") != null) {
-                ps.getPersona().setSexo(ps.getSexo(map.get("sexo").toString()));
+                ts.getTrabajador().setSexo(ts.getSexo(map.get("sexo").toString()));
             }
+            ts.save();
 
-            ps.save();
             res.put("estado", "Ok");
-            res.put("data", "Registro guardado con exito.");
+            res.put("data", "Registro guardado con éxito.");
             return Response.ok(res).build();
-        } catch (IllegalArgumentException e) {
+
+        } catch (ValueAlreadyExistException e) {
             res.put("estado", "error");
             res.put("data", e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
+
+        } catch (IllegalArgumentException e) {
+            res.put("estado", "error");
+            res.put("data", "Error de validación: " + e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
+
         } catch (Exception e) {
             res.put("estado", "error");
             res.put("data", "Error interno del servidor: " + e.getMessage());
@@ -126,10 +144,10 @@ public class TrabajadorApi {
     public Response delete(@PathParam("id") Integer id) throws Exception {
 
         HashMap<String, Object> res = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
+        TrabajadorServices ts = new TrabajadorServices();
         try {
-            ps.getPersona().setId(id);
-            ps.delete();
+            ts.getTrabajador().setId(id);
+            ts.delete();
             res.put("estado", "Ok");
             res.put("data", "Registro eliminado con exito.");
 
@@ -144,81 +162,91 @@ public class TrabajadorApi {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/update")
-    public Response update(HashMap<String, Object> map) throws Exception {
+    public Response update(HashMap<String, Object> map) {
         HashMap<String, Object> res = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
-        if (ps.getPersonaById(Integer.valueOf(map.get("id").toString())) != null) {
-            try {
-                if (map.get("id") == null || map.get("id").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'id' es obligatorio.");
-                }
-                if (map.get("nombre") == null || map.get("nombre").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'nombre' es obligatorio.");
-                }
-                if (map.get("apellido") == null || map.get("apellido").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'apellido' es obligatorio.");
-                }
-                if (map.get("tipoIdentificacion") == null || map.get("tipoIdentificacion").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'tipoIdentificacion' es obligatorio.");
-                }
-                if (map.get("identificacion") == null || map.get("identificacion").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'identificacion' es obligatorio.");
-                }
-                if (map.get("fechaNacimiento") == null || map.get("fechaNacimiento").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'fechaNacimiento' es obligatorio.");
-                }
-                if (map.get("direccion") == null || map.get("direccion").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'direccion' es obligatorio.");
-                }
-                if (map.get("telefono") == null || map.get("telefono").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'telefono' es obligatorio.");
-                }
-                if (map.get("email") == null || map.get("email").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'email' es obligatorio.");
-                }
-                if (map.get("sexo") == null || map.get("sexo").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'sexo' es obligatorio.");
-                }
-                System.out.println("falta alguin dato");
-                ps.setPersona(ps.getPersonaById(Integer.valueOf(map.get("id").toString())));
-                ps.getPersona().setNombre(map.get("nombre").toString());
-                ps.getPersona().setApellido(map.get("apellido").toString());
-                ps.getPersona().setTipoIdentificacion(ps.getTipo(map.get("tipoIdentificacion").toString()));
-                ps.getPersona().setIdentificacion(map.get("identificacion").toString());
-                ps.getPersona().setFechaNacimiento(map.get("fechaNacimiento").toString());
-                ps.getPersona().setDireccion(map.get("direccion").toString());
-                ps.getPersona().setTelefono(map.get("telefono").toString());
-                ps.getPersona().setEmail(map.get("email").toString());
-                ps.getPersona().setSexo(ps.getSexo(map.get("sexo").toString()));
+        TrabajadorServices ts = new TrabajadorServices();
 
-                ps.update();
-                res.put("estado", "Ok");
-                res.put("data", "Registro actualizado con exito.");
-                return Response.ok(res).build();
-            } catch (Exception e) {
-                res.put("estado", "error");
-                res.put("data", "Error interno del servidor: " + e.getMessage());
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
+        try {
+            if (map.get("id") == null) {
+                throw new IllegalArgumentException("El id es obligatorio");
             }
-        } else {
+            int id = (int) map.get("id");
+            ts.setTrabajador(ts.getById(id));
+
+            ts.validateField("id", map, "MIN_VALUE=1");
+            if (map.get("nombre") != null && !map.get("nombre").equals(ts.getTrabajador().getNombre())) {
+                ts.validateField("nombre", map, "NOT_NULL", "ALPHABETIC", "MAX_LENGTH=25", "MIN_LENGTH=3");
+            }
+            if (map.get("apellido") != null && !map.get("apellido").equals(ts.getTrabajador().getApellido())) {
+                ts.validateField("apellido", map, "NOT_NULL", "ALPHABETIC", "MAX_LENGTH=25", "MIN_LENGTH=3");
+            }
+            if (map.get("tipoIdentificacion") != null
+                    && !map.get("tipoIdentificacion").equals(ts.getTrabajador().getTipoIdentificacion())) {
+                ts.getTrabajador().setTipoIdentificacion(ts.getTipo(map.get("tipoIdentificacion").toString()));
+            }
+            if (map.get("identificacion") != null) {
+                String newIdentificacion = map.get("identificacion").toString();
+                String currentIdentificacion = ts.getTrabajador().getIdentificacion();
+                if (newIdentificacion.equalsIgnoreCase(currentIdentificacion)) {
+                    ts.getTrabajador().setIdentificacion(currentIdentificacion);
+                } else {
+                    ts.validateField("identificacion", map, "NOT_NULL", "IS_UNIQUE", "NUMERIC", "LENGTH=10");
+                }
+            }
+            if (map.get("fechaNacimiento") != null
+                    && !map.get("fechaNacimiento").equals(ts.getTrabajador().getFechaNacimiento())) {
+                ts.getTrabajador().setFechaNacimiento(map.get("fechaNacimiento").toString());
+            }
+            ts.validateField("direccion", map, "NOT_NULL", "ALPHANUMERIC", "MAX_LENGTH=50", "MIN_LENGTH=5");
+
+            if (map.get("telefono") != null && !map.get("telefono").equals(ts.getTrabajador().getTelefono())) {
+                ts.validateField("telefono", map, "NOT_NULL", "NUMERIC", "LENGTH=10");
+
+            }
+            if (map.get("email") != null) {
+                String newEmail = map.get("email").toString();
+                String currentEmail = ts.getTrabajador().getEmail();
+                if (newEmail.equalsIgnoreCase(currentEmail)) {
+                    ts.getTrabajador().setEmail(currentEmail);
+                } else {
+                    ts.validateField("email", map, "NOT_NULL", "VALID_EMAIL", "IS_UNIQUE");
+                }
+            }
+            if (map.get("sexo") != null && !map.get("sexo").equals(ts.getTrabajador().getSexo())) {
+                ts.getTrabajador().setSexo(ts.getSexo(map.get("sexo").toString()));
+            }
+
+            ts.update();
+            res.put("estado", "Ok");
+            res.put("data", "Registro actualizado con éxito.");
+            return Response.ok(res).build();
+        } catch (ValueAlreadyExistException e) {
             res.put("estado", "error");
-            res.put("data", "No se encontro el persona con id: " + map.get("id").toString());
-            return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+            res.put("data", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
+        } catch (IllegalArgumentException e) {
+            res.put("estado", "error");
+            res.put("data", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
+        } catch (Exception e) {
+            res.put("estado", "error");
+            res.put("data", "Error interno del servidor: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list/search/ident/{identificacion}")
-    public Response searchPersona(@PathParam("identificacion") String identificacion) throws Exception {
+    public Response searchTrabajador(@PathParam("identificacion") String identificacion) throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
+        TrabajadorServices ts = new TrabajadorServices();
         try {
             res.put("estado", "Ok");
-            res.put("data", ps.obtenerPersonaPor("identificacion", identificacion));
-            if (ps.obtenerPersonaPor(identificacion, ps) == null) {
+            res.put("data", ts.obtenerTrabajadorPor("identificacion", identificacion));
+            if (ts.obtenerTrabajadorPor("identificacion", identificacion) == null) {
                 res.put("estado", "error");
-                res.put("data", "No se encontro el persona con identificacion: " + identificacion);
+                res.put("data", "No se encontro el trabajador con identificacion: " + identificacion);
                 return Response.status(Response.Status.NOT_FOUND).entity(res).build();
             }
             return Response.ok(res).build();
@@ -232,14 +260,14 @@ public class TrabajadorApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list/search/{atributo}/{valor}")
-    public Response buscarPersonas(@PathParam("atributo") String atributo, @PathParam("valor") String valor)
+    public Response buscarTrabajadores(@PathParam("atributo") String atributo, @PathParam("valor") String valor)
             throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
+        TrabajadorServices ts = new TrabajadorServices();
         try {
             res.put("estado", "Ok");
-            res.put("data", ps.getPersonasBy(atributo, valor).toArray());
-            if (ps.getPersonasBy(atributo, valor).isEmpty()) {
+            res.put("data", ts.getTrabajadoresBy(atributo, valor).toArray());
+            if (ts.getTrabajadoresBy(atributo, valor).isEmpty()) {
                 res.put("data", new Object[] {});
             }
             return Response.ok(res).build();
@@ -253,14 +281,14 @@ public class TrabajadorApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list/order/{atributo}/{orden}")
-    public Response ordenarPersonas(@PathParam("atributo") String atributo, @PathParam("orden") Integer orden)
+    public Response ordenarTrabajadores(@PathParam("atributo") String atributo, @PathParam("orden") Integer orden)
             throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
+        TrabajadorServices ts = new TrabajadorServices();
         try {
             res.put("estado", "Ok");
-            res.put("data", ps.order(atributo, orden).toArray());
-            if (ps.order(atributo, orden).isEmpty()) {
+            res.put("data", ts.order(atributo, orden).toArray());
+            if (ts.order(atributo, orden).isEmpty()) {
                 res.put("data", new Object[] {});
             }
             return Response.ok(res).build();
@@ -276,9 +304,9 @@ public class TrabajadorApi {
     @Path("/sexo")
     public Response getSexo() throws ListEmptyException, Exception {
         HashMap<String, Object> map = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
+        TrabajadorServices ts = new TrabajadorServices();
         map.put("msg", "OK");
-        map.put("data", ps.getSexos());
+        map.put("data", ts.getSexos());
         return Response.ok(map).build();
     }
 
@@ -287,9 +315,9 @@ public class TrabajadorApi {
     @Path("/tipoidentificacion")
     public Response geTipos() throws ListEmptyException, Exception {
         HashMap<String, Object> map = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
+        TrabajadorServices ts = new TrabajadorServices();
         map.put("msg", "OK");
-        map.put("data", ps.getTipos());
+        map.put("data", ts.getTipos());
         return Response.ok(map).build();
     }
 
@@ -298,9 +326,9 @@ public class TrabajadorApi {
     @Path("/criterios")
     public Response getCriterios() throws ListEmptyException, Exception {
         HashMap<String, Object> map = new HashMap<>();
-        TrabajadorServices ps = new TrabajadorServices();
+        TrabajadorServices ts = new TrabajadorServices();
         map.put("msg", "OK");
-        map.put("data", ps.getPersonaAttributeLists());
+        map.put("data", ts.getTrabajadorAttributeLists());
         return Response.ok(map).build();
     }
 }

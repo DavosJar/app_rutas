@@ -1,7 +1,7 @@
 package com.app_rutas.models.enums;
 
 public enum ItinerarioEstadoEnum {
-    PENDINENTE("PENDIENTE"),
+    PENDIENTE("PENDIENTE"),
     EN_PROGRESO("EN PROGRESO"),
     COMPLETADO("COMPLETADO"),
     CANCELADO("CANCELADO"),

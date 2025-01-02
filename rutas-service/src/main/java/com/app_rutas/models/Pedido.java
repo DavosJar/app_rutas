@@ -1,35 +1,46 @@
 package com.app_rutas.models;
+
 import com.app_rutas.models.enums.ContenidoEnum;
+
 public class Pedido {
     private Integer id;
-    private String contenido;
     private String fechaRegistro;
+    private String codigoUnico;
     private Boolean requiereFrio;
+    private ContenidoEnum contenido;
     private Double volumenTotal;
-    private Float pesoTotal;
-    private ContenidoEnum estado;
-    private Integer idOrdenEntrega;
+    private Double pesoTotal;
     private Integer idPuntoEntrega;
-    private Integer idItinerario;
+    private Integer idCliente;
+    private String detalleContenido;
+    private Boolean isAttended;
+
+    public Boolean getIsAttended() {
+        return isAttended;
+    }
+
+    public void setIsAttended(Boolean isAttended) {
+        this.isAttended = isAttended;
+    }
 
     public Integer getId() {
-        return this.id;
+        return id;
+    }
+
+    public String getCodigoUnico() {
+        return codigoUnico;
+    }
+
+    public void setCodigoUnico(String codigoUnico) {
+        this.codigoUnico = codigoUnico;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getContenido() {
-        return this.contenido;
-    }
-
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
-    }
-
     public String getFechaRegistro() {
-        return this.fechaRegistro;
+        return fechaRegistro;
     }
 
     public void setFechaRegistro(String fechaRegistro) {
@@ -37,7 +48,7 @@ public class Pedido {
     }
 
     public Boolean getRequiereFrio() {
-        return this.requiereFrio;
+        return requiereFrio;
     }
 
     public void setRequiereFrio(Boolean requiereFrio) {
@@ -45,49 +56,50 @@ public class Pedido {
     }
 
     public Double getVolumenTotal() {
-        return this.volumenTotal;
+        return volumenTotal;
     }
 
     public void setVolumenTotal(Double volumenTotal) {
         this.volumenTotal = volumenTotal;
     }
 
-    public Float getPesoTotal() {
-        return this.pesoTotal;
+    public Double getPesoTotal() {
+        return pesoTotal;
     }
 
-    public void setPesoTotal(Float pesoTotal) {
+    public void setPesoTotal(Double pesoTotal) {
         this.pesoTotal = pesoTotal;
     }
 
-    public ContenidoEnum getEstado() {
-        return this.estado;
-    }
-
-    public void setEstado(ContenidoEnum estado) {
-        this.estado = estado;
-    }
-
-    public Integer getIdOrdenEntrega() {
-        return this.idOrdenEntrega;
-    }
-
-    public void setIdOrdenEntrega(Integer idOrdenEntrega) {
-        this.idOrdenEntrega = idOrdenEntrega;
-    }
-
     public Integer getIdPuntoEntrega() {
-        return this.idPuntoEntrega;
+        return idPuntoEntrega;
     }
 
     public void setIdPuntoEntrega(Integer idPuntoEntrega) {
         this.idPuntoEntrega = idPuntoEntrega;
     }
-    public Integer getIdItinerario() {
-        return this.idItinerario;
+
+    public String getDetalleContenido() {
+        return detalleContenido;
     }
 
-    public void setIdItinerario(Integer idItinerario) {
-        this.idItinerario = idItinerario;
+    public void setDetalleContenido(String detalleContenido) {
+        this.detalleContenido = detalleContenido;
+    }
+
+    public ContenidoEnum getContenido() {
+        return contenido;
+    }
+
+    public void setContenido(ContenidoEnum contenido) {
+        this.contenido = contenido;
+    }
+
+    public Integer getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
     }
 }

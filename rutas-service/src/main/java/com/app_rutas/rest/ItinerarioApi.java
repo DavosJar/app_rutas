@@ -1,5 +1,6 @@
 package com.app_rutas.rest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.ws.rs.DELETE;
@@ -17,6 +18,7 @@ import com.app_rutas.controller.dao.services.ItinerarioServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Itinerario;
+import com.app_rutas.models.OrdenEntrega;
 
 @Path("/itinerario")
 public class ItinerarioApi {
@@ -25,7 +27,7 @@ public class ItinerarioApi {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
     public Response getAll() throws ListEmptyException, Exception {
-        HashMap res = new HashMap<>();
+        HashMap<String, Object> res = new HashMap<>();
         ItinerarioServices ps = new ItinerarioServices();
         try {
             res.put("status", "success");
@@ -43,7 +45,7 @@ public class ItinerarioApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getType() {
-        HashMap map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         ItinerarioServices ps = new ItinerarioServices();
         map.put("msg", "OK");
         map.put("data", ps.getEstado());
@@ -83,24 +85,19 @@ public class ItinerarioApi {
         HashMap<String, Object> res = new HashMap<>();
 
         try {
-            if (map.get("idConductorAsignado") != null) {
+            if (map.get("idConductorVehiculo") != null) {
                 ConductorVehiculoServices cas = new ConductorVehiculoServices();
-                cas.setConductor(cas.get(Integer.parseInt(map.get("idConductorAsignado").toString())));
-                if (cas.getConductor().getId() != null) {
+                cas.setConductorVehiculo(cas.get(Integer.parseInt(map.get("idConductorVehiculo").toString())));
+                if (cas.getConductorVehiculo().getId() != null) {
                     ItinerarioServices ps = new ItinerarioServices();
 
-                    if (map.get("detallesEntrega") == null || map.get("detallesEntrega").toString().isEmpty()) {
-                        throw new IllegalArgumentException("El campo 'detallesEntrega' es obligatorio.");
-                    }
-                    if (map.get("fechaGeneracion") == null || map.get("fechaGeneracion").toString().isEmpty()) {
-                        throw new IllegalArgumentException("El campo 'fechaGeneracion' es obligatorio.");
-                    }
+                    String fehcaGeneracion = java.time.LocalDate.now().toString();
+                    ps.getItinerario().setFechaGeneracion(fehcaGeneracion);
+                    ps.getItinerario().setFechaProgramada(map.get("fechaProgramada").toString());
                     if (map.get("estado") != null) {
                         ps.getItinerario().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
                     }
-                    ps.getItinerario().setDetallesEntrega(map.get("detallesEntrega").toString());
-                    ps.getItinerario().setFechaGeneracion(map.get("fechaGeneracion").toString());
-                    ps.getItinerario().setIdConductorAsignado(cas.getConductor().getId());
+                    ps.getItinerario().setIdConductorVehiculo(cas.getConductorVehiculo().getId());
                     ps.save();
                     res.put("estado", "Ok");
                     res.put("data", "Registro guardado con exito.");
@@ -150,8 +147,8 @@ public class ItinerarioApi {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/update")
-    public Response update(HashMap map) {
-        HashMap res = new HashMap<>();
+    public Response update(HashMap<String, Object> map) {
+        HashMap<String, Object> res = new HashMap<>();
         try {
             ItinerarioServices ps = new ItinerarioServices();
             ps.setItinerario(ps.get(Integer.parseInt(map.get("id").toString())));
@@ -162,16 +159,14 @@ public class ItinerarioApi {
             } else {
                 if (map.get("conductor-asignado") != null) {
                     ConductorVehiculoServices cas = new ConductorVehiculoServices();
-                    cas.setConductor(cas.get(Integer.parseInt(map.get("conductor-asignado").toString())));
-                    if (cas.getConductor().getId() != null) {
-                        if (map.get("detallesEntrega") != null) {
-                            ps.getItinerario().setDetallesEntrega(map.get("detallesEntrega").toString());
-                        }
+                    cas.setConductorVehiculo(cas.get(Integer.parseInt(map.get("conductor-asignado").toString())));
+                    if (cas.getConductorVehiculo().getId() != null) {
+
                         if (map.get("fechaGeneracion") != null) {
                             ps.getItinerario().setFechaGeneracion(map.get("fechaGeneracion").toString());
                         }
                         ps.getItinerario().setEstado(ps.getEstadoEnum(map.get("estado").toString()));
-                        ps.getItinerario().setIdConductorAsignado(cas.getConductor().getId());
+                        ps.getItinerario().setIdConductorVehiculo(cas.getConductorVehiculo().getId());
                         ps.update();
                         res.put("status", "success");
                         res.put("message", "Itinerario actualizado con exito.");
@@ -246,4 +241,39 @@ public class ItinerarioApi {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/generar")
+    public Response generarItinerario(HashMap<String, Object> map) {
+        HashMap<String, Object> res = new HashMap<>();
+        ItinerarioServices is = new ItinerarioServices();
+        try {
+            Integer id = Integer.parseInt(map.get("id").toString());
+
+            is.setItinerario(is.getById(id));
+
+            LinkedList<OrdenEntrega> ordenesEntrega = is.generarOrdenList(id);
+            OrdenEntrega[] ordenes = ordenesEntrega.toArray();
+            ArrayList<OrdenEntrega> ordenes1 = new ArrayList<>();
+            for (OrdenEntrega ordenEntrega : ordenes) {
+                ordenes1.add(ordenEntrega);
+            }
+
+            is.getItinerario().setDetallesEntrega(ordenes1);
+            is.update();
+
+            res.put("estado", "Ok");
+            res.put("data", "Itinerario generado con éxito.");
+            res.put("id", is.getItinerario().getId());
+            res.put("ordenes", ordenesEntrega.toArray());
+
+            return Response.ok(res).build();
+        } catch (Exception e) {
+            res.put("estado", "error");
+            res.put("data", "Error interno del servidor: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
+        }
+    }
+
 }

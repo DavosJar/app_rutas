@@ -2,6 +2,7 @@ package com.app_rutas.controller.dao;
 
 import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
+import com.app_rutas.controller.excepcion.ValueAlreadyExistException;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Pedido;
 import com.app_rutas.models.enums.ContenidoEnum;
@@ -103,7 +104,7 @@ public class PedidoDao extends AdapterDao<Pedido> {
                 mid = (low + high) / 2;
 
                 String midValue = obtenerAttributeValue(aux[mid], attribute).toString().toLowerCase();
-                //System.out.println("Comparando: " + midValue + " con " + searchValue);
+                // System.out.println("Comparando: " + midValue + " con " + searchValue);
 
                 if (midValue.startsWith(searchValue)) {
                     if (mid == 0 || !obtenerAttributeValue(aux[mid - 1], attribute).toString().toLowerCase()
@@ -203,6 +204,31 @@ public class PedidoDao extends AdapterDao<Pedido> {
     public LinkedList<Pedido> order(String attribute, Integer type) throws Exception {
         LinkedList<Pedido> lista = listAll();
         return lista.isEmpty() ? lista : lista.mergeSort(attribute, type);
+    }
+
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        if (campo == null || value == null) {
+            throw new IllegalArgumentException("El atributo y el valor no pueden ser nulos.");
+        }
+
+        if (this.listAll == null) {
+            this.listAll = listAll();
+        }
+
+        if (this.listAll.isEmpty()) {
+            return true;
+        }
+
+        Pedido[] pedidos = this.listAll.toArray();
+
+        for (Pedido p : pedidos) {
+            Object attributeValue = obtenerAttributeValue(p, campo);
+            if (attributeValue != null && attributeValue.toString().equalsIgnoreCase(value.toString())) {
+                throw new ValueAlreadyExistException("El valor ya existe.");
+            }
+        }
+
+        return true;
     }
 
     public String toJson() throws Exception {

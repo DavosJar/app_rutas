@@ -1,5 +1,7 @@
 package com.app_rutas.controller.dao.services;
 
+import java.util.HashMap;
+
 import com.app_rutas.controller.dao.ConductorDao;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Conductor;
@@ -47,7 +49,7 @@ public class ConductorServices {
 
     }
 
-    public LinkedList<Conductor> getConductorsBy(String atributo, Object valor) throws Exception {
+    public LinkedList<Conductor> getConductoresBy(String atributo, Object valor) throws Exception {
         return obj.buscar(atributo, valor);
     }
 
@@ -99,7 +101,24 @@ public class ConductorServices {
         return obj.getTurnos();
     }
 
-    public String[] getConductorAttributeLists() {
+    public String[] getAttributeList() {
         return obj.getConductorAttributeLists();
+    }
+
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        Boolean unicoTrabajador, unicoConductor;
+        if (campo.equals("licenciaConducir")) {
+            unicoConductor = obj.isUnique(campo, value);
+            unicoTrabajador = true;
+        } else {
+            unicoTrabajador = new TrabajadorServices().isUnique(campo, value);
+            unicoConductor = obj.isUnique(campo, value);
+        }
+        return unicoTrabajador && unicoConductor;
+    }
+
+    public void validateField(String field, HashMap<String, Object> map, String... validations) throws Exception {
+        Conductor persona = this.getConductor();
+        FieldValidator.validateAndSet(persona, map, field, validations);
     }
 }

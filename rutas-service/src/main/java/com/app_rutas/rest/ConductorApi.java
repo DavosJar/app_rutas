@@ -14,6 +14,9 @@ import javax.ws.rs.core.Response.Status;
 
 import com.app_rutas.controller.dao.services.ConductorServices;
 import com.app_rutas.controller.excepcion.ListEmptyException;
+import com.app_rutas.controller.excepcion.ValueAlreadyExistException;
+import com.app_rutas.controller.tda.list.LinkedList;
+import com.app_rutas.models.Conductor;
 
 @Path("/conductor")
 public class ConductorApi {
@@ -21,15 +24,16 @@ public class ConductorApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
-    public Response getAllProyects() throws ListEmptyException, Exception {
+    public Response getAllProyeccs() throws ListEmptyException, Exception {
         HashMap<String, Object> res = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
+        ConductorServices cs = new ConductorServices();
         // EventoCrudServices ev = new EventoCrudServices();
         try {
+            LinkedList<Conductor> lista = cs.listAll();
             res.put("status", "OK");
             res.put("msg", "Consulta exitosa.");
-            res.put("data", ps.listAll().toArray());
-            if (ps.listAll().isEmpty()) {
+            res.put("data", lista.toArray());
+            if (lista.isEmpty()) {
                 res.put("data", new Object[] {});
             }
             // ev.registrarEvento(TipoCrud.LIST, "Se ha consultado la lista de
@@ -48,11 +52,11 @@ public class ConductorApi {
     @Path("/get/{id}")
     public Response getConductorById(@PathParam("id") Integer id) throws Exception {
         HashMap<String, Object> map = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
+        ConductorServices cs = new ConductorServices();
         try {
             map.put("msg", "OK");
-            map.put("data", ps.getConductorById(id));
-            if (ps.getConductorById(id) == null) {
+            map.put("data", cs.getConductorById(id));
+            if (cs.getConductorById(id) == null) {
                 map.put("msg", "ERROR");
                 map.put("error", "No se encontro el conductor con id: " + id);
                 return Response.status(Status.NOT_FOUND).entity(map).build();
@@ -71,64 +75,52 @@ public class ConductorApi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(HashMap<String, Object> map) {
         HashMap<String, Object> res = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
+        ConductorServices cs = new ConductorServices();
 
         try {
-            if (map.get("nombre") == null || map.get("nombre").toString().isEmpty()) {
-                throw new IllegalArgumentException("El campo 'nombre' es obligatorio.");
-            }
-            ps.getConductor().setNombre(map.get("nombre").toString());
 
-            if (map.get("apellido") == null || map.get("apellido").toString().isEmpty()) {
-                throw new IllegalArgumentException("El campo 'apellido' es obligatorio.");
-            }
-            ps.getConductor().setApellido(map.get("apellido").toString());
+            cs.validateField("nombre", map, "NOT_NULL", "ALPHABETIC", "MAX_LENGTH=25", "MIN_LENGTH=3");
+            cs.validateField("apellido", map, "NOT_NULL", "ALPHABETIC", "MAX_LENGTH=25", "MIN_LENGTH=3");
 
             if (map.get("tipoIdentificacion") != null) {
-                ps.getConductor().setTipoIdentificacion(ps.getTipo(map.get("tipoIdentificacion").toString()));
+                cs.getConductor().setTipoIdentificacion(cs.getTipo(map.get("tipoIdentificacion").toString()));
             }
-            if (map.get("identificacion") != null) {
-                ps.getConductor().setIdentificacion(map.get("identificacion").toString());
-            }
-            if (map.get("fechaNacimiento") != null) {
-                ps.getConductor().setFechaNacimiento(map.get("fechaNacimiento").toString());
-            }
-            if (map.get("direccion") != null) {
-                ps.getConductor().setDireccion(map.get("direccion").toString());
-            }
-            if (map.get("telefono") != null) {
-                ps.getConductor().setTelefono(map.get("telefono").toString());
-            }
-            if (map.get("email") != null) {
-                ps.getConductor().setEmail(map.get("email").toString());
-            }
+            cs.validateField("identificacion", map, "NOT_NULL", "IS_UNIQUE", "NUMERIC", "LENGTH=10");
+            cs.validateField("fechaNacimiento", map, "DATE", "NOT_NULL", "MIN_DATE=1900-01-01", "MAX_DATE=2021-12-31");
+            cs.validateField("direccion", map, "NOT_NULL", "ALPHANUMERIC", "MAX_LENGTH=50", "MIN_LENGTH=5");
+            cs.validateField("telefono", map, "NOT_NULL", "NUMERIC", "LENGTH=10");
+            cs.validateField("email", map, "NOT_NULL", "VALID_EMAIL", "IS_UNIQUE");
             if (map.get("sexo") != null) {
-                ps.getConductor().setSexo(ps.getSexo(map.get("sexo").toString()));
+                cs.getConductor().setSexo(cs.getSexo(map.get("sexo").toString()));
             }
-            if (map.get("licenciaConducir") != null) {
-                ps.getConductor().setLicenciaConducir(map.get("licenciaConducir").toString());
-            }
-            if (map.get("caducidadLicencia") != null) {
-                ps.getConductor().setCaducidadLicencia(map.get("caducidadLicencia").toString());
-            }
-            if (map.get("salario") != null) {
-                ps.getConductor().setSalario(Float.valueOf(map.get("salario").toString()));
-            }
+            cs.validateField("licenciaConducir", map, "NOT_NULL", "IS_UNIQUE", "NUMERIC", "LENGTH=10");
+
+            cs.validateField("caducidadLicencia", map, "DATE", "NOT_NULL", "MIN_DATE=1950-01-01",
+                    "MAX_DATE=2021-12-31");
+            cs.validateField("salario", map, "NOT_NULL", "MIN_VALUE=0");
             if (map.get("turno") != null) {
-                ps.getConductor().setTurno(ps.getTurno(map.get("turno").toString()));
+                cs.getConductor().setTurno(cs.getTurno(map.get("turno").toString()));
             }
             if (map.get("estado") != null) {
-                ps.getConductor().setEstado(ps.getEstado(map.get("estado").toString()));
+                cs.getConductor().setEstado(cs.getEstado(map.get("estado").toString()));
             }
-            //System.out.println("datos: " + ps.getConductor().getLicenciaConducir());
-            ps.save();
+            cs.getConductor().setIsAsigned(false);
+            cs.save();
+
             res.put("estado", "Ok");
-            res.put("data", "Conductor guardado con exito.");
+            res.put("data", "Registro guardado con éxito.");
             return Response.ok(res).build();
-        } catch (IllegalArgumentException e) {
+
+        } catch (ValueAlreadyExistException e) {
             res.put("estado", "error");
             res.put("data", e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
+
+        } catch (IllegalArgumentException e) {
+            res.put("estado", "error");
+            res.put("data", "Error de validación: " + e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
+
         } catch (Exception e) {
             res.put("estado", "error");
             res.put("data", "Error interno del servidor: " + e.getMessage());
@@ -142,12 +134,12 @@ public class ConductorApi {
     public Response delete(@PathParam("id") Integer id) throws Exception {
 
         HashMap<String, Object> res = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
+        ConductorServices cs = new ConductorServices();
         try {
-            ps.getConductor().setId(id);
-            ps.delete();
+            cs.getConductor().setId(id);
+            cs.delete();
             res.put("estado", "Ok");
-            res.put("data", "Conductor eliminado con exito.");
+            res.put("data", "Registro eliminado con exito.");
 
             return Response.ok(res).build();
         } catch (Exception e) {
@@ -160,81 +152,99 @@ public class ConductorApi {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/update")
-    public Response update(HashMap<String, Object> map) throws Exception {
+    public Response update(HashMap<String, Object> map) {
         HashMap<String, Object> res = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
-        if (ps.getConductorById(Integer.valueOf(map.get("id").toString())) != null) {
-            try {
-                if (map.get("id") == null || map.get("id").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'id' es obligatorio.");
-                }
-                if (map.get("nombre") == null || map.get("nombre").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'nombre' es obligatorio.");
-                }
-                if (map.get("apellido") == null || map.get("apellido").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'apellido' es obligatorio.");
-                }
-                if (map.get("tipoIdentificacion") == null || map.get("tipoIdentificacion").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'tipoIdentificacion' es obligatorio.");
-                }
-                if (map.get("identificacion") == null || map.get("identificacion").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'identificacion' es obligatorio.");
-                }
-                if (map.get("fechaNacimiento") == null || map.get("fechaNacimiento").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'fechaNacimiento' es obligatorio.");
-                }
-                if (map.get("direccion") == null || map.get("direccion").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'direccion' es obligatorio.");
-                }
-                if (map.get("telefono") == null || map.get("telefono").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'telefono' es obligatorio.");
-                }
-                if (map.get("email") == null || map.get("email").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'email' es obligatorio.");
-                }
-                if (map.get("sexo") == null || map.get("sexo").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'sexo' es obligatorio.");
-                }
-                if (map.get("licenciaConducir") == null || map.get("licenciaConducir").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'licenciaConducir' es obligatorio.");
-                }
-                if (map.get("caducidadLicencia") == null || map.get("caducidadLicencia").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'caducidadLicencia' es obligatorio.");
-                }
-                if (map.get("salario") == null || map.get("salario").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'salario' es obligatorio.");
-                }
-                if (map.get("turno") == null || map.get("turno").toString().isEmpty()) {
-                    throw new IllegalArgumentException("El campo 'turno' es obligatorio.");
-                }
-                if (map.get("estado") == null || map.get("estado").toString().isEmpty()) {
-                    throw new IllegalArgumentException("Elsave campo 'estado' es obligatorio.");
-                }
-                //System.out.println("falta alguin dato");
-                ps.setConductor(ps.getConductorById(Integer.valueOf(map.get("id").toString())));
-                ps.getConductor().setNombre(map.get("nombre").toString());
-                ps.getConductor().setApellido(map.get("apellido").toString());
-                ps.getConductor().setTipoIdentificacion(ps.getTipo(map.get("tipoIdentificacion").toString()));
-                ps.getConductor().setIdentificacion(map.get("identificacion").toString());
-                ps.getConductor().setFechaNacimiento(map.get("fechaNacimiento").toString());
-                ps.getConductor().setDireccion(map.get("direccion").toString());
-                ps.getConductor().setTelefono(map.get("telefono").toString());
-                ps.getConductor().setEmail(map.get("email").toString());
-                ps.getConductor().setSexo(ps.getSexo(map.get("sexo").toString()));
+        ConductorServices cs = new ConductorServices();
 
-                ps.update();
-                res.put("estado", "Ok");
-                res.put("data", "Conductor actualizado con exito.");
-                return Response.ok(res).build();
-            } catch (Exception e) {
-                res.put("estado", "error");
-                res.put("data", "Error interno del servidor: " + e.getMessage());
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
+        try {
+            if (map.get("id") == null) {
+                throw new IllegalArgumentException("El id es obligatorio");
             }
-        } else {
+            int id = (int) map.get("id");
+            cs.setConductor(cs.getConductorById(id));
+            System.out.println("Conductor obtenido " + cs.getConductorById(id));
+
+            cs.validateField("id", map, "MIN_VALUE=1");
+            if (map.get("nombre") != null && !map.get("nombre").equals(cs.getConductor().getNombre())) {
+                cs.validateField("nombre", map, "NOT_NULL", "ALPHABETIC", "MAX_LENGTH=25", "MIN_LENGTH=3");
+            }
+            if (map.get("apellido") != null && !map.get("apellido").equals(cs.getConductor().getApellido())) {
+                cs.validateField("apellido", map, "NOT_NULL", "ALPHABETIC", "MAX_LENGTH=25", "MIN_LENGTH=3");
+            }
+            if (map.get("tipoIdentificacion") != null
+                    && !map.get("tipoIdentificacion").equals(cs.getConductor().getTipoIdentificacion())) {
+                cs.getConductor().setTipoIdentificacion(cs.getTipo(map.get("tipoIdentificacion").toString()));
+            }
+            if (map.get("identificacion") != null) {
+                String newIdentificacion = map.get("identificacion").toString();
+                String currentIdentificacion = cs.getConductor().getIdentificacion();
+                if (newIdentificacion.equalsIgnoreCase(currentIdentificacion)) {
+                    cs.getConductor().setIdentificacion(currentIdentificacion);
+                } else {
+                    cs.validateField("identificacion", map, "NOT_NULL", "IS_UNIQUE", "NUMERIC", "LENGTH=10");
+                }
+            }
+            if (map.get("fechaNacimiento") != null
+                    && !map.get("fechaNacimiento").equals(cs.getConductor().getFechaNacimiento())) {
+                cs.getConductor().setFechaNacimiento(map.get("fechaNacimiento").toString());
+            }
+            cs.validateField("direccion", map, "NOT_NULL", "ALPHANUMERIC", "MAX_LENGTH=50", "MIN_LENGTH=5");
+
+            if (map.get("telefono") != null && !map.get("telefono").equals(cs.getConductor().getTelefono())) {
+                cs.validateField("telefono", map, "NOT_NULL", "NUMERIC", "LENGTH=10");
+
+            }
+            if (map.get("email") != null) {
+                String newEmail = map.get("email").toString();
+                String currentEmail = cs.getConductor().getEmail();
+                if (newEmail.equalsIgnoreCase(currentEmail)) {
+                    cs.getConductor().setEmail(currentEmail);
+                } else {
+                    cs.validateField("email", map, "NOT_NULL", "VALID_EMAIL", "IS_UNIQUE");
+                }
+            }
+            if (map.get("sexo") != null && !map.get("sexo").equals(cs.getConductor().getSexo())) {
+                cs.getConductor().setSexo(cs.getSexo(map.get("sexo").toString()));
+            }
+            if (map.get("licenciaConducir") != null) {
+                String newLicencia = map.get("licenciaConducir").toString();
+                String currentLic = cs.getConductor().getLicenciaConducir();
+                if (newLicencia.equalsIgnoreCase(currentLic)) {
+                    cs.getConductor().setLicenciaConducir(currentLic);
+                } else {
+                    cs.validateField("licenciaConducir", map, "NOT_NULL", "IS_UNIQUE", "NUMERIC", "LENGTH=10");
+                }
+            }
+            if (map.get("salario") != null && !map.get("salario").equals(cs.getConductor().getNombre())) {
+                cs.validateField("salario", map, "NOT_NULL", "MIN_VALUE=0");
+            }
+            if (map.get("turno") != null
+                    && !map.get("turno").equals(cs.getConductor().getTurno())) {
+                cs.getConductor().setTurno(cs.getTurno(map.get("turno").toString()));
+            }
+            if (map.get("estado") != null
+                    && !map.get("estado").equals(cs.getConductor().getEstado())) {
+                cs.getConductor().setEstado(cs.getEstado(map.get("estado").toString()));
+            }
+            if (map.get("isAsigend") != null) {
+                cs.getConductor().setIsAsigned(Boolean.parseBoolean(map.get("isAsigned").toString()));
+            }
+            cs.update();
+            res.put("estado", "Ok");
+            res.put("data", "Registro actualizado con éxito.");
+            return Response.ok(res).build();
+        } catch (ValueAlreadyExistException e) {
             res.put("estado", "error");
-            res.put("data", "No se encontro el conductor con id: " + map.get("id").toString());
-            return Response.status(Response.Status.NOT_FOUND).entity(res).build();
+            res.put("data", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
+        } catch (IllegalArgumentException e) {
+            res.put("estado", "error");
+            res.put("data", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(res).build();
+        } catch (Exception e) {
+            res.put("estado", "error");
+            res.put("data", "Error interno del servidor: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }
 
@@ -243,11 +253,11 @@ public class ConductorApi {
     @Path("/list/search/ident/{identificacion}")
     public Response searchConductor(@PathParam("identificacion") String identificacion) throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
+        ConductorServices cs = new ConductorServices();
         try {
             res.put("estado", "Ok");
-            res.put("data", ps.obtenerConductorPor("identificacion", identificacion));
-            if (ps.obtenerConductorPor(identificacion, ps) == null) {
+            res.put("data", cs.obtenerConductorPor("identificacion", identificacion));
+            if (cs.obtenerConductorPor("identificacion", identificacion) == null) {
                 res.put("estado", "error");
                 res.put("data", "No se encontro el conductor con identificacion: " + identificacion);
                 return Response.status(Response.Status.NOT_FOUND).entity(res).build();
@@ -263,14 +273,14 @@ public class ConductorApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list/search/{atributo}/{valor}")
-    public Response buscarConductors(@PathParam("atributo") String atributo, @PathParam("valor") String valor)
+    public Response buscarConductores(@PathParam("atributo") String atributo, @PathParam("valor") String valor)
             throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
+        ConductorServices cs = new ConductorServices();
         try {
             res.put("estado", "Ok");
-            res.put("data", ps.getConductorsBy(atributo, valor).toArray());
-            if (ps.getConductorsBy(atributo, valor).isEmpty()) {
+            res.put("data", cs.getConductoresBy(atributo, valor).toArray());
+            if (cs.getConductoresBy(atributo, valor).isEmpty()) {
                 res.put("data", new Object[] {});
             }
             return Response.ok(res).build();
@@ -284,14 +294,14 @@ public class ConductorApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list/order/{atributo}/{orden}")
-    public Response ordenarConductors(@PathParam("atributo") String atributo, @PathParam("orden") Integer orden)
+    public Response ordenarConductores(@PathParam("atributo") String atributo, @PathParam("orden") Integer orden)
             throws Exception {
         HashMap<String, Object> res = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
+        ConductorServices cs = new ConductorServices();
         try {
             res.put("estado", "Ok");
-            res.put("data", ps.order(atributo, orden).toArray());
-            if (ps.order(atributo, orden).isEmpty()) {
+            res.put("data", cs.order(atributo, orden).toArray());
+            if (cs.order(atributo, orden).isEmpty()) {
                 res.put("data", new Object[] {});
             }
             return Response.ok(res).build();
@@ -307,9 +317,9 @@ public class ConductorApi {
     @Path("/sexo")
     public Response getSexo() throws ListEmptyException, Exception {
         HashMap<String, Object> map = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
+        ConductorServices cs = new ConductorServices();
         map.put("msg", "OK");
-        map.put("data", ps.getSexos());
+        map.put("data", cs.getSexos());
         return Response.ok(map).build();
     }
 
@@ -318,9 +328,9 @@ public class ConductorApi {
     @Path("/tipoidentificacion")
     public Response geTipos() throws ListEmptyException, Exception {
         HashMap<String, Object> map = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
+        ConductorServices cs = new ConductorServices();
         map.put("msg", "OK");
-        map.put("data", ps.getTipos());
+        map.put("data", cs.getTipos());
         return Response.ok(map).build();
     }
 
@@ -329,9 +339,9 @@ public class ConductorApi {
     @Path("/criterios")
     public Response getCriterios() throws ListEmptyException, Exception {
         HashMap<String, Object> map = new HashMap<>();
-        ConductorServices ps = new ConductorServices();
+        ConductorServices cs = new ConductorServices();
         map.put("msg", "OK");
-        map.put("data", ps.getConductorAttributeLists());
+        map.put("data", cs.getAttributeList());
         return Response.ok(map).build();
     }
 
@@ -339,7 +349,7 @@ public class ConductorApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getType() {
-        HashMap map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         ConductorServices ps = new ConductorServices();
         map.put("msg", "OK");
         map.put("data", ps.getTurnos());
@@ -350,7 +360,7 @@ public class ConductorApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEstadoC() {
-        HashMap map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         ConductorServices ps = new ConductorServices();
         map.put("msg", "OK");
         map.put("data", ps.getEstados());

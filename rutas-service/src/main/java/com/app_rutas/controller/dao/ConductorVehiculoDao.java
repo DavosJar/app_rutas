@@ -2,9 +2,9 @@ package com.app_rutas.controller.dao;
 
 import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
+import com.app_rutas.controller.excepcion.ValueAlreadyExistException;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.ConductorVehiculo;
-import com.app_rutas.models.enums.EstadoConductor;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Method;
@@ -103,7 +103,7 @@ public class ConductorVehiculoDao extends AdapterDao<ConductorVehiculo> {
                 mid = (low + high) / 2;
 
                 String midValue = obtenerAttributeValue(aux[mid], attribute).toString().toLowerCase();
-                //System.out.println("Comparando: " + midValue + " con " + searchValue);
+                // System.out.println("Comparando: " + midValue + " con " + searchValue);
 
                 if (midValue.startsWith(searchValue)) {
                     if (mid == 0 || !obtenerAttributeValue(aux[mid - 1], attribute).toString().toLowerCase()
@@ -203,6 +203,31 @@ public class ConductorVehiculoDao extends AdapterDao<ConductorVehiculo> {
     public LinkedList<ConductorVehiculo> order(String attribute, Integer type) throws Exception {
         LinkedList<ConductorVehiculo> lista = listAll();
         return lista.isEmpty() ? lista : lista.mergeSort(attribute, type);
+    }
+
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        if (campo == null || value == null) {
+            throw new IllegalArgumentException("El atributo y el valor no pueden ser nulos.");
+        }
+
+        if (this.listAll == null) {
+            this.listAll = listAll();
+        }
+
+        if (this.listAll.isEmpty()) {
+            return true;
+        }
+
+        ConductorVehiculo[] conductorVehiculoList = this.listAll.toArray();
+
+        for (ConductorVehiculo cv : conductorVehiculoList) {
+            Object attributeValue = obtenerAttributeValue(cv, campo);
+            if (attributeValue != null && attributeValue.toString().equalsIgnoreCase(value.toString())) {
+                throw new ValueAlreadyExistException("El valor ya existe.");
+            }
+        }
+
+        return true;
     }
 
     public String toJson() throws Exception {

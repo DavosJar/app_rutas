@@ -1,5 +1,7 @@
 package com.app_rutas.controller.dao.services;
 
+import java.util.HashMap;
+
 import com.app_rutas.controller.dao.TrabajadorDao;
 import com.app_rutas.controller.tda.list.LinkedList;
 import com.app_rutas.models.Trabajador;
@@ -8,15 +10,14 @@ import com.app_rutas.models.enums.TipoIdentificacion;
 
 public class TrabajadorServices {
 
-    @SuppressWarnings("FieldMayBeFinal")
     private TrabajadorDao obj;
 
     public TrabajadorServices() {
         obj = new TrabajadorDao();
     }
 
-    public Trabajador getPersona() {
-        return obj.getPersona();
+    public Trabajador getTrabajador() {
+        return obj.getTrabajador();
     }
 
     public Boolean save() throws Exception {
@@ -31,12 +32,12 @@ public class TrabajadorServices {
         return obj.getListAll();
     }
 
-    public void setPersona(Trabajador Pprsona) {
-        obj.setPersona(Pprsona);
+    public void setTrabajador(Trabajador trabajador) {
+        obj.setTrabajador(trabajador);
     }
 
-    public Trabajador getPersonaById(Integer id) throws Exception {
-        return obj.getPersonaById(id);
+    public Trabajador getById(Integer id) throws Exception {
+        return obj.getTrabajadorById(id);
 
     }
 
@@ -45,7 +46,7 @@ public class TrabajadorServices {
 
     }
 
-    public LinkedList<Trabajador> getPersonasBy(String atributo, Object valor) throws Exception {
+    public LinkedList<Trabajador> getTrabajadoresBy(String atributo, Object valor) throws Exception {
         return obj.buscar(atributo, valor);
     }
 
@@ -53,7 +54,7 @@ public class TrabajadorServices {
         return obj.order(atributo, type);
     }
 
-    public Trabajador obtenerPersonaPor(String atributo, Object valor) throws Exception {
+    public Trabajador obtenerTrabajadorPor(String atributo, Object valor) throws Exception {
         return obj.buscarPor(atributo, valor);
     }
 
@@ -77,8 +78,21 @@ public class TrabajadorServices {
         return obj.getSexos();
     }
 
-    public String[] getPersonaAttributeLists() {
-        return obj.getPersonaAttributeLists();
+    public String[] getTrabajadorAttributeLists() {
+        return obj.getTrabajadorAttributeLists();
     }
 
+    public Boolean isUnique(String campo, Object value) throws Exception {
+        Boolean unicTrabajador;
+        Boolean unicConductor;
+        unicTrabajador = obj.isUnique(campo, value);
+        ConductorServices cs = new ConductorServices();
+        unicConductor = cs.isUnique(campo, value);
+        return unicTrabajador && unicConductor;
+    }
+
+    public void validateField(String field, HashMap<String, Object> map, String... validations) throws Exception {
+        Trabajador persona = this.getTrabajador();
+        FieldValidator.validateAndSet(persona, map, field, validations);
+    }
 }

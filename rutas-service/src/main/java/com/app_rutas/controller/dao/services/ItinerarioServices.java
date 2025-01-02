@@ -3,38 +3,56 @@ package com.app_rutas.controller.dao.services;
 import java.util.HashMap;
 
 import com.app_rutas.controller.dao.ItinerarioDao;
-import com.app_rutas.models.ConductorVehiculo;
 import com.app_rutas.models.Itinerario;
+import com.app_rutas.models.OrdenEntrega;
+import com.app_rutas.models.Pedido;
 import com.app_rutas.models.enums.ItinerarioEstadoEnum;
 import com.app_rutas.controller.tda.list.LinkedList;
 
 public class ItinerarioServices {
     private ItinerarioDao obj;
 
-    public Object[] listShowAll()throws Exception{
-        if(!obj.getListAll().isEmpty()){
+    public Object[] listShowAll() throws Exception {
+        if (!obj.getListAll().isEmpty()) {
             Itinerario[] lista = (Itinerario[]) obj.getListAll().toArray();
             Object[] respuesta = new Object[lista.length];
             for (int i = 0; i < lista.length; i++) {
-                ConductorVehiculo c = new ConductorVehiculoServices().get(lista[i].getIdConductorAsignado());
-                HashMap mapa = new HashMap();
+                HashMap<String, Object> mapa = new HashMap<>();
                 mapa.put("id", lista[i].getId());
                 mapa.put("detallesEntrega", lista[i].getDetallesEntrega());
                 mapa.put("fechaGeneracion", lista[i].getFechaGeneracion());
+                mapa.put("fechaProgranada", lista[i].getFechaProgramada());
                 mapa.put("estado", lista[i].getEstado());
-                mapa.put("idConductorAsignado", c);
+                mapa.put("idConductorVeiculo",
+                        new ConductorVehiculoServices().showOne(lista[i].getIdConductorVehiculo()));
                 respuesta[i] = mapa;
             }
             return respuesta;
         }
-        return new Object[]{};
+        return new Object[] {};
+    }
+
+    public Object showOne(Integer id) {
+        try {
+            Itinerario i = obj.getById(id);
+            HashMap<String, Object> mapa = new HashMap<>();
+            mapa.put("id", i.getId());
+            mapa.put("detallesEntrega", i.getDetallesEntrega());
+            mapa.put("fechaGeneracion", i.getFechaGeneracion());
+            mapa.put("fechaProgranada", i.getFechaProgramada());
+            mapa.put("estado", i.getEstado());
+            mapa.put("idConductorVehiculo", new ConductorVehiculoServices().showOne(id));
+            return mapa;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al buscar el itinerario");
+        }
     }
 
     public ItinerarioServices() {
         this.obj = new ItinerarioDao();
     }
 
-    public LinkedList listAll() throws Exception {
+    public LinkedList<Itinerario> listAll() throws Exception {
         return obj.getListAll();
     }
 
@@ -102,4 +120,20 @@ public class ItinerarioServices {
     public String getByJson(Integer index) throws Exception {
         return obj.getByJson(index);
     }
+
+    public LinkedList<OrdenEntrega> generarOrdenList(Integer id) throws Exception {
+        PedidoServices ps = new PedidoServices();
+        Pedido[] pedidos = ps.listAll().toArray();
+        LinkedList<OrdenEntrega> ordenesEntrega = new LinkedList<>();
+        OrdenEntregaServices oes = new OrdenEntregaServices();
+        for (Pedido pedido : pedidos) {
+            OrdenEntrega ordenEntrega = oes.generarOrdenEntrega(pedido, id);
+            ordenesEntrega.add(ordenEntrega);
+            oes.save();
+            ps.setPedido(pedido);
+            ps.matchAttende(pedido.getId());
+        }
+        return ordenesEntrega;
+    }
+
 }

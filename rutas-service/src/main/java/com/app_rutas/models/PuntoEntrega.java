@@ -2,7 +2,6 @@ package com.app_rutas.models;
 
 public class PuntoEntrega {
     private Integer id;
-    private Integer idCliente;
     private String num;
     private String callePrincipal;
     private String calleSecundaria;
@@ -14,14 +13,6 @@ public class PuntoEntrega {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getIdCliente() {
-        return this.idCliente;
-    }
-
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
     }
 
     public String getNum() {

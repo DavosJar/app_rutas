@@ -4,33 +4,34 @@ import com.app_rutas.controller.dao.implement.AdapterDao;
 import com.app_rutas.controller.dao.implement.Contador;
 import com.app_rutas.controller.excepcion.ValueAlreadyExistException;
 import com.app_rutas.controller.tda.list.LinkedList;
-import com.app_rutas.models.Trabajador;
+import com.app_rutas.models.Cuenta;
+import com.app_rutas.models.enums.Rol;
 import com.app_rutas.models.enums.Sexo;
 import com.app_rutas.models.enums.TipoIdentificacion;
 import com.google.gson.Gson;
 import java.lang.reflect.Method;
 
 @SuppressWarnings({ "unchecked", "ConvertToTryWithResources" })
-public class TrabajadorDao extends AdapterDao<Trabajador> {
-    private Trabajador trabajador;
-    private LinkedList<Trabajador> listAll;
+public class CuentaDao extends AdapterDao<Cuenta> {
+    private Cuenta cuenta;
+    private LinkedList<Cuenta> listAll;
 
-    public TrabajadorDao() {
-        super(Trabajador.class);
+    public CuentaDao() {
+        super(Cuenta.class);
     }
 
-    public Trabajador getTrabajador() {
-        if (this.trabajador == null) {
-            this.trabajador = new Trabajador();
+    public Cuenta getCuenta() {
+        if (this.cuenta == null) {
+            this.cuenta = new Cuenta();
         }
-        return this.trabajador;
+        return this.cuenta;
     }
 
-    public void setTrabajador(Trabajador trabajador) {
-        this.trabajador = trabajador;
+    public void setCuenta(Cuenta cuenta) {
+        this.cuenta = cuenta;
     }
 
-    public LinkedList<Trabajador> getListAll() throws Exception {
+    public LinkedList<Cuenta> getListAll() throws Exception {
         if (listAll == null) {
             this.listAll = listAll();
         }
@@ -38,63 +39,63 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
     }
 
     public boolean save() throws Exception {
-        Integer id = Contador.obtenerValorActual(Trabajador.class);
+        Integer id = Contador.obtenerValorActual(Cuenta.class);
         try {
-            this.trabajador.setId(id);
-            this.persist(this.trabajador);
-            Contador.actualizarContador(Trabajador.class);
+            this.cuenta.setId(id);
+            this.persist(this.cuenta);
+            Contador.actualizarContador(Cuenta.class);
             this.listAll = listAll();
             return true;
         } catch (Exception e) {
-            throw new Exception("Error al guardar el trabajador: " + e.getMessage());
+            throw new Exception("Error al guardar el cuenta: " + e.getMessage());
         }
     }
 
     public Boolean update() throws Exception {
-        if (this.trabajador == null || this.trabajador.getId() == null) {
-            throw new Exception("No se ha seleccionado un trabajador para actualizar.");
+        if (this.cuenta == null || this.cuenta.getId() == null) {
+            throw new Exception("No se ha seleccionado un cuenta para actualizar.");
         }
         if (listAll == null) {
             listAll = listAll();
         }
-        Integer index = getTrabajadorIndex("id", this.trabajador.getId());
+        Integer index = getCuentaIndex("id", this.cuenta.getId());
         if (index == -1) {
-            throw new Exception("Trabajador no encontrado.");
+            throw new Exception("Cuenta no encontrado.");
         }
         try {
-            this.merge(this.trabajador, index);
+            this.merge(this.cuenta, index);
             listAll = listAll();
             return true;
         } catch (Exception e) {
-            throw new Exception("Error al actualizar el trabajador: " + e.getMessage());
+            throw new Exception("Error al actualizar el cuenta: " + e.getMessage());
         }
     }
 
     public Boolean delete() throws Exception {
-        if (this.trabajador == null || this.trabajador.getId() == null) {
-            throw new Exception("No se ha seleccionado un trabajador para eliminar.");
+        if (this.cuenta == null || this.cuenta.getId() == null) {
+            throw new Exception("No se ha seleccionado un cuenta para eliminar.");
         }
         if (listAll == null) {
             listAll = listAll();
         }
-        Integer index = getTrabajadorIndex("id", this.trabajador.getId());
+        Integer index = getCuentaIndex("id", this.cuenta.getId());
         if (index == -1) {
-            throw new Exception("Trabajador no encontrado.");
+            throw new Exception("Cuenta no encontrado.");
         }
         try {
             this.delete(index);
             listAll = listAll();
             return true;
         } catch (Exception e) {
-            throw new Exception("Error al eliminar el trabajador: " + e.getMessage());
+            throw new Exception("Error al eliminar el cuenta: " + e.getMessage());
         }
     }
 
-    private LinkedList<Trabajador> linearBinarySearch(String attribute, Object value) throws Exception {
-        LinkedList<Trabajador> lista = this.listAll().quickSort(attribute, 1);
-        LinkedList<Trabajador> trabajadors = new LinkedList<>();
+    private LinkedList<Cuenta> linearBinarySearch(String attribute, Object value) throws Exception {
+        LinkedList<Cuenta> lista = this.listAll().quickSort(attribute, 1);
+        LinkedList<Cuenta> cuentas = new LinkedList<>();
         if (!lista.isEmpty()) {
-            Trabajador[] aux = lista.toArray();
+            Cuenta[] aux = lista.toArray();
             Integer low = 0;
             Integer high = aux.length - 1;
             Integer mid;
@@ -122,58 +123,57 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
             }
 
             if (index.equals(-1)) {
-                return trabajadors;
+                return cuentas;
             }
 
             Integer i = index;
             while (i < aux.length
                     && obtenerAttributeValue(aux[i], attribute).toString().toLowerCase().startsWith(searchValue)) {
-                trabajadors.add(aux[i]);
-                System.out.println("Agregando: " + aux[i].getNombre());
+                cuentas.add(aux[i]);
                 i++;
             }
         }
-        return trabajadors;
+        return cuentas;
     }
 
-    public LinkedList<Trabajador> buscar(String attribute, Object value) throws Exception {
+    public LinkedList<Cuenta> buscar(String attribute, Object value) throws Exception {
         return linearBinarySearch(attribute, value);
     }
 
-    public Trabajador buscarPor(String attribute, Object value) throws Exception {
-        LinkedList<Trabajador> lista = listAll();
-        Trabajador p = null;
+    public Cuenta buscarPor(String attribute, Object value) throws Exception {
+        LinkedList<Cuenta> lista = listAll();
+        Cuenta p = null;
 
         try {
             if (!lista.isEmpty()) {
-                Trabajador[] trabajadors = lista.toArray();
-                for (int i = 0; i < trabajadors.length; i++) {
-                    if (obtenerAttributeValue(trabajadors[i], attribute).toString().toLowerCase()
+                Cuenta[] cuentas = lista.toArray();
+                for (int i = 0; i < cuentas.length; i++) {
+                    if (obtenerAttributeValue(cuentas[i], attribute).toString().toLowerCase()
                             .equals(value.toString().toLowerCase())) {
-                        p = trabajadors[i];
+                        p = cuentas[i];
                         break;
                     }
                 }
             }
             if (p == null) {
-                throw new Exception("No se encontró el trabajador con " + attribute + ": " + value);
+                throw new Exception("No se encontró el cuenta con " + attribute + ": " + value);
             }
         } catch (Exception e) {
-            throw new Exception("Error al buscar el trabajador: " + e.getMessage());
+            throw new Exception("Error al buscar el cuenta: " + e.getMessage());
         }
 
         return p;
     }
 
-    private Integer getTrabajadorIndex(String attribute, Object value) throws Exception {
+    private Integer getCuentaIndex(String attribute, Object value) throws Exception {
         if (this.listAll == null) {
             this.listAll = listAll();
         }
         Integer index = -1;
         if (!this.listAll.isEmpty()) {
-            Trabajador[] trabajadors = this.listAll.toArray();
-            for (int i = 0; i < trabajadors.length; i++) {
-                if (obtenerAttributeValue(trabajadors[i], attribute).toString().toLowerCase()
+            Cuenta[] cuentas = this.listAll.toArray();
+            for (int i = 0; i < cuentas.length; i++) {
+                if (obtenerAttributeValue(cuentas[i], attribute).toString().toLowerCase()
                         .equals(value.toString().toLowerCase())) {
                     index = i;
                     break;
@@ -197,9 +197,9 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
         throw new NoSuchMethodException("No se encontor el atributo: " + attribute);
     }
 
-    public String[] getTrabajadorAttributeLists() {
+    public String[] getCuentaAttributeLists() {
         LinkedList<String> attributes = new LinkedList<>();
-        for (Method m : Trabajador.class.getDeclaredMethods()) {
+        for (Method m : Cuenta.class.getDeclaredMethods()) {
             if (m.getName().startsWith("get")) {
                 String attribute = m.getName().substring(3);
                 if (!attribute.equalsIgnoreCase("id")) {
@@ -223,10 +223,10 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
             return true;
         }
 
-        Trabajador[] Trabajadores = this.listAll.toArray();
+        Cuenta[] Cuentaes = this.listAll.toArray();
 
-        for (Trabajador trabajador : Trabajadores) {
-            Object attributeValue = obtenerAttributeValue(trabajador, campo);
+        for (Cuenta cuenta : Cuentaes) {
+            Object attributeValue = obtenerAttributeValue(cuenta, campo);
             if (attributeValue != null && attributeValue.toString().equalsIgnoreCase(value.toString())) {
                 throw new ValueAlreadyExistException("El valor ya existe.");
             }
@@ -235,21 +235,21 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
         return true;
     }
 
-    public LinkedList<Trabajador> order(String attribute, Integer type) throws Exception {
-        LinkedList<Trabajador> lista = listAll();
+    public LinkedList<Cuenta> order(String attribute, Integer type) throws Exception {
+        LinkedList<Cuenta> lista = listAll();
         return lista.isEmpty() ? lista : lista.mergeSort(attribute, type);
     }
 
     public String toJson() throws Exception {
         Gson g = new Gson();
-        return g.toJson(this.trabajador);
+        return g.toJson(this.cuenta);
     }
 
-    public Trabajador getTrabajadorById(Integer id) throws Exception {
+    public Cuenta getCuentaById(Integer id) throws Exception {
         return get(id);
     }
 
-    public String getTrabajadorJsonByIndex(Integer index) throws Exception {
+    public String getCuentaJsonByIndex(Integer index) throws Exception {
         Gson g = new Gson();
         return g.toJson(get(index));
     }
@@ -262,17 +262,16 @@ public class TrabajadorDao extends AdapterDao<Trabajador> {
         return TipoIdentificacion.values();
     }
 
-    public Sexo getSexo(String sexo) {
-        return Sexo.valueOf(sexo);
-    }
-
-    public Sexo[] getSexos() {
-        return Sexo.values();
-    }
-
-    public String getTrabajadorJson(Integer Index) throws Exception {
+    public String getCuentaJson(Integer Index) throws Exception {
         Gson g = new Gson();
         return g.toJson(get(Index));
     }
 
+    public Rol getRol(String rol) {
+        return Rol.valueOf(rol);
+    }
+
+    public Rol[] getRolList() {
+        return Rol.values();
+    }
 }
